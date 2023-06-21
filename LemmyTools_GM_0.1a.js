@@ -165,7 +165,7 @@ function searchComms(id, full, commsdiv) {
  const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML = css;
 
 // Usage: 
- addCSS(".ltmenu {position: fixed; min-width: 240px; width: 8%; max-height: 7%; top: 0; left: 0; font-size: .75em; color: blue; border:1px solid gray; overflow: hidden; background-color: #cce2ff; display: block; color: black; min-height:80px; }" + ".ltcommsbar {position: fixed; min-width: 240px; width: 8%; word-wrap: break-word; max-height: 93%; min-height:93%; top: 80px; left: 0; font-size: .75em; color: blue; border:1px solid gray; overflow: auto; background-color: #cce2ff; display: block; color: black;}" + ".ltbutton {background-color: #ccffe5;}");
+ addCSS(".ltmenu {position: fixed; min-width: 240px; width: 8%; max-height: 7%; top: 0; left: 0; font-size: .75em; overflow: hidden; display: block; min-height:80px; }" + ".ltcommsbar {position: fixed; min-width: 240px; width: 8%; word-wrap: break-word; max-height: 93%; min-height:93%; top: 80px; left: 0; font-size: .75em; overflow: auto; display: block; }" + ".ltbutton {background-color: #ccffe5;}");
 
 
 `;
@@ -232,11 +232,11 @@ if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")
 //Build the divs
 var idiv = document.createElement("div");
 idiv.setAttribute("id", "searchdiv");
-idiv.classList.add("ltmenu");
+idiv.classList.add("ltmenu", "border-secondary", "card");
 idiv.innerHTML = "<input type='text'  id='commsearch' placeholder='Sub search' oninput='searchComms(commsearch, communityArray, div)' /><br />LemmyTools<span style='float:right;'><button class='ltbutton' id='toggle' onClick='Toggle()'" + "style='float:right;'  /> << </button><br /><br /><b><a href=" + homeInstance + ">Home</a></b></span>";
 var div = document.createElement("div");
 div.setAttribute("id", "myDiv");
-div.classList.add("ltcommsbar")
+div.classList.add("ltcommsbar", "border-secondary", "card");
 if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")) {
   url = location.href;
   console.log("LemmyTools: " + "url is " + url)
