@@ -43,14 +43,16 @@ easy subscribe method.
 /* SCRIPT BELOW */
 
 const funcsString = `
-function update(comm, page) {
+function update(comm, page, subString) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      console.log("LemmyTools: " + "update()");
+      console.log("LemmyTools: " + "update()" + subString);
       document.querySelectorAll('[role="alert"]').forEach(function(el) {
         el.innerHTML += "<br /><br /><a href=" + subString + " target='_blank'><button class='ltbutton'>Easy Subscribe</button></a>";
       });
+
+/*
       let commPageArray = [];
       let remoteLinks = [];
       if (url.includes("/communities")) {
@@ -72,6 +74,7 @@ function update(comm, page) {
       }
       
       }
+*/
     }
   }
   xhttp.open("GET", page, true);
@@ -96,7 +99,9 @@ function commupdate(id, page, data) {
 
 
 
-function Toggle() {
+function Toggle(overide) {
+
+	
   var s = document.getElementById("searchdiv");
   var size = s.getBoundingClientRect();
   var x = document.getElementById("myDiv");
@@ -194,8 +199,8 @@ setInterval(function() {
     if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")) {
       console.log("LemmyTools: " + "On lemmy");
       if ((url.includes(homeInstance) == false) && ((url.includes("/c/") || url.includes("/post/") || url.includes("/comment/") || url.includes("/communities")))) {
-        console.log("LemmyTools: " + "On remote instance community");
-        update(community, url);
+        console.log("LemmyTools: " + "On remote instance community" + "Button to: " + subString);
+        update(community, url, subString);
       }
     }
   }
@@ -206,8 +211,8 @@ setInterval(function() {
 if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")) {
   console.log("LemmyTools: " + "On lemmy");
   if ((url.includes(homeInstance) == false) && ((url.includes("/c/") || url.includes("/post/") || url.includes("/comment/") || url.includes("/communities")))) {
-    console.log("LemmyTools: " + "On remote instance community");
-    update(community, url);
+    console.log("LemmyTools: " + "On remote instance community - DIRECT -" + "Button to: " + subString);
+    update(community, url, subString);
   }
 }
 
@@ -264,7 +269,8 @@ console.log("LemmyTools: Got Results >20");
   }
 } else {
   console.log("LemmyTools: On Remote Instance - Bar");
-  div.innerHTML = localStorage.getItem("remoteComms");
+  //div.innerHTML = localStorage.getItem("remoteComms");
+	Toggle("off");
 }
 `;
 
