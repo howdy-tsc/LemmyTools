@@ -6,7 +6,7 @@ Current Features:
 a searchable list of your subscribed communities. 
 - Adds link back to home instance for easy navigation when on remote
 instances.
-- Remote instance side bar is very much useless currently
+- On remote instance side bar is very much useless currently except for the link back home.
 
 Upocoming features:
 
@@ -17,4 +17,14 @@ for easy subscription.
 - Create remote instance search of communities and integrate with
 easy subscribe method.
 
+Installation and Configuration:
+
+1 - Browser must have Greasemonkey addon (You could use another JS injector app for the .js). Tested with Greasemonkey.
+2 - Download either the .JS file or the greasemonkey.zip
+3 - Edit the Lemmytools(.js) file and add your home instance of lemmy.
+ex: const theHomeinstance = 'https://lemmy.ml';
+4 - Import the .zip or add a new user script and copy and paste the contents of the Lemmytools(.js) file.
+
+
+This script is all done by a complete amateur for fun. Enjoy and feel free to fork it! 
 
