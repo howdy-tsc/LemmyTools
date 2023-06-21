@@ -270,6 +270,7 @@ console.log("LemmyTools: Got Results >20");
 } else {
   console.log("LemmyTools: On Remote Instance - Bar");
   //div.innerHTML = localStorage.getItem("remoteComms");
+ if($('#myDiv').isVisible()){
 	Toggle("off");
 }
 `;
