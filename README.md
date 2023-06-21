@@ -13,7 +13,8 @@ Upcoming features:
     Create option page for saving homeinstance and other options.
     Create sub communities grouping function.
     Create remote instance search of communities and integrate with easy subscribe method.
-
+    Create addon for firefox/chrome.
+    
 Installation and Configuration:
 
 1 - Browser must have Greasemonkey addon (You could use another JS injector app for the .js). Tested with Greasemonkey.
