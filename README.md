@@ -1,4 +1,4 @@
-<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">https://github.com/howdy-tsc/LemmyTools</a></p>
+<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">https://github.com/howdy-tsc/LemmyTools</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">https://greasyfork.org/en/scripts/469169-lemmytools</a></p>
 <p>LemmyTools 0.1a - GreaseMonkey Addon Script</p>
 <p>Current Features:</p>
 <ul>
