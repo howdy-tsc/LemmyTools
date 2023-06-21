@@ -106,6 +106,14 @@ function Toggle(overide) {
   var size = s.getBoundingClientRect();
   var x = document.getElementById("myDiv");
   var b = document.getElementById("toggle");
+
+//on remote instance just hide the bar.
+  if (overide = 0)
+{
+x.style.display = "none";
+}
+
+
   if (x.style.display === "none") {
     x.style.display = "block";
     b.innerHTML = "<<";
@@ -122,8 +130,8 @@ function Toggle(overide) {
 {
           s.style.left = "-200px";
 }
-
 }
+
 }
 
 function searchComms(id, full, commsdiv) {
@@ -270,8 +278,7 @@ console.log("LemmyTools: Got Results >20");
 } else {
   console.log("LemmyTools: On Remote Instance - Bar");
   //div.innerHTML = localStorage.getItem("remoteComms");
- if($('#myDiv').isVisible()){
-	Toggle("off");
+	Toggle(0);
 }
 `;
 
