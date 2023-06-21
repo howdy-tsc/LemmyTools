@@ -17,9 +17,8 @@
 </ul>
 <p>Installation and Configuration:</p>
 <p>1 - Browser must have Greasemonkey addon (You could use another JS injector app for the .js). Tested with Greasemonkey.</p>
-<p>2 - Download either the .JS file or the greasemonkey.zip</p>
-<p>3 - Import the .zip or add a new user script and copy and paste the contents of the Lemmytools(.js) file.</p>
-<p>4 - Edit the script and to add your home instance of lemmy.</p>
+<p>2 - Download either the .JS file or install from <a href="https://greasyfork.org/en/scripts/469169-lemmytools">greasyfork.</a></p></p>
+<p>3 - After adding the script to greasemonkey, edit the script variable to add your home instance of lemmy.</p>
 <p>EDIT THIS LINE: const theHomeinstance = ‘<a href="https://lemmy.ml">https://lemmy.ml</a>’;</p>
 <p>This script is all done by a complete amateur for fun. Enjoy and feel free to fork it!</p>
 <p>Community Sidebar:</p>
