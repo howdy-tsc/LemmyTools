@@ -1,4 +1,4 @@
-/* LemmyTools 0.1a - GreaseMonkey Addon Script
+LemmyTools 0.1a - GreaseMonkey Addon Script
 
 Current Features:
 - Adds "Easy Subscribe" button to remote instance communities.
@@ -16,7 +16,5 @@ for easy subscription.
 - Create sub communities grouping function.
 - Create remote instance search of communities and integrate with
 easy subscribe method.
-- 
 
-/* ---------------------- */
 
