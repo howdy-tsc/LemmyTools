@@ -1,4 +1,3 @@
-<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">https://github.com/howdy-tsc/LemmyTools</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">https://greasyfork.org/en/scripts/469169-lemmytools</a></p>
 <p>LemmyTools 0.1a - GreaseMonkey Addon Script</p>
 <p>Current Features:</p>
 <ul>
@@ -6,6 +5,7 @@
     <li>Adds a collapsible sidebar on the left side of screen that shows a searchable list of your subscribed communities.</li>
     <li>Adds link back to home instance for easy navigation when on remote instances.</li>
     <li>On remote instance side bar is very much useless currently except for the link back home.</li>
+    <li>Use on mobile browsers is erratic.</li>
 </ul>
 <p>Upcoming features:</p>
 <ul>
@@ -27,3 +27,7 @@
 <p><img src="https://thesimplecorner.org/pictrs/image/6aa12b03-885a-4722-ada6-19722352f6c5.png" alt=""></p>
 <p>Easy Subscribe Button:</p>
 <p><img src="https://thesimplecorner.org/pictrs/image/279fbf9e-efa8-42ae-bee6-4263582a72bb.png" alt=""></p>
+
+
+<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">Github</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">GreasyFork</a></p>
+<p><b></b>Please submit issues to the gitlab for feature requests and problems: Github LemmyTools Issues</b></p>
