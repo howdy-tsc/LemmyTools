@@ -23,7 +23,7 @@
 <p>This script is all done by a complete amateur for fun. Enjoy and feel free to fork it!</p>
 
 <p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">Github</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">GreasyFork</a></p>
-<p><b></b>Please submit issues to the gitlab for feature requests and problems: Github LemmyTools Issues</b></p>
+<p><b></b>Please submit issues to the gitlab for feature requests and problems: <a href="https://github.com/howdy-tsc/LemmyTools/issues">Github LemmyTools Issues</a></b></p>
 
 <b>ScreenShots</b><hr />
 
