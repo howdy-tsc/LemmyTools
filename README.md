@@ -21,6 +21,12 @@
 <p>3 - After adding the script to greasemonkey, edit the script variable to add your home instance of lemmy.</p>
 <p>EDIT THIS LINE: const theHomeinstance = ‘<a href="https://lemmy.ml">https://lemmy.ml</a>’;</p>
 <p>This script is all done by a complete amateur for fun. Enjoy and feel free to fork it!</p>
+
+<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">Github</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">GreasyFork</a></p>
+<p><b></b>Please submit issues to the gitlab for feature requests and problems: Github LemmyTools Issues</b></p>
+
+<b>ScreenShots</b><hr />
+
 <p>Community Sidebar:</p>
 <p><img src="https://thesimplecorner.org/pictrs/image/7bc23efc-9f13-42a8-8e62-f87b154f077a.png" alt=""></p>
 <p>Community Sidebar - Search:</p>
@@ -28,6 +34,3 @@
 <p>Easy Subscribe Button:</p>
 <p><img src="https://thesimplecorner.org/pictrs/image/279fbf9e-efa8-42ae-bee6-4263582a72bb.png" alt=""></p>
 
-
-<p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">Github</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">GreasyFork</a></p>
-<p><b></b>Please submit issues to the gitlab for feature requests and problems: Github LemmyTools Issues</b></p>
