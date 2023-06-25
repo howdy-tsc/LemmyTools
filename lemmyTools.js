@@ -373,7 +373,7 @@ height = (height/100 * 1);
 var idiv = document.createElement("div");
 idiv.setAttribute("id", "searchdiv");
 idiv.classList.add("ltmenu", "border-secondary", "card");
-idiv.innerHTML = "<span style='float:" + settings.reverseSide + ";'><button class='ltbutton' id='toggle' onClick='Toggle()'" + "/> << </button></span><input type='text' id='commsearch' placeholder='Sub search' oninput='searchComms(commsearch, communityArray, div)' /><br />LemmyTools - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a><br /><b><a href=" + homeInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a></b></span>";
+idiv.innerHTML = "<span style='float:" + settings.reverseSide + ";'><button class='ltbutton' id='toggle' onClick='Toggle()'" + "/> << </button></span><input type='text' id='commsearch' placeholder='Sub search' oninput='searchComms(commsearch, communityArray, div)' /><br />LemmyTools - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a><br /><b><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a></b></span>";
 var div = document.createElement("div");
 div.setAttribute("id", "myDiv");
 div.classList.add("ltcommsbar");
