@@ -24,3 +24,6 @@
 
 
 
+ChangeLog:
+0.1.1 - Updated added settings menu, fixed new compatibility changes with lemmy 0.18.
+0.1a - Initial Release
