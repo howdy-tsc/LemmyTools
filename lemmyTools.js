@@ -9,16 +9,21 @@
 
 
 
-/* SCRIPT BELOW */
+
 const homeString = `
+// ------------ EDIT THIS FOR MANUAL HOME INSTANCE FIX: var homeInstance = 'https://lemmy.ml'; Should be temporary.
+var homeInstance = '';
 // -------------- VERSION ------------------- 
 const ltVer = "0.1.1";
 const ltTestedVer = "BE: 0.18.0";
-var homeInstance = '';
+
 var comm = '';
 `;
 //--------------------------------------------
 
+
+
+/* SCRIPT BELOW */
 const funcsString = `
 function isltMobile(){
 if (/Android|iPhone/i.test(navigator.userAgent)) {
@@ -133,7 +138,7 @@ function searchComms(id, full, commsdiv) {
 		var commsCount = localStorage.getItem("commsCount");
 if (commsCount == null)
 {
-commsdiv.innerHTML = "<hr /><b>Welcome to LemmyTools! Ver " + ltVer + "</b><br /><br />If this is your first time running the script, set your lemmy homeinstance in the option page. <br /><br /> If you dont see your subscribed communities here simply login to your lemmy and then click the LemmyTools home button above. ";
+commsdiv.innerHTML = "<hr /><b>Welcome to LemmyTools! Ver " + ltVer + "</b><br /><br />If this is your first time running the script, set your lemmy homeinstance in the option page. [0.1.1 - Manually enter your home lemmy instance in script for offsite home button functionality. (temporary)]. <br /><br /> If you dont see your subscribed communities here simply login to your lemmy and then click the LemmyTools home button above. ";
 }
 else
 {
@@ -196,7 +201,14 @@ if (localStorage.getItem('option_reverseSide') == null)
 }
 if (localStorage.getItem('option_homeInstance') == null)
 {
-	  instance = 'https://thesimplecorner.org';
+	 if (homeInstance != '')
+         {
+	    instance = homeInstance;
+  	 }
+    	else 
+     {
+	  instance = window.location.origin;
+      }
 		//alert('LemmyTools has defaulted to this lemmy instance. You can change this setting by clicking the options button on the sidebar.');
 }
 if (localStorage.getItem('option_commposVertical') == null)
@@ -299,7 +311,7 @@ var count = 0;
 
 if (isltMobile())
 {
-Toggle(0);
+//Toggle(0);
 }
 
 
@@ -441,7 +453,7 @@ console.log("LemmyTools: Got Results >20");
 } else {
   console.log("LemmyTools: On Remote Instance - Bar");
   //div.innerHTML = localStorage.getItem("remoteComms");
-	Toggle(0);
+	//Toggle(0);
 }
 `;
 
