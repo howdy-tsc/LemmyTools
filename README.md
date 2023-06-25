@@ -27,3 +27,8 @@
 ChangeLog:
 0.1.1 - Updated added settings menu, fixed new compatibility changes with lemmy 0.18.
 0.1a - Initial Release
+
+
+
+Screenshot:
+<img src="https://thesimplecorner.org/pictrs/image/b4924db3-4c4a-4d2e-ba73-072022c1a837.png" />
