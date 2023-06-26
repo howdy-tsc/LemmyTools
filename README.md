@@ -13,11 +13,10 @@
 </ul>
 
 </p>
-<p>Upcoming features:</p>
+<p>Feature for future releases:</p>
 <ul>
     <li>When off site collect a list of communities and display in sidebar for easy subscription.</li>
-    <li>Create sub communities grouping function.</li>
-    <li>Create remote instance search of communities and integrate with easy subscribe method.</li>
+    <li>Create communities grouping function.</li>
     <li>Create addon for firefox/chrome.</li>
 </ul>
 <p>Installation and Configuration:</p>
