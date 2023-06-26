@@ -8,7 +8,7 @@
 </ul>
 <p>Next release features and fixes:</p>
 <ul>
-    <li>Click and Drag to expand images</li>
+    <li>Click and Drag to expand lemmy images</li>
     <li>Re-work Lemmy Detection</li>
 </ul>
 
