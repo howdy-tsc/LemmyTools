@@ -6,6 +6,13 @@
     <li>Adds link back to home instance and a community browser.</li>
     <li>(new) - Adds an options menu to configure LemmyTools settings.</li>
 </ul>
+<p>Next release features and fixes:</p>
+<ul>
+    <li>Click and Drag to expand images</li>
+    <li>Re-work Lemmy Detection</li>
+</ul>
+
+</p>
 <p>Upcoming features:</p>
 <ul>
     <li>When off site collect a list of communities and display in sidebar for easy subscription.</li>
