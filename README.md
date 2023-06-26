@@ -10,6 +10,8 @@
 <ul>
     <li>Click and Drag to expand lemmy images</li>
     <li>Re-work Lemmy Detection</li>
+    <li>Fix for '#' breaking easy subscribe button</li>
+    <li>Fix for script breaking other sites due to poor isLemmy implementation.</li>
 </ul>
 
 </p>
