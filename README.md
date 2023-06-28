@@ -3,22 +3,23 @@ Just my latest efforts until release.
 
 <p>LemmyTools 0.1.2 - GreaseMonkey Addon Script</p>
 <p>Current Features:</p>
-<ul>
-    **New for 0.1.2:** 
-    
+
+   New for 0.1.2:
+   <ul>
     <li>Click and Drag to expand lemmy images</li>
     <li>Fix for '#' breaking easy subscribe button</li>
     <li>Fix for script breaking other sites due to poor isLemmy implementation.</li>
     <li>Fixed memory allocation issue with eventHandlers</li>
     <li>Various UI bug fixes (not showing all communities, settings menu display, etc...)</li>
     <li>Change Instance Sidebar functionality...</li>
-
+</ul>
     Script Features:
+       <ul>
     <li>Adds “Easy Subscribe” button to remote instance communities.</li>
     <li>Adds a collapsible sidebar on the side of screen that shows a searchable list of your subscribed communities.</li>
     <li>Adds link back to home instance and a community browser.</li>
     <li>Adds an options menu to configure LemmyTools settings.</li>
-    <
+    
 </ul>
 
 </p>
