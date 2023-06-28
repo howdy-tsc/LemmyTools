@@ -4,7 +4,8 @@ Just my latest efforts until release.
 <p>LemmyTools 0.1.2 - GreaseMonkey Addon Script</p>
 <p>Current Features:</p>
 <ul>
-    New for 0.1.2:
+    **New for 0.1.2:** 
+    
     li>Click and Drag to expand lemmy images</li>
     <li>Fix for '#' breaking easy subscribe button</li>
     <li>Fix for script breaking other sites due to poor isLemmy implementation.</li>
