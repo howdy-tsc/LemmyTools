@@ -6,7 +6,7 @@ Just my latest efforts until release.
 <ul>
     **New for 0.1.2:** 
     
-    li>Click and Drag to expand lemmy images</li>
+    <li>Click and Drag to expand lemmy images</li>
     <li>Fix for '#' breaking easy subscribe button</li>
     <li>Fix for script breaking other sites due to poor isLemmy implementation.</li>
     <li>Fixed memory allocation issue with eventHandlers</li>
