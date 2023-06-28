@@ -611,11 +611,13 @@ console.log("LemmyTools: Got Results >20");
 }
 
 `;
-  
 
-(function() { 
+
+(function() {
     'use strict';
-  	if(typeof $ == 'undefined'){ var $ = unsafeWindow.jQuery; }
+    if (typeof $ == 'undefined') {
+        var $ = unsafeWindow.jQuery;
+    }
     let isLemmy;
     try {
         isLemmy = true;
@@ -631,4 +633,3 @@ console.log("LemmyTools: Got Results >20");
     }
 
 })();
- 
