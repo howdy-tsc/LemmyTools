@@ -162,10 +162,11 @@ commposSide = localStorage.getItem("option_commposSide");
 reverseSide = localStorage.getItem("option_reverseSide");
 var instance = localStorage.getItem("option_homeInstance");
 commposVertical = localStorage.getItem("option_commposVertical");
-doExpandImages = localStorage.getItem("option_expandImages");
-doExpandImageSize = localStorage.getItem("option_expandImageSize");
+expandImages = localStorage.getItem("option_expandImages");
+expandImagesize = localStorage.getItem("option_expandImageSize");
+hoverCheck = localStorage.getItem("option_hoverCheck");
 hideSideBar = localStorage.getItem("option_hideSideBar");
-
+unblurNSFW = localStorage.getItem("option_unblurNSFW");
 if (localStorage.getItem('option_commposSide') == null)
 {
 		console.log("LemmyTools: First Run Defaults");
@@ -184,9 +185,10 @@ if (localStorage.getItem('option_homeInstance') == null)
   	 }
     	else 
      {
-	  instance = window.location.origin;
+		//alert('Welcome to LemmyTools. LemmyTools has defaulted to this lemmy instance.');
+	  //instance = window.location.origin;
       }
-		//alert('LemmyTools has defaulted to this lemmy instance. You can change this setting by clicking the options button on the sidebar.');
+		
 }
 if (localStorage.getItem('option_commposVertical') == null)
 {
@@ -201,26 +203,34 @@ else
 }
 if (localStorage.getItem('option_expandImages') == null)
 {
-	  doExpandImages = "true";
+	  expandImages = "true";
 }
 if (localStorage.getItem('option_hideSideBar') == null)
 {
-	  hideSideBar = "true";
+	  hideSideBar = "false";
 }
 if (localStorage.getItem('option_expandImageSize') == null)
 {
-	  doExpandImageSize = "50";
+	  expandImagesize = "50";
 }
-
+if (localStorage.getItem('option_hoverCheck') == null)
+{
+	  hoverCheck = "false";
+}
+if (localStorage.getItem('option_unblurNSFW') == null)
+{
+	  unblurNSFW = "false";
+}
 
 localStorage.setItem("option_commposSide", commposSide);
 localStorage.setItem("option_reverseSide", reverseSide);
 localStorage.setItem("option_homeInstance", instance);
 localStorage.setItem("option_commposVertical", commposVertical);
-localStorage.setItem("option_expandImages", doExpandImages);
-localStorage.setItem("option_expandImageSize", doExpandImageSize);
-localStorage.getItem("option_hideSideBar", hideSideBar);
-
+localStorage.setItem("option_expandImages", expandImages);
+localStorage.setItem("option_expandImageSize", expandImagesize);
+localStorage.setItem("option_hideSideBar", hideSideBar);
+localStorage.setItem("option_hoverCheck", hoverCheck);
+localStorage.setItem("option_unblurNSFW", unblurNSFW);
 }
 else if (open == 3)
 {
@@ -241,17 +251,25 @@ var commposVertical = document.getElementsByName("option_commposVertical")[0];
 value = commposVertical.value;
 commposVertical  = value;
 
-var doExpandImages = document.getElementsByName("option_expandImages")[0];
-value = doExpandImages.checked;
-doExpandImages  = value;
+var expandImages = document.getElementsByName("option_expandImages")[0];
+value = expandImages.checked;
+expandImages  = value;
 
-var doExpandImageSize = document.getElementsByName("option_expandImageSize")[0];
-value = doExpandImageSize.value;
-doExpandImageSize  = value;
+var expandImagesize = document.getElementsByName("option_expandImageSize")[0];
+value = expandImagesize.value;
+expandImagesize  = value;
 
 var hideSideBar = document.getElementsByName("option_hideSideBar")[0];
 value = hideSideBar.checked;
 hideSideBar  = value;
+
+var hoverCheck = document.getElementsByName("option_hoverCheck")[0];
+value = hoverCheck.checked;
+hoverCheck  = value;
+
+var unblurNSFW = document.getElementsByName("option_unblurNSFW")[0];
+value = unblurNSFW.checked;
+unblurNSFW  = value;
 
 if (commposVertical > 85)
 {
@@ -279,8 +297,10 @@ localStorage.setItem("option_reverseSide", reverseSide);
 localStorage.setItem("option_homeInstance", theHomeinstance);
 localStorage.setItem("option_commposVertical", commposVertical);
 localStorage.setItem("option_hideSideBar", hideSideBar);
-localStorage.setItem("option_expandImages", doExpandImages);
-localStorage.setItem("option_expandImageSize", doExpandImageSize);
+localStorage.setItem("option_expandImages", expandImages);
+localStorage.setItem("option_expandImageSize", expandImagesize);
+localStorage.setItem("option_hoverCheck", hoverCheck);
+localStorage.setItem("option_unblurNSFW", unblurNSFW);
 location.reload(true);
 }
 
@@ -288,17 +308,28 @@ commposSide = localStorage.getItem("option_commposSide");
 reverseSide = localStorage.getItem("option_reverseSide");
 instance = localStorage.getItem("option_homeInstance");
 commposVertical = localStorage.getItem("option_commposVertical");
-doExpandImages = localStorage.getItem("option_expandImages");
-doExpandImageSize = localStorage.getItem("option_expandImageSize");
+expandImages = localStorage.getItem("option_expandImages");
+expandImagesize = localStorage.getItem("option_expandImageSize");
 hideSideBar = localStorage.getItem("option_hideSideBar");
+hoverCheck = localStorage.getItem("option_hoverCheck");
+unblurNSFW = localStorage.getItem("option_unblurNSFW");
 
-
-const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical, doExpandImages: doExpandImages, doExpandImageSize: doExpandImageSize, hideSideBar: hideSideBar};
+const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages, expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW};
 return userOptions;
 
 
 }
+function scrollToElement(pageElement) {    
+    var positionX = 0,         
+        positionY = -100;    
 
+    while(pageElement != null){        
+        positionX += pageElement.offsetLeft;        
+        positionY += pageElement.offsetTop;        
+        pageElement = pageElement.offsetParent;        
+        window.scrollTo(positionX, positionY);    
+    }
+}
 
 `;
 
@@ -350,7 +381,7 @@ setInterval(function() {
 document.onmousedown = e => {
 
 
-if (settings.doExpandImages == "true")
+if (settings.expandImages == "true")
 {
 
 
@@ -396,7 +427,7 @@ if (settings.doExpandImages == "true")
   	});
     
    if(e.which === 1 &&  mouseReference.buttonDown && mouseMove) {
-
+		scrollToElement(img);
     document.addEventListener("mouseup", function(e) {
     e.preventDefault();
     mouseReference.buttonDown = false; 
@@ -412,17 +443,16 @@ if (settings.doExpandImages == "true")
     e.preventDefault();
     mouseX = e.clientX;
     mouseY = e.clientY;  
-    var deltaY = 0;
+    var deltaY = mouseY;
     var deltaX = mouseX ;
-    
-   
-      deltaY = (mouseY - initialY) * 1.5;   
-      deltaY += imgheight;
+
+      deltaY = ((initialY / 2) + mouseY) * .7;   
+		
    
     imgTimeout = setTimeout(function() {
     img.style.height = deltaY + "px";  
     img.style.width = img.height / ratio + "px";
-    }, 50);
+    }, 10);
 
  
 } // if e.which
@@ -430,7 +460,10 @@ if (settings.doExpandImages == "true")
 }
 else if ((e.target.id == 'searchdiv') || (e.target.id == 'myDiv'))
 {
-//Toggle();
+if (settings.hoverCheck !== "true")
+{
+Toggle();
+}
 }
 }		// if expand images
 }	// document body e  
@@ -486,7 +519,7 @@ setInterval(function() {
 
 
 //Option Divs
-if (settings.doExpandImages == "true")
+if (settings.expandImages == "true")
 {
  eIcheck = 'checked';
 }
@@ -502,6 +535,23 @@ else
 {
  hSBcheck = '';
 }
+if (settings.hoverCheck == "true")
+{
+ hoverCheck = 'checked';
+}
+else
+{
+ hoverCheck = '';
+}
+if (settings.unblurNSFW == "true")
+{
+ unblurCheck = 'checked';
+}
+else
+{
+unblurCheck = '';
+}
+
 
 var odiv = document.createElement("div");
 odiv.setAttribute("id", "ltOptions");
@@ -514,12 +564,14 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + "</h4></hr>" +
 "</thead></tr>" +
 "<tbody>" +
 "<tr><td><b>HomeInstance URL</b> (Ex: https://yourinstance.lemmy)</td><td><textarea name='option_homeInstance'>" + settings.theInstance + "</textarea></td></tr>" +
-"<tr><td><b>Community Bar Side</b><br /> - default: right</td><td><select name='option_commposSide'><option value='" + settings.positionSide + "'>" + settings.positionSide + "</option><option value='right'>right</option><option value='left'>left</option></select></td></tr>" +
-"<tr><td><b>Community Bar Side Vertical Position </b><br />% from top [0-85] - default: desktop-5, mobile-65</td><td><textarea name='option_commposVertical'>" + settings.positionVertical + "</textarea></td></tr>" +
-"<tr><td><b>Hide/Move SideBar (Trending, ServerInfo, Communities) </b></td><td><input type='checkbox'  name='option_hideSideBar' " + hSBcheck + "/></td></tr>" +
+"<tr><td><b>LemmyTools bar window side</b><br /> - default: right</td><td><select name='option_commposSide'><option value='" + settings.positionSide + "'>" + settings.positionSide + "</option><option value='right'>right</option><option value='left'>left</option></select></td></tr>" +
+"<tr><td><b>LemmyTools bar vertical position </b><br />% from top [0-85] - default: desktop-5, mobile-65</td><td><textarea name='option_commposVertical'>" + settings.positionVertical + "</textarea></td></tr>" +
+"<tr><td><b>Hover to activate LemmyTools bar</b><br />Otherwise click.</td><td><input type='checkbox'  name='option_hoverCheck'" + hoverCheck + "/></td></tr>" +  
+"<tr><td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities) </td><td><input type='checkbox'  name='option_hideSideBar'" + hSBcheck + "/></td></tr>" +
 "<tr><td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand images by clicking and dragging.</td><td><input type='checkbox'  name='option_expandImages' " + eIcheck + "/></td></tr>" +
-"<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post. - default: 50</td><td><textarea name='option_expandImageSize'>" + settings.doExpandImageSize + "</textarea></td></tr>" +
-"<tr><td><button id='LTsaveoptions' onclick='options(3)'>Save /  Close</button></td></tr></tbody></table></div>" +
+"<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post. - default: 50</td><td><textarea name='option_expandImageSize'>" + settings.expandImagesize + "</textarea></td></tr>" +
+"<tr><td><b>Auto unblur NSFW images</b><br /></td><td><input type='checkbox'  name='option_unblurNSFW'" + unblurCheck + "/></td></tr>" +  
+"<tr><td></td><td><button id='LTsaveoptions' onclick='options(3)'>Save /  Close</button></td></tr></tbody></table></div>" +
 "<p> Tested on Lemmy Version: " + ltTestedVer  + " on firefox. " +
 "<br /><h5>LemmyTools Links</h5><hr /><a href='https://thesimplecorner.org/c/lemmytools'>!lemmytools@thesimplecorner.org</a><br />Get it here: <a href='https://github.com/howdy-tsc/LemmyTools'>Github</a> or <a href='https://greasyfork.org/en/scripts/469169-lemmytools'>GreasyFork</a><br />Please submit issues to the github for feature requests and problems: <a href='https://github.com/howdy-tsc/LemmyTools/issues'>Github LemmyTools Issues</a><br /></p><br /><a href='https://ko-fi.com/lemmytools'><img src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png' width='32' />Enjoy LemmyTools? Send a tip!</a>";
 document.body.appendChild(odiv);
@@ -536,23 +588,40 @@ touchdiv.setAttribute("id", "touchdiv");
 var idiv = document.createElement("div");
 idiv.setAttribute("id", "searchdiv");
 idiv.classList.add("ltmenu", "border-secondary", "card");
-idiv.innerHTML = "<h5>LemmyTools " + ltVer + "</h5><span style='float:" + settings.reverseSide + ";'><b><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></b><br /></span><input type='text' id='commsearch' name='commsearchinput' oninput='searchComms(commsearch.value, communityArray, div)' placeholder='Sub search' /><br /><br /></span><div style='clear:both;'></div>";
+idiv.innerHTML = "<span style='float:" + settings.reverseSide + ";'><h5>LemmyTools " + ltVer + "</h5><b><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></b><br /><input type='text' id='commsearch' name='commsearchinput' oninput='searchComms(commsearch.value, communityArray, div)' placeholder='Sub search' /><br /><br /></span><div style='clear:both;'></div>";
 var div = document.createElement("div");
 div.setAttribute("id", "myDiv");
 div.classList.add("ltcommsbar");
 
-// One liner function:
- const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML = css;
 
-//" + (100 - settings.positionVertical) + "
-// Usage: 
- addCSS(".ltmenu {position: fixed; min-width: 240px; width: 8%; top: " + settings.positionVertical +"%;" + settings.positionSide + ": 0; font-size: .75em; display: block; height: 100%; min-height: auto;  z-index:999; overflow:scroll; padding: 10px; border: thick double; border-right:none !important; outline: 1px solid grey !important;}" +
-".ltcommsbar { word-wrap: break-word; overflow:auto; height:100%;}" + 
+var styleString = ".ltmenu {position: fixed; top: " + settings.positionVertical +"%;" + settings.positionSide + ": 0; font-size: .75em; display: block; height: 100%; min-height: auto;  z-index:999; overflow:scroll; padding: 10px; border: thick double; border-right:none !important; outline: 1px solid grey !important;}" +
+".ltmenu input { width: 100%;}" + 
+".ltcommsbar { word-wrap: break-word; overflow:auto; height:100%; width:240px;}" + 
 ".ltbutton {background-color: #ccffe5;}" +
-".img-fluid {width: " + settings.doExpandImageSize + "%}" +
-"#searchdiv {position: fixed; height: 100%; min-height: auto; min-width: 240px; width: 8%; display:block;  z-index:999; overflow: auto; display: block; transition: " + settings.positionSide + " 1s; " + settings.positionSide + " : 0; overflow: auto;}" +
-"#searchdiv:not(:hover) {transition: " + settings.positionSide + " 1s; " + settings.positionSide + " : -215px;}" +
-".ltoptions {position: fixed; min-width: auto; min-height: auto; width: auto; height:auto; top: " + settings.positionVertical +"%;" + "display:none;  margin:0 auto; z-index:1000; padding:0.5%; border: thick double;}");
+".img-fluid {width: " + settings.expandImagesize + "%}" +
+"#searchdiv {position: fixed; height: 100%; min-height: auto; width: 240px; display:block;  z-index:999; overflow: auto; display: block; transition-timing-function: ease; transition: " + settings.positionSide + " .25s; " + settings.positionSide + " : 0; overflow: auto;}" +
+".ltoptions {position: fixed; min-width: auto; min-height: auto; width: auto; height:auto; top: " + settings.positionVertical +"%;" + "display:none;  margin:0 auto; z-index:1000; padding:0.5%; border: thick double;}";
+
+//Hover ltBar
+if (settings.hoverCheck == "true")
+{
+styleString += "#searchdiv:not(:hover) {transition-timing-function: ease; transition: " + settings.positionSide + ".25s; " + settings.positionSide + " : -215px;} ";
+}
+else
+{
+styleString += "#searchdiv:not(:hover) {}";
+}
+if (settings.unblurNSFW == "true")
+{
+styleString += " .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} ";
+}
+else
+{
+styleString += " .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
+}
+
+const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML = css;
+addCSS(styleString);
 
 
 
@@ -611,13 +680,11 @@ console.log("LemmyTools: Got Results >20");
 }
 
 `;
+  
 
-
-(function() {
+(function() { 
     'use strict';
-    if (typeof $ == 'undefined') {
-        var $ = unsafeWindow.jQuery;
-    }
+  	if(typeof $ == 'undefined'){ var $ = unsafeWindow.jQuery; }
     let isLemmy;
     try {
         isLemmy = true;
@@ -633,3 +700,4 @@ console.log("LemmyTools: Got Results >20");
     }
 
 })();
+ 
