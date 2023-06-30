@@ -10,7 +10,9 @@
     <li>Hover to activate lemmy Toolbar</li>
     <li>Significant UI changes</li>
     <li>Reworked easy button for offsite</li>
-   
+   </ul>
+   <p> Fixes </p>
+   <ul>
     <li>Fix for '#' breaking easy subscribe button</li>
     <li>Fix for script breaking other sites due to poor isLemmy implementation.</li>
     <li>Fixed memory allocation issue with eventHandlers</li>
