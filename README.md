@@ -1,4 +1,4 @@
-<h5>LemmyTools 0.1.2 - GreaseMonkey Addon Script</h5>
+<h5>LemmyTools 0.1.2</h5>
 
 
    New for 0.1.2:
