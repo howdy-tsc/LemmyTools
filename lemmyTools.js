@@ -5,7 +5,7 @@
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
-// @run-at 			document-end
+// @run-at 	document-end
 // ==/UserScript==
 
 //todo:
