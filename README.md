@@ -1,5 +1,9 @@
-##### LemmyTools 0.1.2
+##### LemmyTools 0.1.2.1
 
+0.1.2.1 patch:
+*  Fixed LTbar style funkiness on light themes.
+*  Fixed default values for mobile bar vertical position.
+  
 New for 0.1.2:
 
 *   Auto\-Expand and Click&Drag to expand lemmy images!
