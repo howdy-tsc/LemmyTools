@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2
+// @version      0.1.2.1
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -24,7 +24,7 @@ var homeInstance = 'https://thesimplecorner.org';
 
 
 // -------------- VERSION ------------------- 
-const ltVer = '0.1.2';
+const ltVer = '0.1.2.1';
 const ltTestedVer = '0.18';
 var comm = '';
 
@@ -93,7 +93,7 @@ function Toggle(overide) {
     x.style.display = "block";
 			s.style.height = "100%";
 		cs.style.display = "inline";
-    h.innerHTML = "<h6 style='font-size: 0.93rem !important;'><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></h6>";
+    h.innerHTML = "<h6 style='font-size: 0.90rem !important;'><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></h6>";
     s.style[settings.positionSide] = "0%";
 
   	} 
@@ -656,7 +656,7 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + " Options</h4></hr>" +
 "<tr><td><b>LemmyTools Settings:</b></td><td></td></tr>" +
 "<tr><td><b>HomeInstance URL</b><br /> Make sure to edit the homeInstance variable of<br /> the UserScript for the remote instance Home button fix. (Temporary workaround).<br />(Ex: https://yourinstance.lemmy)</td><td><textarea name='option_homeInstance'>" + settings.theInstance + "</textarea></td></tr>" +
 "<tr><td><b>LemmyTools bar window side</b><br /> - default: right</td><td><select name='option_commposSide'><option value='" + settings.positionSide + "'>" + settings.positionSide + "</option><option value='right'>right</option><option value='left'>left</option></select></td></tr>" +
-"<tr><td><b>LemmyTools bar vertical position </b><br />% from top [0-85] - default: desktop-5, mobile-65</td><td><textarea name='option_commposVertical'>" + settings.positionVertical + "</textarea></td></tr>" +
+"<tr><td><b>LemmyTools bar vertical position </b><br />% from top [0-85] - default: desktop-5, mobile-5</td><td><textarea name='option_commposVertical'>" + settings.positionVertical + "</textarea></td></tr>" +
 "<tr><td><b>Hover to activate LemmyTools bar</b><br />Otherwise click.</td><td><input type='checkbox'  name='option_hoverCheck'" + hoverCheck + "/></td></tr>" +  
 "<tr><td><br /><br /></td><td></td></tr>" +
 "<tr><td><b>Site Style and Behaviors:</b></td><td></td></tr>" +
@@ -687,7 +687,7 @@ touchdiv.setAttribute("id", "touchdiv");
 var idiv = document.createElement("div");
 idiv.setAttribute("id", "searchdiv");
 idiv.classList.add("ltmenu", "border-secondary", "card");
-idiv.innerHTML = "<span class='clickAble'  style='float:" + settings.reverseSide + ";'> <header id='ltBarHeader' class='card-header'><h6 style='font-size: 0.93rem !important;'><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></h6></header><input type='text' id='commsearch' name='commsearchinput' oninput='searchComms(commsearch.value, communityArray, div)' placeholder='Search your subscriptions (or visted subs)' /></span><b class='clickAble'>LemmyTools " + ltVer + "</b><div style='clear:both;'></div>";
+idiv.innerHTML = "<span class='clickAble'  style='float:" + settings.reverseSide + ";'> <header id='ltBarHeader' class='card-header'><h6 style='font-size: 0.90rem !important;'><a href=" + settings.theInstance + ">Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find Comms</a> - <a href='#' id='LToptions' onclick='options(" + 1 + ")'>Options</a></h6></header><input type='text' id='commsearch' name='commsearchinput' oninput='searchComms(commsearch.value, communityArray, div)' placeholder='Search your subscriptions (or visted subs)' /></span><b class='clickAble'>LemmyTools " + ltVer + "</b><div style='clear:both;'></div>";
 var div = document.createElement("div");
 div.setAttribute("id", "myDiv");
 div.classList.add("ltcommsbar");
