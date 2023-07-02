@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         LemmyTools_dev
+// @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
 // @version      0.1.2.2
 // @description  A small suite of tools to make Lemmy easier.
