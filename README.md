@@ -1,5 +1,16 @@
-<h5>LemmyTools 0.1.2</h5>
+<h5>LemmyTools 0.1.2.2</h5>
 
+ New/Fixes: 0.1.2.2
+* Fixed Expanding Images (More reliable expanding (click and drag), Fixed issue of having to hide past expanded images to expand current image) 
+* Adding Expanding Image Speed Control in options for fine tuning of expanding images.
+* Removed Scroll Bars from LemmyTools Bar 
+* Fixed CSS breaking community and profile icons/avatars
+* Changed various defaults after further use.
+* Changed styling.
+   
+   0.1.2.1 patch:
+*  Fixed LTbar style funkiness on light themes.
+*  Fixed default values for mobile bar vertical position.
 
    New for 0.1.2:
    <ul>
