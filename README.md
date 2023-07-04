@@ -1,4 +1,4 @@
-<h5>LemmyTools 0.1.2.2</h5>
+<h5>LemmyTools 0.1.2.3</h5>
 
 New/Fixes: 0.1.2.3:
 * Completely re-worked expanding images. Should be much better.
