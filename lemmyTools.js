@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.3
+// @version      0.1.2.4
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -10,9 +10,9 @@
 
 const ltConfig = `
 // ------------ EDIT THIS VARIABLE ---------------------
-var homeInstance = '';
+var homeInstance = 'https://thesimplecorner.org';
 // ------------ END EDIT AREA --------------------------
-// Fixes remote Instance home link
+// Fixes remote Instance home link. Ex: var homeInstance = 'https://thesimplecorner.org';
 
 
 //Nothing below needs edited.
@@ -20,7 +20,7 @@ var homeInstance = '';
 
 
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.3';
+const ltVer = '0.1.2.4';
 const ltTestedVer = '0.18';
 var comm = '';
 
