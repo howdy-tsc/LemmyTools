@@ -1,4 +1,7 @@
-<h5>LemmyTools 0.1.2.3</h5>
+<h5>LemmyTools 0.1.2.4</h5>
+
+0.1.2.4:
+* Fixes mobile styling from 0.1.2.3 release.
 
 New/Fixes: 0.1.2.3:
 * Completely re-worked expanding images. Should be much better.
