@@ -32,7 +32,7 @@ const funcs = `
 
 function isHomeInstanceSet(i2c)
 {
- const isit = false;
+var isit = false;
  if (i2c.length > 3)
  {
   isit = true;
