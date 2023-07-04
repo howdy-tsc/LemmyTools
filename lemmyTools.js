@@ -778,7 +778,7 @@ if (url.includes(settings.theInstance)) {
     communityArray.forEach(_ => count++);
   }
 
-  div.innerHTML += communityArray;
+  div.innerHTML += communityArray.join('');
   if (div.innerHTML.length >= 20) {
 console.log("LemmyTools: Got Results >20");
 
@@ -786,15 +786,15 @@ console.log("LemmyTools: Got Results >20");
       localStorage.setItem("localComms", communityArray);
 			localStorage.setItem("commsCount", count);
     //force update the page
-    searchComms("", communityArray, div);
+    searchComms("", communityArray.join(''), div);
 
   } else {
     console.log("LemmyTools: " + "get localcomms from localstore");
     communityArray = localStorage.getItem("localComms");
 
-    div.innerHTML += communityArray;
+    div.innerHTML += communityArray.join('');
     //force update the page
-    searchComms("", communityArray, div);
+    searchComms("", communityArray.join(''), div);
   }
 
 
