@@ -1,4 +1,12 @@
-<h5>LemmyTools 0.1.2.2</h5>
+<h5>LemmyTools 0.1.2.3</h5>
+
+New/Fixes: 0.1.2.3:
+* Completely re-worked expanding images. Should be much better.
+* LemmyTools Bar is hidden by default. Option added in settings to keep it open. Now all CSS.
+* Removed scroll bars persisting in google chrome on LemmyTools bar.
+* Message for homeInstance variable added to option page if not added.
+* Elemenation of poor eventHandlers leads to much better perforamnce.
+* old.reddit theme from soundjester/lemmy_monkey now being added from cdn instead of manually. 
 
  New/Fixes: 0.1.2.2
 * Fixed Expanding Images (More reliable expanding (click and drag), Fixed issue of having to hide past expanded images to expand current image) 
