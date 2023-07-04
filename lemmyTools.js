@@ -10,9 +10,9 @@
 
 const ltConfig = `
 // ------------ EDIT THIS VARIABLE ---------------------
-var homeInstance = 'https://thesimplecorner.org';
+var homeInstance = '';
 // ------------ END EDIT AREA --------------------------
-// Fixes remote Instance home link. Ex: var homeInstance = 'https://thesimplecorner.org';
+// Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
 
 
 //Nothing below needs edited.
@@ -620,11 +620,6 @@ height = (height/100 * 1);
 
 
 const brandingString = "<span style='vertical-align: super !important; writing-mode: vertical-lr; text-orientation: mixed;'>LemmyTools</span></div><br />"
-
-if (isltMobile())
-{
-brandingString = "</div><br />"
-}
 
 //Comm divs
 var touchdiv = document.createElement("div");
