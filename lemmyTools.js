@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.4
+// @version      0.1.2.5
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -18,11 +18,9 @@ var homeInstance = '';
 //Nothing below needs edited.
 
 
-
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.4';
+const ltVer = '0.1.2.5';
 const ltTestedVer = '0.18';
-var comm = '';
 
 //--------------------------------------------
 `;
@@ -42,39 +40,39 @@ var isit = false;
 
 function isltMobile(){
 if (/Android|iPhone/i.test(navigator.userAgent)) {
-console.log("LemmyTools: " + "is mobile!");
- return true;
-}
-else
-{
-console.log("LemmyTools: " + "is desktop!");
-return false;
-}
+    console.log("LemmyTools: " + "is mobile!");
+    return true;
+  }
+  else
+  {
+    console.log("LemmyTools: " + "is desktop!");
+    return false;
+  }
 }
 
+const mobile = isltMobile();
 
- let remoteCommunityArray = [];
-				
+
+let remoteCommunityArray = [];		
 function update(comm, page, subString, hI) {
 
-     var el = document.getElementById("myDiv");
+var el = document.getElementById("myDiv");
 try{
  if (comm)
 {
-
-				
-       	var browsedComm = "<li><h5>" + comm + "</h5><a href=" + subString + " target='_blank'><button class='ltbutton'>Easy Subscribe</button></a></li>";
-				remoteCommunityArray.push(browsedComm);
+  var browsedComm = "<li><h5>" + comm + "</h5><a href=" + subString + " target='_blank'><button class='ltbutton'>Easy Subscribe</button></a></li>";
+  remoteCommunityArray.push(browsedComm);
 				
  }
 }
 catch{}
 
 return remoteCommunityArray;
-
 }
 
+//Searches communityArray for results in LemmyTools Sidebar.
 function searchComms(id, full, commsdiv) {
+
 
 console.log("LemmyTools: " + "commsearch evt searchinput" + id + commsdiv);
   var url = window.location.href;
@@ -126,27 +124,23 @@ console.log("LemmyTools: " + "Comm Update");
 }
 
 
-
-
 function options(open){
 var odiv = document.getElementById("ltOptions");
 console.log("LemmyTools: " + "Options Functions");
 if (open == 1)
 {
 odiv.style.display = "block";
-
 }
 else if (open == 2){
 //First run set defaults or pull from localstorage.
-
-mobile = isltMobile();
+const mobile = isltMobile();
 
 commposSide = localStorage.getItem("option_commposSide");
 reverseSide = localStorage.getItem("option_reverseSide");
 var instance = localStorage.getItem("option_homeInstance");
 commposVertical = localStorage.getItem("option_commposVertical");
 expandImages = localStorage.getItem("option_expandImages");
-ExpandImageSize = localStorage.getItem("option_ExpandImageSize");
+expandImagesize = localStorage.getItem("option_expandImagesize");
 hoverCheck = localStorage.getItem("option_hoverCheck");
 hideSideBar = localStorage.getItem("option_hideSideBar");
 unblurNSFW = localStorage.getItem("option_unblurNSFW");
@@ -203,14 +197,14 @@ if (localStorage.getItem('option_hideSideBar') == null)
 {
 	  hideSideBar = "false";
 }
-if (localStorage.getItem('option_ExpandImageSize') == null)
+if (localStorage.getItem('option_expandImagesize') == null)
 {		if (mobile)
 {
-	 	  ExpandImageSize = "100";
+	 	  expandImagesize = "100";
 }
 else
 {
-		  ExpandImageSize = "50";
+		  expandImagesize = "50";
 }
 
 }
@@ -235,14 +229,14 @@ else
 }
 if (localStorage.getItem('option_expandImageSpeed') == null)
 {
- expandImageSpeed = "0.30";
+ expandImageSpeed = "0.50";
 }
 localStorage.setItem("option_commposSide", commposSide);
 localStorage.setItem("option_reverseSide", reverseSide);
 localStorage.setItem("option_homeInstance", instance);
 localStorage.setItem("option_commposVertical", commposVertical);
 localStorage.setItem("option_expandImages", expandImages);
-localStorage.setItem("option_ExpandImageSize", ExpandImageSize);
+localStorage.setItem("option_expandImagesize", expandImagesize);
 localStorage.setItem("option_hideSideBar", hideSideBar);
 localStorage.setItem("option_hoverCheck", hoverCheck);
 localStorage.setItem("option_unblurNSFW", unblurNSFW);alienSiteOld
@@ -272,9 +266,9 @@ var expandImages = document.getElementsByName("option_expandImages")[0];
 value = expandImages.checked;
 expandImages  = value;
 
-var ExpandImageSize = document.getElementsByName("option_ExpandImageSize")[0];
-value = ExpandImageSize.value;
-ExpandImageSize  = value;
+var expandImagesize = document.getElementsByName("option_expandImagesize")[0];
+value = expandImagesize.value;
+expandImagesize  = value;
 
 var expandImageSpeed = document.getElementsByName("option_expandImageSpeed")[0];
 value = expandImageSpeed.value;
@@ -332,7 +326,7 @@ localStorage.setItem("option_homeInstance", theHomeinstance);
 localStorage.setItem("option_commposVertical", commposVertical);
 localStorage.setItem("option_hideSideBar", hideSideBar);
 localStorage.setItem("option_expandImages", expandImages);
-localStorage.setItem("option_ExpandImageSize", ExpandImageSize);
+localStorage.setItem("option_expandImagesize", expandImagesize);
 localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
 localStorage.setItem("option_hoverCheck", hoverCheck);
 localStorage.setItem("option_unblurNSFW", unblurNSFW);
@@ -345,14 +339,14 @@ reverseSide = localStorage.getItem("option_reverseSide");
 instance = localStorage.getItem("option_homeInstance");
 commposVertical = localStorage.getItem("option_commposVertical");
 expandImages = localStorage.getItem("option_expandImages");
-ExpandImageSize = localStorage.getItem("option_ExpandImageSize");
+expandImagesize = localStorage.getItem("option_expandImagesize");
 expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
 hideSideBar = localStorage.getItem("option_hideSideBar");
 hoverCheck = localStorage.getItem("option_hoverCheck");
 unblurNSFW = localStorage.getItem("option_unblurNSFW");
 alienSiteOld= localStorage.getItem("option_alienSiteOld");
 
-const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages, ExpandImageSize: ExpandImageSize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, expandImageSpeed: expandImageSpeed};
+const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages,expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, expandImageSpeed: expandImageSpeed};
 return userOptions;
 
 
@@ -423,12 +417,21 @@ xhr.send();
 const main = `
 // LemmyTools
 
-
-
 //check if first run or load saved settings
 let settings = options("2");
 
 
+/* The provided restyling was graciously used with permission from the developer(s) of Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
+
+// @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
+// @namespace    https://github.com/soundjester/lemmy_monkey
+// @description  Reformat widescreen desktop to look more like Reddit
+// @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
+
+Thank you.
+*/
+
+//Add Compact AlienSiteOld Theme
 if (settings.alienSiteOld == "true")
 {
 console.log('LemmyTools: Adding alienSiteOld');
@@ -446,82 +449,6 @@ var community = broken[1];
 var subString = settings.theInstance + "/search?q=!" + community + "@" + site + "&type=All&listingType=All&page=1";
 subString = subString.replace('#', '');
 var count = 0;
-
-
-//Expand Images----------------------------------------------
-
-setInterval(function() {	
-if (settings.expandImages == "true")
-{
-		let theImages = [];
-		theImages = document.getElementsByClassName('img-expanded');
-   for (i=0; i < theImages.length; i++)
-   {
-   	 theImages[i].addEventListener('mousedown', startDrag);
-   }
-		
-	
-     
-      let posX;
-      let node;
-      function startDrag(e){
-      	e.preventDefault();
-        
-        node = e.currentTarget;
-        node.style.cursor = 'nwse-resize';
-        try {
-        node.closest("a").setAttribute('onclick', 'return false;');
-        node.srcElement.closest("a").setAttribute('overflow', 'auto;');
-        node.preventDefault();
-        }catch{}
-	
-        posX = e.clientX;
-        document.addEventListener('mousemove', resize);
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('dblclick', openImage);
-      }
-      function resize(e){
-      	e.preventDefault();
-        const nextPosX = e.pageX;
-        node.style.width = (node.offsetWidth) + (nextPosX - posX) * settings.expandImageSpeed + "px";
-        posX = nextPosX;
-      }
-      function stopDrag(e){
-      	e.preventDefault();
-        node.style.cursor = 'default';
-        document.removeEventListener('mousemove', resize);
-        document.removeEventListener('mouseup', stopDrag);
-      }
-       function openImage(e){
-        window.open(node.src, '_blank');
-        document.removeEventListener('dblclick', openImage);
-        document.removeEventListener('mousemove', resize);
-        document.removeEventListener('mouseup', stopDrag);
-       
-      }
-
-
-}		// if expand images
-
-//Removes the offset from images.
-try{removeClassByWildcard("offset-*");}catch{}
-
-			//sidebar settings do
-   		if (settings.hideSideBar == "true"){
-          try{
-            var sidebarSubscribed = document.getElementById("sidebarContainer");
-            sidebarSubscribed.style.display = 'none';
-					  removeClassByWildcard("site-sideba*");
-
-            var serverInfo = document.getElementById("sidebarInfo");
-            var serverInfoString = serverInfo.innerHtml;
-            serverInfo.style.display = 'none';
-          }
-            catch {}
-          }
-
-
-}, 500);
 
 
 //Option Divs
@@ -578,6 +505,8 @@ hIAlertString = "";
 }
 
 
+//Create Lemmy Tools Elements ----------------------------------------
+
 var odiv = document.createElement("div");
 odiv.setAttribute("id", "ltOptions");
 odiv.classList.add("ltoptions", "border-secondary", "card");
@@ -598,8 +527,8 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + " Options</h4></hr>" +
 "<tr><td><b>Compact Lemmy to old.Reddit Re-format (Lemmy v0.18) style</b><br />Like the old alien.site but lemmy! <br />Defaults - Desktop: On / Mobile: Off</td><td><input type='checkbox'  name='option_alienSiteOld'" + aSOcheck + "/></td></tr>" +
 "<tr><td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.</td><td><input type='checkbox'  name='option_hideSideBar'" + hSBcheck + "/></td></tr>" +
 "<tr><td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand images by clicking and dragging.<br />Doubleclick to open full image.</td><td><input type='checkbox'  name='option_expandImages' " + eIcheck + "/></td></tr>" +
-"<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 / Mobile: 100</td><td><textarea name='option_ExpandImageSize'>" + settings.ExpandImageSize + "</textarea></td></tr>" +
-"<tr><td><b>Expand Image Speed</b><br />Speed multiplier for expanding images. If your images seem to expand<br /> to fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.30 </td><td><textarea name='option_expandImageSpeed'>" + settings.expandImageSpeed + "</textarea></td></tr>" +
+"<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 / Mobile: 100</td><td><textarea name='option_expandImagesize'>" + settings.expandImagesize + "</textarea></td></tr>" +
+"<tr><td><b>Expand Image Speed</b><br />Speed multiplier for expanding images. If your images seem to expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td><td><textarea name='option_expandImageSpeed'>" + settings.expandImageSpeed + "</textarea></td></tr>" +
 "<tr><td><b>Auto unblur NSFW images</b><br /></td><td><input type='checkbox'  name='option_unblurNSFW'" + unblurCheck + "/></td></tr>" +
 "<tr><td></td><td><button id='LTsaveoptions' onclick='options(3)'>Save /  Close</button></td></tr></tbody></table></div>" +
 "<p> Tested on Lemmy Version: " + ltTestedVer  + " on firefox. " +
@@ -610,16 +539,12 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + " Options</h4></hr>" +
 "<a href='https://github.com/soundjester/lemmy_monkey'> Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)</a></li>";
 
 
-document.body.appendChild(odiv);
-
-
-var height = window.innerHeight
-|| document.documentElement.clientHeight
-|| document.body.clientHeight;
-height = (height/100 * 1);
-
-
-const brandingString = "<span style='vertical-align: super !important; writing-mode: vertical-lr; text-orientation: mixed;'>LemmyTools</span></div><br />"
+//Adjust clickable area for mobile (add brandingString if desktop)
+var brandingString = "";
+if (mobile !== true)
+{
+brandingString = "<span style='vertical-align: super !important; writing-mode: vertical-lr; text-orientation: mixed;'>LemmyTools</span>";
+}
 
 //Comm divs
 var touchdiv = document.createElement("div");
@@ -633,18 +558,19 @@ idiv.innerHTML = "<div id='ltActiveSearchDiv' class='ltActiveSearchDiv'><header 
 "</div>" +
 "<div id='ltPassiveSearchDiv' class='ltPassiveSearchDiv'><img width=30 height=30  class='targetImg' src='data:image/webp;base64,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' />" +
 brandingString +
+"</div><br />" +
 " ";
 
 var div = document.createElement("div");
 div.setAttribute("id", "myDiv");
 div.classList.add("ltcommsbar");
 
-
 var styleString = ".ltmenu {position: fixed; top: " + settings.positionVertical +"%;" + settings.positionSide + ": 0; font-size: .75rem; display: block; height: 100%; min-height: auto;" +
 "z-index:999; overflow:scroll; border: thick double; border-right:none !important; outline: 1px solid grey !important; }" +
 ".ltActiveSearchDiv {font-size: 0.9rem; width: 100%;}" +
 ".ltmenu input { width: 100%;}" +
 ".ltPassiveSearchDiv {display:none; width: 100%;}" +
+"#myDiv li { list-style-type: none;}" +
 "#myDiv hr {display:block; }" +
 "#searchdiv {" + settings.positionSide +": 0; position: fixed; height:100%; min-height: auto; width: 240px; display:block;  z-index:999; overflow: scroll; display: block; transition-timing-function: ease;  transition: " + settings.positionSide + " .25s; transition-delay: 0, 0.25s; overflow: auto;}" +
 ".ltbutton {background-color: #ccffe5;}" +
@@ -676,7 +602,8 @@ styleString += " " +
 "#myDiv:not(:hover) {animation: showNavOut 500ms ease-in-out both; display:none; height:0; transition-timing-function: ease;  transition: height;  transition-duration: 1.0; transition-delay: 0.5s;}" +
 ".ltPassiveSearchDiv {display:block; float: " + settings.reverseSide + "; padding-" + settings.positionSide + ": 200px;}" +
 "#ltActiveSearchDiv {display:none; animation: showNav 500ms ease-in-out both;}" +
-".post-listings .img-fluid {width: " + settings.ExpandImageSize + "%}" +
+".post-listings .img-fluid {width: " + settings.expandImagesize + "%}" +
+"#sidebarSubscribed {display:none;}" + 
 "#searchdiv { " + settings.positionSide +": -200px; position: fixed; height:110px; min-height: auto; width: 240px; display:block;  z-index:999; overflow: auto; display: block; transition-timing-function: ease;  transition: " + settings.positionSide + ", height; transition-duration: 0.25s, 0.25s; transition-delay: 0.25s, 0.25s; animation: showNavOut 250ms ease-in-out both;}" +
 "#searchdiv:hover .ltActiveSearchDiv {display:block;}" +
 "#searchdiv:hover .ltPassiveSearchDiv {display:none;}" +
@@ -693,26 +620,35 @@ styleString += "" +
 "";
 }
 
+//Adjust clickable area for mobile (remove brandingString)
+if (mobile == true)
+{
+styleString += "" +
+"#searchdiv {height: 35px;}" +
+"";
+}
+
+
+
+
 // ADD MAIN CSS
 const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML = css;
 addCSS(styleString);
 
 
 
+//add lemmytools elements to page
+document.body.appendChild(odiv);
+document.body.appendChild(idiv);
+idiv.appendChild(div);
 
-  url = location.href;
-  console.log("LemmyTools: " + "url is " + url)
-  // -----------------------------------------------
-  //Add divs to page;
-  document.body.appendChild(idiv);
-  idiv.appendChild(div);
-
-let rCommunityArray = [];
 
 //Easier Subscribe Buttons ---------------------------
+url = location.href;
+console.log("LemmyTools: " + "url is " + url)
+let rCommunityArray = [];
 //Browsing remote instance
 setInterval(function() {	
-var url = window.location.href;
 var currentPage = url;
 var broken = url.split('/c/');
 var site = broken[0];
@@ -759,11 +695,9 @@ subString = subString.replace('#', '');
   currentPage = location.href;
 }, 1000);
 
-//Logged in
-// -----------------------------------------------
 
 
-
+// Update homeInstance Comms for bar to use
 
 let communityArray = new Array();
 if (url.includes(settings.theInstance)) {
@@ -777,7 +711,8 @@ if (url.includes(settings.theInstance)) {
     count = 0;
     communityArray.forEach(_ => count++);
   }
-  communityArray = communityArray.join(''); // just get it over with and turn it into a string here.
+
+communityArray = communityArray.join('');
 
   div.innerHTML += communityArray;
   if (div.innerHTML.length >= 20) {
@@ -790,13 +725,14 @@ console.log("LemmyTools: Got Results >20");
     searchComms("", communityArray, div);
 
   } else {
-    console.log("LemmyTools: " + "get localcomms from localstore joined");
+    console.log("LemmyTools: " + "get localcomms from localstore");
     communityArray = localStorage.getItem("localComms");
-    console.log(communityArray);
+
     div.innerHTML += communityArray;
     //force update the page
     searchComms("", communityArray, div);
   }
+
 
 }
   else {
@@ -807,39 +743,96 @@ console.log("LemmyTools: Got Results >20");
 }
 
 
+//Expand Images----------------------------------------------
+
+setInterval(function() {	
+if (settings.expandImages == "true")
+{
+		let theImages = [];
+		theImages = document.getElementsByClassName('img-expanded');
+   for (i=0; i < theImages.length; i++)
+   {
+   	 theImages[i].addEventListener('mousedown', startDrag);
+
+   }
+	
+      let posX;
+      let node;
+      function startDrag(e){
+      	e.preventDefault();
+        
+        node = e.currentTarget;
+        node.style.cursor = 'nwse-resize';
+        try {
+        node.closest("a").setAttribute('onclick', 'return false;');
+        node.srcElement.closest("a").setAttribute('overflow', 'auto;');
+        node.preventDefault();
+        }catch{}
+	
+        posX = e.clientX;
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopDrag);
+       
+      }
+      function resize(e){
+      	e.preventDefault();
+        const nextPosX = e.pageX;
+        node.style.width = (node.offsetWidth) + (nextPosX - posX) * settings.expandImageSpeed + "px";
+        posX = nextPosX;
+      }
+      function stopDrag(e){
+      	e.preventDefault();
+        node.style.cursor = 'default';
+        document.removeEventListener('mousemove', resize);
+        document.removeEventListener('mouseup', stopDrag);
+      }
+       
+
+
+}		// if expand images
+
+//Removes the offset from images.
+try{removeClassByWildcard("offset-*");}catch{}
+
+			//sidebar settings do
+   		if (settings.hideSideBar == "true"){
+          try{
+            var sidebarSubscribed = document.getElementById("sidebarContainer");
+            sidebarSubscribed.style.display = 'none';
+					  removeClassByWildcard("site-sideba*");
+
+            var serverInfo = document.getElementById("sidebarInfo");
+            var serverInfoString = serverInfo.innerHtml;
+            serverInfo.style.display = 'none';
+          }
+            catch {}
+          }
+
+
+}, 500);
 
 
 `;
 
-/* The provided restyling was graciously used with permission from the developer(s) of Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-
-// @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-// @namespace    https://github.com/soundjester/lemmy_monkey
-// @description  Reformat widescreen desktop to look more like Reddit
-// @version      2.4
-// @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
-
-Thank you.
-*/
 
 
-
+//If lemmy do
 (function() {
-  'use strict';
+    'use strict';
 
-  let isLemmy;
-  try {
-    isLemmy = true;
-    isLemmy = document.head.querySelector("[name~=Description][content]").content === "Lemmy";
-  } catch (_er) {
-    isLemmy = false;
-  }
+    let isLemmy;
+    try {
+        isLemmy = true;
+        isLemmy = document.head.querySelector("[name~=Description][content]").content === "Lemmy";
+    } catch (_er) {
+        isLemmy = false;
+    }
 
-  if (isLemmy) {
+    if (isLemmy) {
 
-    document.body.appendChild(document.createElement("script")).innerHTML = ltConfig;
-    document.head.appendChild(document.createElement("script")).innerHTML = funcs;
-    document.body.appendChild(document.createElement("script")).innerHTML = main;
-  }
+        document.body.appendChild(document.createElement("script")).innerHTML = ltConfig;
+        document.head.appendChild(document.createElement("script")).innerHTML = funcs;
+        document.body.appendChild(document.createElement("script")).innerHTML = main;
+    }
 
 })();
