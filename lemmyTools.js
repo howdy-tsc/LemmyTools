@@ -777,6 +777,7 @@ if (url.includes(settings.theInstance)) {
     count = 0;
     communityArray.forEach(_ => count++);
   }
+  communityArray = communityArray.join(''); // just get it over with and turn it into a string here.
 
   div.innerHTML += communityArray;
   if (div.innerHTML.length >= 20) {
@@ -789,14 +790,13 @@ console.log("LemmyTools: Got Results >20");
     searchComms("", communityArray, div);
 
   } else {
-    console.log("LemmyTools: " + "get localcomms from localstore");
+    console.log("LemmyTools: " + "get localcomms from localstore joined");
     communityArray = localStorage.getItem("localComms");
-
+    console.log(communityArray);
     div.innerHTML += communityArray;
     //force update the page
     searchComms("", communityArray, div);
   }
-
 
 }
   else {
