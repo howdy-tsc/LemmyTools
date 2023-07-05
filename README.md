@@ -5,6 +5,7 @@
 * Fixed "," in community Array (Thanks Christoph-Wagner!)
 * Removed dblclick open images event for post images (may re-implement later)
 * Fixed mobile styling for hover area button (made it smaller)
+* Fixed easy subscribe button displaying incorrect subStrings with extra '@' - Thanks Christoph! 
 * Added global (mobile variable).
 * Cleaned up code (a bit).
 
