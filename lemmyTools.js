@@ -655,7 +655,8 @@ var site = broken[0];
 site = site.replace('https://', '');
 var community = broken[1];
 try{broken2 = community.split('?'); community = broken2[0];}catch{}
-var subString = settings.theInstance + "/search?q=!" + community + "@" + site + "&type=All&listingType=All&page=1";
+var communityName = community.indexOf('@') > -1 ? community : community + "@" + site;
+var subString = settings.theInstance + "/search?q=!" + communityName + "&type=All&listingType=All&page=1";
 subString = subString.replace('#', '');
 
 
