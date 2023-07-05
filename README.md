@@ -2,11 +2,11 @@
  
  0.1.2.5 - Fixed "," in community Array (Thanks Christoph-Wagner!)
 
-Fixed "," in community Array (Thanks Christoph-Wagner!)
-Removed dblclick open images event for post images (may re-implement later)
-Fixed mobile styling for hover area button (made it smaller)
-Added global (mobile variable).
-Cleaned up code (a bit).
+* Fixed "," in community Array (Thanks Christoph-Wagner!)
+* Removed dblclick open images event for post images (may re-implement later)
+* Fixed mobile styling for hover area button (made it smaller)
+* Added global (mobile variable).
+* Cleaned up code (a bit).
 
 0.1.2.4:
 * Fixes mobile styling from 0.1.2.3 release.
