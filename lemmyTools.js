@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.6
+// @version      0.1.2.6p1
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -19,7 +19,7 @@ var homeInstance = '';
 
 
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.6';
+const ltVer = '0.1.2.6p1';
 const ltTestedVer = '0.18';
 
 //--------------------------------------------
@@ -698,8 +698,11 @@ var broken = url.split('/c/');
 var site = broken[0];
 site = site.replace('https://', '');
 var community = broken[1];
-try{broken2 = community.split('?'); community = broken2[0];}catch{}
+try{
+broken2 = community.split('?'); community = broken2[0];
 var communityName = community.indexOf('@') > -1 ? community : community + "@" + site;
+}catch{}
+
 var subString = settings.theInstance + "/search?q=!" + communityName + "&type=All&listingType=All&page=1";
 subString = subString.replace('#', '');
 
