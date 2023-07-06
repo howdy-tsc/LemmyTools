@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.5
+// @version      0.1.2.6
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -19,7 +19,7 @@ var homeInstance = '';
 
 
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.5';
+const ltVer = '0.1.2.6';
 const ltTestedVer = '0.18';
 
 //--------------------------------------------
@@ -27,6 +27,11 @@ const ltTestedVer = '0.18';
 
 
 const funcs = `
+/* Globals */
+
+const mobile = isltMobile();
+let remoteCommunityArray = [];	
+
 
 function isHomeInstanceSet(i2c)
 {
@@ -37,6 +42,7 @@ var isit = false;
  }
  return isit;
 }
+
 
 function isltMobile(){
 if (/Android|iPhone/i.test(navigator.userAgent)) {
@@ -50,10 +56,8 @@ if (/Android|iPhone/i.test(navigator.userAgent)) {
   }
 }
 
-const mobile = isltMobile();
 
-
-let remoteCommunityArray = [];		
+//Remote Instance
 function update(comm, page, subString, hI) {
 
 var el = document.getElementById("myDiv");
@@ -73,7 +77,6 @@ return remoteCommunityArray;
 //Searches communityArray for results in LemmyTools Sidebar.
 function searchComms(id, full, commsdiv) {
 
-
 console.log("LemmyTools: " + "commsearch evt searchinput" + id + commsdiv);
   var url = window.location.href;
   var query = id.toLowerCase();
@@ -91,6 +94,8 @@ else
 }
 }
 else {
+
+//This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
     commsdiv.innerHTML = full;
     console.log("LemmyTools: " + "Searching for:" + query);
     var children = commsdiv.getElementsByTagName("li");
@@ -99,7 +104,7 @@ else {
     var found;
     for (var i = 0; i < children.length; i++) {
       if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
-        found = children[i].innerHTML + '<br /><hr />';
+        found = children[i].innerHTML + '<br />';
         console.log("LemmyTools: " + "Found: " + found);
         data.push(found);
       }
@@ -113,16 +118,20 @@ else {
 
 
 function commupdate(id, page, data) {
-console.log("LemmyTools: " + "Comm Update");
+console.log("LemmyTools: " + "LTbar Update");
   var count = -1;
 
       //console.log("LemmyTools: " + "updating " + id + " commsearch with: " + data);
+
       data.forEach(_ => count++);
+			data = data.join('');
       id.innerHTML = "";
       id.innerHTML += "Results: " + count + "<hr /><br />";
       id.innerHTML += data;
 }
 
+
+//Options page, get from localstorage (site data)
 
 function options(open){
 var odiv = document.getElementById("ltOptions");
@@ -145,6 +154,7 @@ hoverCheck = localStorage.getItem("option_hoverCheck");
 hideSideBar = localStorage.getItem("option_hideSideBar");
 unblurNSFW = localStorage.getItem("option_unblurNSFW");
 alienSiteOld = localStorage.getItem("option_alienSiteOld");
+alienSiteOldReadWidth = localStorage.getItem("option_alienSiteOldReadWidth");
 expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
 
 
@@ -218,14 +228,23 @@ if (localStorage.getItem('option_unblurNSFW') == null)
 }
 if (localStorage.getItem('option_alienSiteOld') == null)
 {
+
 if (mobile)
 {
 	 	  alienSiteOld = "false";
+			
+			
 }
 else
 {
 		  alienSiteOld = "true";
 }
+
+
+}
+if (localStorage.getItem('option_alienSiteOldReadWidth') == null)
+{
+alienSiteOldReadWidth = "740";
 }
 if (localStorage.getItem('option_expandImageSpeed') == null)
 {
@@ -239,8 +258,9 @@ localStorage.setItem("option_expandImages", expandImages);
 localStorage.setItem("option_expandImagesize", expandImagesize);
 localStorage.setItem("option_hideSideBar", hideSideBar);
 localStorage.setItem("option_hoverCheck", hoverCheck);
-localStorage.setItem("option_unblurNSFW", unblurNSFW);alienSiteOld
+localStorage.setItem("option_unblurNSFW", unblurNSFW);
 localStorage.setItem("option_alienSiteOld", alienSiteOld);
+localStorage.setItem("option_alienSiteOldReadWidth", alienSiteOldReadWidth);
 localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
 }
 else if (open == 3)
@@ -290,6 +310,12 @@ var alienSiteOld = document.getElementsByName("option_alienSiteOld")[0];
 value = alienSiteOld.checked;
 alienSiteOld = value;
 
+var alienSiteOldReadWidth = document.getElementsByName("option_alienSiteOldReadWidth")[0];
+value = alienSiteOldReadWidth.value;
+alienSiteOldReadWidth = value;
+
+
+
 if (commposVertical > 85)
 {
 commposVertical = 85;
@@ -331,6 +357,7 @@ localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
 localStorage.setItem("option_hoverCheck", hoverCheck);
 localStorage.setItem("option_unblurNSFW", unblurNSFW);
 localStorage.setItem("option_alienSiteOld", alienSiteOld);
+localStorage.setItem("option_alienSiteOldReadWidth", alienSiteOldReadWidth);
 location.reload(true);
 }
 
@@ -344,13 +371,16 @@ expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
 hideSideBar = localStorage.getItem("option_hideSideBar");
 hoverCheck = localStorage.getItem("option_hoverCheck");
 unblurNSFW = localStorage.getItem("option_unblurNSFW");
-alienSiteOld= localStorage.getItem("option_alienSiteOld");
+alienSiteOld = localStorage.getItem("option_alienSiteOld");
+alienSiteOldReadWidth = localStorage.getItem("option_alienSiteOldReadWidth");
 
-const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages,expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, expandImageSpeed: expandImageSpeed};
+const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages,expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, alienSiteOldReadWidth: alienSiteOldReadWidth, expandImageSpeed: expandImageSpeed};
+console.log("LemmyTools: Settings" + userOptions);
 return userOptions;
 
 
 }
+
 function scrollToElement(pageElement) {
     var positionX = 0,
         positionY = -130;
@@ -362,6 +392,8 @@ function scrollToElement(pageElement) {
         window.scrollTo(positionX, positionY, "smooth");
     }
 }
+
+//Used for offset removal
 function removeClassByWildcard(divClass) {
   // If the class ends with a "*", then it matches all classes that start with the given class name.
   if (divClass.endsWith("*")) {
@@ -401,6 +433,7 @@ function removeClassByWildcard(divClass) {
   }
 
 }
+
 function alienSiteOldStyle_compact() {
 var xhr=new XMLHttpRequest();
 xhr.open("GET","https://cdn.jsdelivr.net/gh/soundjester/lemmy_monkey@main/old.reddit.compact.user.js");
@@ -410,9 +443,11 @@ xhr.onload=function(){
 }
 xhr.send();
 }
+
+
 `;
 
-/*--- */
+
 
 const main = `
 // LemmyTools
@@ -524,11 +559,11 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + " Options</h4></hr>" +
 "<tr><td><b>Keep LemmyTools Bar Open</b><br />Works best for widescreen desktops.</td><td><input type='checkbox'  name='option_hoverCheck'" + hoverCheck + "/></td></tr>" +
 "<tr><td><br /><br /></td><td></td></tr>" +
 "<tr><td><b>Site Style and Behaviors:</b></td><td></td></tr>" +
-"<tr><td><b>Compact Lemmy to old.Reddit Re-format (Lemmy v0.18) style</b><br />Like the old alien.site but lemmy! <br />Defaults - Desktop: On / Mobile: Off</td><td><input type='checkbox'  name='option_alienSiteOld'" + aSOcheck + "/></td></tr>" +
+"<tr><td><b>Compact Lemmy to old.Reddit Re-format (Lemmy v0.18) style</b><br />Like the old alien.site but lemmy! <br />Defaults - Desktop: On / Mobile: Off <br /><br /> Post width / comment width setting in pixels. Increase or Decrease to your reading preference while viewing posts. (Default 740) </td><td><input type='checkbox'  name='option_alienSiteOld'" + aSOcheck + "/><br /><br /><br /><textarea name='option_alienSiteOldReadWidth'>" + settings.alienSiteOldReadWidth + "</textarea></td></tr>" +
 "<tr><td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.</td><td><input type='checkbox'  name='option_hideSideBar'" + hSBcheck + "/></td></tr>" +
 "<tr><td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand images by clicking and dragging.<br />Doubleclick to open full image.</td><td><input type='checkbox'  name='option_expandImages' " + eIcheck + "/></td></tr>" +
 "<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 / Mobile: 100</td><td><textarea name='option_expandImagesize'>" + settings.expandImagesize + "</textarea></td></tr>" +
-"<tr><td><b>Expand Image Speed</b><br />Speed multiplier for expanding images. If your images seem to expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td><td><textarea name='option_expandImageSpeed'>" + settings.expandImageSpeed + "</textarea></td></tr>" +
+"<tr><td><b>Expand Image Speed</b><br />Speed multiplier for click&drag expanding images. If your images seem to expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td><td><textarea name='option_expandImageSpeed'>" + settings.expandImageSpeed + "</textarea></td></tr>" +
 "<tr><td><b>Auto unblur NSFW images</b><br /></td><td><input type='checkbox'  name='option_unblurNSFW'" + unblurCheck + "/></td></tr>" +
 "<tr><td></td><td><button id='LTsaveoptions' onclick='options(3)'>Save /  Close</button></td></tr></tbody></table></div>" +
 "<p> Tested on Lemmy Version: " + ltTestedVer  + " on firefox. " +
@@ -628,6 +663,15 @@ styleString += "" +
 "";
 }
 
+//Adjust Comment/Post width (for reading with compact old style)
+if (settings.alienSiteOld == "true")
+{
+styleString += "" +
+"#postContent, .md-div, .alert-warning  {max-width: 740px !important; }" +
+".mb-3.row { max-width: " + settings.alienSiteOldReadWidth + "px !important; }" +
+".comment { max-width: " + settings.alienSiteOldReadWidth + "px !important; }" +
+"";
+}
 
 
 
@@ -655,8 +699,7 @@ var site = broken[0];
 site = site.replace('https://', '');
 var community = broken[1];
 try{broken2 = community.split('?'); community = broken2[0];}catch{}
-var communityName = community.indexOf('@') > -1 ? community : community + "@" + site;
-var subString = settings.theInstance + "/search?q=!" + communityName + "&type=All&listingType=All&page=1";
+var subString = settings.theInstance + "/search?q=!" + community + "@" + site + "&type=All&listingType=All&page=1";
 subString = subString.replace('#', '');
 
 
@@ -742,6 +785,7 @@ console.log("LemmyTools: Got Results >20");
 	//Toggle(0);
 
 }
+
 
 
 //Expand Images----------------------------------------------
