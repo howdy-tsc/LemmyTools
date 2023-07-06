@@ -1,4 +1,9 @@
-<h5>LemmyTools 0.1.2.5</h5>
+<h5>LemmyTools 0.1.2.6</h5>
+
+ 0.1.2.6 - 
+ * Added aliensite.Old width in options with 740px default, 
+ * cleaned up LTBar search results (no more <hr>.
+
  
  0.1.2.5 - Fixed "," in community Array (Thanks Christoph-Wagner!)
 
