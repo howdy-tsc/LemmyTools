@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.6p1
+// @version      0.1.2.6p2
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
@@ -10,7 +10,7 @@
 
 const ltConfig = `
 // ------------ EDIT THIS VARIABLE ---------------------
-var homeInstance = '';
+var homeInstance = 'https://thesimplecorner.org';
 // ------------ END EDIT AREA --------------------------
 // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
 
@@ -19,7 +19,7 @@ var homeInstance = '';
 
 
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.6p1';
+const ltVer = '0.1.2.6p2';
 const ltTestedVer = '0.18';
 
 //--------------------------------------------
@@ -605,6 +605,7 @@ var styleString = ".ltmenu {position: fixed; top: " + settings.positionVertical 
 ".ltActiveSearchDiv {font-size: 0.9rem; width: 100%;}" +
 ".ltmenu input { width: 100%;}" +
 ".ltPassiveSearchDiv {display:none; width: 100%;}" +
+".post-listings .img-fluid {width: " + settings.expandImagesize + "%}" +
 "#myDiv li { list-style-type: none;}" +
 "#myDiv hr {display:block; }" +
 "#searchdiv {" + settings.positionSide +": 0; position: fixed; height:100%; min-height: auto; width: 240px; display:block;  z-index:999; overflow: scroll; display: block; transition-timing-function: ease;  transition: " + settings.positionSide + " .25s; transition-delay: 0, 0.25s; overflow: auto;}" +
@@ -637,7 +638,6 @@ styleString += " " +
 "#myDiv:not(:hover) {animation: showNavOut 500ms ease-in-out both; display:none; height:0; transition-timing-function: ease;  transition: height;  transition-duration: 1.0; transition-delay: 0.5s;}" +
 ".ltPassiveSearchDiv {display:block; float: " + settings.reverseSide + "; padding-" + settings.positionSide + ": 200px;}" +
 "#ltActiveSearchDiv {display:none; animation: showNav 500ms ease-in-out both;}" +
-".post-listings .img-fluid {width: " + settings.expandImagesize + "%}" +
 "#sidebarSubscribed {display:none;}" + 
 "#searchdiv { " + settings.positionSide +": -200px; position: fixed; height:110px; min-height: auto; width: 240px; display:block;  z-index:999; overflow: auto; display: block; transition-timing-function: ease;  transition: " + settings.positionSide + ", height; transition-duration: 0.25s, 0.25s; transition-delay: 0.25s, 0.25s; animation: showNavOut 250ms ease-in-out both;}" +
 "#searchdiv:hover .ltActiveSearchDiv {display:block;}" +
