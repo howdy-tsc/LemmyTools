@@ -66,7 +66,7 @@ try{
  if (comm)
 {
   var browsedComm = "<li><h5>" + comm + "</h5></li>" +
-"<li><a href='" + homeInstance + "/c/" + page + "' target='_blank'><button class='ltbutton'>Browse/Sub on Home Instance</button></a><br /><a href='" + subString + "' target='_blank'><button class='ltbutton'>Alternative Subscribe Method</button></a></li><br /><br />Use the Alternative Subscribe if the community doesn't exist on your instance already.";
+"<li><a href='" + homeInstance + "/c/" + page + "' target='_blank'><button class='ltbutton'>Browse/Sub on Home Instance</button></a><br /><a href='" + subString + "' target='_blank'><button class='ltbutton'>Alternative Subscribe Method</button></a></li>";
 
 
   remoteCommunityArray.push(browsedComm);
