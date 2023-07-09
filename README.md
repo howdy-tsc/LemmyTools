@@ -1,6 +1,17 @@
-<h5>LemmyTools - ReadMe</h5>
+<h3>LemmyTools - ReadMe</h3>
 
-<p>Installation and Configuration:</p>
+<p><b>Current Features: 0.1.2.7</b></p>
+<li>Adds a positional side bar that has a searchable list of communities</li>
+<li>Click&drag to resize images</li>
+<li>Show all images on page automatically or by a button click</li>
+<li>Adds the ability to use the old.reddit style script by soundjester/lemmy_monkey: https://github.com/soundjester/lemmy_monkey (Also: Option to edit post and comment size for easier reading).</li>
+<li>Auto unblur NSFW images</li>
+<li>A link back to home instance on remote instances</li>
+<li>Browse remote community on home instance</li>
+<li>Subscribe to instance easier that doesn't exist on your home instance.</li>
+
+<br />
+<p><b>Installation and Configuration:</b></p>
 <p>1 - Browser must have a Userscript addon (Tampermonkey, Greasemonkey, Etc...). Tested with Greasemonkey.</p>
 <p>2 - Download either the .JS file or install from <a href="https://greasyfork.org/en/scripts/469169-lemmytools">greasyfork.</a></p></p>
 <p>3 - Set home lemmy instance via options page once script is loaded (and manually edit the homeInstance variable in script for all functionality)</p>
