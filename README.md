@@ -3,12 +3,15 @@
 <p><b>Current Features: 0.1.2.7</b></p>
 <li>Adds a positional side bar that has a searchable list of communities</li>
 <li>Click&drag to resize images</li>
+<li>Set image size after clicking thumbnail</li>
+<li>Hide Lemmy Sidebars</li>
 <li>Show all images on page automatically or by a button click</li>
 <li>Adds the ability to use the old.reddit style script by soundjester/lemmy_monkey: https://github.com/soundjester/lemmy_monkey (Also: Option to edit post and comment size for easier reading).</li>
 <li>Auto unblur NSFW images</li>
 <li>A link back to home instance on remote instances</li>
 <li>Browse remote community on home instance</li>
 <li>Subscribe to instance easier that doesn't exist on your home instance.</li>
+<li>Works and styled for mobile use as well.</li>
 
 <br />
 <p><b>Installation and Configuration:</b></p>
