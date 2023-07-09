@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name         LemmyTools2
-// @namespace    https://thesimplecorner.org/c/lemmytools2
+// @name         LemmyTools
+// @namespace    https://thesimplecorner.org/c/lemmytools
 // @version      0.2.0-preview
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
+// @author       @cwagner@lemmy.cwagner.me
 // @grant        none
 // @include      https://*
 // ==/UserScript==
@@ -18,7 +19,7 @@
   const LogInformation = 1;
   const LogImportant = 2;
   // ------------ EDIT THIS VARIABLE ---------------------
-  const homeInstance = "https://lemmy.cwagner.me/";
+  const homeInstance = "";
 
   // Choose a log level for the console:
   const logLevel = LogDebug;
