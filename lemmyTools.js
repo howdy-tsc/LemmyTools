@@ -953,7 +953,6 @@ console.log("P: " + pUrl );
 
     let isLemmy;
     try {
-        isLemmy = true;
         isLemmy = document.head.querySelector("[name~=Description][content]").content === "Lemmy";
     } catch (_er) {
         isLemmy = false;
