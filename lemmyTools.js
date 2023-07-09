@@ -1,16 +1,17 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.1.2.6p2
+// @version      0.1.2.7
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @include      https://*
+// @require			 https://code.jquery.com/jquery-3.7.0.slim.min.js
 // ==/UserScript==
 
 
 const ltConfig = `
 // ------------ EDIT THIS VARIABLE ---------------------
-var homeInstance = 'https://thesimplecorner.org';
+var homeInstance = '';
 // ------------ END EDIT AREA --------------------------
 // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
 
@@ -19,8 +20,8 @@ var homeInstance = 'https://thesimplecorner.org';
 
 
 // -------------- VERSION -------------------
-const ltVer = '0.1.2.6p2';
-const ltTestedVer = '0.18';
+const ltVer = '0.1.2.7';
+const ltTestedVer = '0.18.1';
 
 //--------------------------------------------
 `;
@@ -59,12 +60,15 @@ if (/Android|iPhone/i.test(navigator.userAgent)) {
 
 //Remote Instance
 function update(comm, page, subString, hI) {
-
+console.log("update function");
 var el = document.getElementById("myDiv");
 try{
  if (comm)
 {
-  var browsedComm = "<li><h5>" + comm + "</h5><a href=" + subString + " target='_blank'><button class='ltbutton'>Easy Subscribe</button></a></li>";
+  var browsedComm = "<li><h5>" + comm + "</h5></li>" +
+"<li><a href='" + homeInstance + "/c/" + page + "' target='_blank'><button class='ltbutton'>Browse/Sub on Home Instance</button></a><br /><a href='" + subString + "' target='_blank'><button class='ltbutton'>Alternative Subscribe Method</button></a></li><br /><br />Use the Alternative Subscribe if the community doesn't exist on your instance already.";
+
+
   remoteCommunityArray.push(browsedComm);
 				
  }
@@ -156,6 +160,7 @@ unblurNSFW = localStorage.getItem("option_unblurNSFW");
 alienSiteOld = localStorage.getItem("option_alienSiteOld");
 alienSiteOldReadWidth = localStorage.getItem("option_alienSiteOldReadWidth");
 expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
+showAllImages = localStorage.getItem("option_showAllImages");
 
 
 if (localStorage.getItem('option_commposSide') == null)
@@ -250,6 +255,12 @@ if (localStorage.getItem('option_expandImageSpeed') == null)
 {
  expandImageSpeed = "0.50";
 }
+if (localStorage.getItem('option_showAllImages') == null)
+{
+	  showAllImages = "false";
+}
+
+
 localStorage.setItem("option_commposSide", commposSide);
 localStorage.setItem("option_reverseSide", reverseSide);
 localStorage.setItem("option_homeInstance", instance);
@@ -262,6 +273,8 @@ localStorage.setItem("option_unblurNSFW", unblurNSFW);
 localStorage.setItem("option_alienSiteOld", alienSiteOld);
 localStorage.setItem("option_alienSiteOldReadWidth", alienSiteOldReadWidth);
 localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
+localStorage.setItem("option_showAllImages", showAllImages);
+
 }
 else if (open == 3)
 {
@@ -314,6 +327,9 @@ var alienSiteOldReadWidth = document.getElementsByName("option_alienSiteOldReadW
 value = alienSiteOldReadWidth.value;
 alienSiteOldReadWidth = value;
 
+var showAllImages = document.getElementsByName("option_showAllImages")[0];
+value = showAllImages.checked;
+showAllImages = value;
 
 
 if (commposVertical > 85)
@@ -358,6 +374,7 @@ localStorage.setItem("option_hoverCheck", hoverCheck);
 localStorage.setItem("option_unblurNSFW", unblurNSFW);
 localStorage.setItem("option_alienSiteOld", alienSiteOld);
 localStorage.setItem("option_alienSiteOldReadWidth", alienSiteOldReadWidth);
+localStorage.setItem("option_showAllImages", showAllImages);
 location.reload(true);
 }
 
@@ -373,8 +390,9 @@ hoverCheck = localStorage.getItem("option_hoverCheck");
 unblurNSFW = localStorage.getItem("option_unblurNSFW");
 alienSiteOld = localStorage.getItem("option_alienSiteOld");
 alienSiteOldReadWidth = localStorage.getItem("option_alienSiteOldReadWidth");
+showAllImages = localStorage.getItem("option_showAllImages");
 
-const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages,expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, alienSiteOldReadWidth: alienSiteOldReadWidth, expandImageSpeed: expandImageSpeed};
+const userOptions = {theInstance: instance, positionSide: commposSide, reverseSide: reverseSide, positionVertical: commposVertical,expandImages: expandImages,expandImagesize: expandImagesize, hideSideBar: hideSideBar, hoverCheck: hoverCheck, unblurNSFW: unblurNSFW, alienSiteOld: alienSiteOld, alienSiteOldReadWidth: alienSiteOldReadWidth, expandImageSpeed: expandImageSpeed, showAllImages: showAllImages};
 console.log("LemmyTools: Settings" + userOptions);
 return userOptions;
 
@@ -445,6 +463,34 @@ xhr.send();
 }
 
 
+//Expand all images on page
+function allImages(h)
+{
+let clickableImages = [];
+
+clickableImages = document.querySelectorAll('[aria-label="Expand here"]');
+console.log(clickableImages.length);
+  console.log(clickableImages);
+if (h != 1)
+{
+for (i=0; i<clickableImages.length; i=i+2)
+{
+try{
+clickableImages[i].click();
+clickableImages[i].show();
+}catch{}
+}
+}
+else
+{
+//lazy - need to figure out way to handle on dom iter
+location.reload(true);
+}
+
+clickableImages = "";
+} //end of function
+
+
 `;
 
 
@@ -475,15 +521,15 @@ alienSiteOldStyle_compact();
 
 
 /* Script */
-var url = window.location.href;
-var currentPage = url;
-var broken = url.split('/c/');
-var site = broken[0];
-site = site.replace('https://', '');
-var community = broken[1];
-var subString = settings.theInstance + "/search?q=!" + community + "@" + site + "&type=All&listingType=All&page=1";
-subString = subString.replace('#', '');
+url = window.location.href;
+console.log("LemmyTools: " + "url is " + url)
 var count = 0;
+
+
+//Keep Updated
+setInterval(function (){
+url = window.location.href;
+}, 1000);
 
 
 //Option Divs
@@ -527,6 +573,14 @@ else
 {
 aSOcheck = '';
 }
+if (settings.showAllImages == "true")
+{
+ showAllImagesCheck = 'checked';
+}
+else
+{
+ showAllImagesCheck = '';
+}
 
 var hIAlertString = '';
 //Is HomeInstance Manually Set For WorkAround
@@ -564,6 +618,7 @@ odiv.innerHTML = "<h4>LemmyTools " + ltVer + " Options</h4></hr>" +
 "<tr><td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand images by clicking and dragging.<br />Doubleclick to open full image.</td><td><input type='checkbox'  name='option_expandImages' " + eIcheck + "/></td></tr>" +
 "<tr><td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 / Mobile: 100</td><td><textarea name='option_expandImagesize'>" + settings.expandImagesize + "</textarea></td></tr>" +
 "<tr><td><b>Expand Image Speed</b><br />Speed multiplier for click&drag expanding images. If your images seem to expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td><td><textarea name='option_expandImageSpeed'>" + settings.expandImageSpeed + "</textarea></td></tr>" +
+"<tr><td><b>Automatically open image posts</b><br /></td><td><input type='checkbox'  name='option_showAllImages'" + showAllImagesCheck + "/></td></tr>" +
 "<tr><td><b>Auto unblur NSFW images</b><br /></td><td><input type='checkbox'  name='option_unblurNSFW'" + unblurCheck + "/></td></tr>" +
 "<tr><td></td><td><button id='LTsaveoptions' onclick='options(3)'>Save /  Close</button></td></tr></tbody></table></div>" +
 "<p> Tested on Lemmy Version: " + ltTestedVer  + " on firefox. " +
@@ -688,12 +743,11 @@ idiv.appendChild(div);
 
 
 //Easier Subscribe Buttons ---------------------------
-url = location.href;
-console.log("LemmyTools: " + "url is " + url)
+
+var currentPage = '';
+setInterval(function (){
 let rCommunityArray = [];
 //Browsing remote instance
-setInterval(function() {	
-var currentPage = url;
 var broken = url.split('/c/');
 var site = broken[0];
 site = site.replace('https://', '');
@@ -702,45 +756,30 @@ try{
 broken2 = community.split('?'); community = broken2[0];
 var communityName = community.indexOf('@') > -1 ? community : community + "@" + site;
 }catch{}
-
 var subString = settings.theInstance + "/search?q=!" + communityName + "&type=All&listingType=All&page=1";
 subString = subString.replace('#', '');
+var count = 0;
 
 
-  url = window.location.href;
   if (currentPage != location.href) {
+  currentPage = location.href;
     console.log("LemmyTools: " + "Easy Sub Running...");
     if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")) {
-      console.log("LemmyTools: " + "On remote lemmy");
-      if ((url.includes(settings.theInstance) == false) && ((url.includes("/c/") || url.includes("/post/") || url.includes("/comment/") || url.includes("/communities")))) {
+ 		if ((url.includes(settings.theInstance) == false) && ((url.includes("/c/") || url.includes("/post/") || url.includes("/comment/") || url.includes("/communities")))) {
         console.log("LemmyTools: " + "On remote instance community" + "Button to: " + subString);
-      rCommunityArray =  update(community, url, subString, settings.theInstance);
+      console.log("LemmyTools: " + "On remote lemmy");
+        console.log("LemmyTools: " + "On remote instance community" + "Button to: " + subString);
+     rCommunityArray =  update(community, communityName, subString, settings.theInstance);
   let rDup = [...new Set(rCommunityArray)];
   rCommunityArray = rCommunityArray.reverse();
 	div.innerHTML = '';
 	div.innerHTML += rCommunityArray;
 	communityArray = rCommunityArray;
 
-      }
-    }
-  }else if (document.querySelector('meta[name="Description"]').content.includes("Lemmy")) {
-  if ((url.includes(settings.theInstance) == false) && ((url.includes("/c/") || url.includes("/post/") || url.includes("/comment/") || url.includes("/communities")))) {
-    console.log("LemmyTools: " + "On remote instance community - DIRECT -" + "Button to: " + subString);
-  rCommunityArray =  update(community, url, subString, settings.theInstance);
-  let rDup = [...new Set(rCommunityArray)];
-  rCommunityArray = rDup;
-	rCommunityArray = rCommunityArray.reverse();
-	div.innerHTML = '';
-	div.innerHTML += rCommunityArray;
-	communityArray = rCommunityArray;
-
-  }
-
+    
 }
-
-
-
-  currentPage = location.href;
+}
+}
 }, 1000);
 
 
@@ -858,7 +897,50 @@ try{removeClassByWildcard("offset-*");}catch{}
           }
 
 
+//Show All Images Functionality on button toggle.
+try{
+addImageButtonArea = document.getElementsByClassName('row align-items-center mb-3 g-3');
+if ((addImageButtonArea[0].innerHTML.indexOf('showAllImages') == -1) && (settings.showAllImages != "true"))
+{
+addImageButtonArea[0].appendChild(document.createElement("div")).innerHTML = "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>";
+showImagesButton = document.getElementById("showAllImages");
+showImagesButton.addEventListener("click", function (e) { 
+
+if (showImagesButton.value == 'Show All Images')
+{
+	showImagesButton.value = 'Hide All Images';
+	allImages();
+}
+else
+{
+	showImagesButton.value = 'Show All Images';
+	allImages(1);
+}
+});
+}
+}catch {}
+
+
 }, 500);
+
+
+//Open Images Always
+var pUrl = "";
+
+openimages = setInterval(function(){
+if (settings.showAllImages == "true")
+{
+console.log("url: " + url);
+if ((pUrl.length <= 3) || (pUrl != url))
+{
+allImages();
+}
+pUrl = url; 
+console.log("P: " + pUrl );
+
+}
+}, 2000);
+
 
 
 `;
