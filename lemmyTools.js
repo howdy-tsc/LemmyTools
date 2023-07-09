@@ -44,7 +44,7 @@
   function ltLog(msg, level) {
     level = level || LogImportant;
     if (level < logLevel) return;
-    console.log(`[LemmyTools] ${msg}`);
+    console.log("[LemmyTools]", msg);
   }
 
   function isLemmySite() {
@@ -77,9 +77,11 @@
   function update(comm, page, subString) {
     try {
       if (comm) {
-        const browsedComm = `<li>
-    <h5>${comm}</h5>
-    <a href=${subString} target='_blank'><button class='ltbutton'>Easy Subscribe</button></a>
+        const browsedComm = `<li><h5>${comm}</h5></li>
+<li>
+    <a href='${homeInstance}/c/${page}' target='_blank'><button type="button" class='ltbutton'>Browse/Sub on Home Instance</button></a>
+    <br />
+    <a href='${subString}' target='_blank'><button type="button" class='ltbutton'>Alternative Subscribe Method</button></a>
 </li>`;
         remoteCommunityArray.push(browsedComm);
       }
@@ -89,8 +91,8 @@
   }
 
   //Searches communityArray for results in LemmyTools Sidebar.
-  function searchComms(query, full, commsdiv) {
-    ltLog(`commsearch evt searchinput${query}${commsdiv}`);
+  function searchComms(query, full) {
+    ltLog(`commsearch evt searchinput${query}${div}`, LogDebug);
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
@@ -98,40 +100,40 @@
     if (query === "") {
       const commsCount = localStorage.getItem("commsCount");
       if (commsCount == null || full.length < 1) {
-        commsdiv.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
+        div.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
 If this is your first time running the script, set your lemmy homeinstance in the option page. 
 [${ltVer}] - Manually enter your home lemmy instance in script for offsite home button functionality. (temporary)]. <br /><br /> 
 If you don’t see your subscribed communities here simply login to your lemmy and then click the LemmyTools home button above. `;
       } else {
-        commsdiv.innerHTML = `Communities: ${commsCount}<hr />${full}`;
+        div.innerHTML = `Communities: ${commsCount}<hr />${full}`;
       }
     } else {
       //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
-      commsdiv.innerHTML = full;
-      ltLog(`Searching for:${query}`);
-      const children = commsdiv.getElementsByTagName("li");
-      ltLog(`Children found: ${children.length}`);
+      div.innerHTML = full;
+      ltLog(`Searching for:${query}`, LogDebug);
+      const children = div.getElementsByTagName("li");
+      ltLog(`Children found: ${children.length}`, LogDebug);
       let data = [""];
       let found;
       for (let i = 0; i < children.length; i++) {
         if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
           found = children[i].innerHTML + "<br />";
-          ltLog(`Found: ${found}`);
+          ltLog(`Found: ${found}`, LogDebug);
           data.push(found);
         }
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
-      commupdate(commsdiv, url, resultSet);
+      commupdate(url, resultSet);
     }
   }
 
-  function commupdate(id, page, data) {
+  function commupdate(page, data) {
     ltLog("LTbar Update");
     let count = -1;
     data.forEach((_) => count++);
     data = data.join("");
-    id.innerHTML = `Results: ${count}<hr /><br />${data}`;
+    div.innerHTML = `Results: ${count}<hr /><br />${data}`;
   }
   const optionsKey = "LemmyToolsOptions";
 
@@ -166,34 +168,33 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           alienSiteOld: !mobile,
           alienSiteOldReadWidth: 740,
           expandImageSpeed: 0.5,
+          showAllImages: false,
         },
         getSettingsFromLocalStorage()
       );
-      console.log("What", userOptions);
       localStorage.setItem(optionsKey, JSON.stringify(userOptions));
     } else if (open === 3) {
       //save button
       odiv.style.display = "none";
 
-      // console.log(userOptions.commposSide);
       userOptions.commposSide =
         document.getElementById("option_commposSide").value;
-      // console.log(userOptions.commposSide);
       userOptions.instance = document.getElementById(
         "option_homeInstance"
       ).value;
-      userOptions.commposVertical = document.getElementById(
-        "option_commposVertical"
-      ).value;
+      userOptions.commposVertical = parseInt(
+        document.getElementById("option_commposVertical").value
+      );
       userOptions.expandImages = document.getElementById(
         "option_expandImages"
       ).checked;
-      userOptions.expandImagesize = document.getElementById(
-        "option_expandImagesize"
-      ).value;
-      userOptions.expandImageSpeed = document.getElementById(
-        "option_expandImageSpeed"
-      ).value;
+      userOptions.expandImagesize = parseInt(
+        document.getElementById("option_expandImagesize").value,
+        10
+      );
+      userOptions.expandImageSpeed = parseFloat(
+        document.getElementById("option_expandImageSpeed").value
+      );
       userOptions.hideSideBar =
         document.getElementById("option_hideSideBar").checked;
       userOptions.hoverCheck =
@@ -203,18 +204,12 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       userOptions.alienSiteOld = document.getElementById(
         "option_alienSiteOld"
       ).checked;
-      userOptions.alienSiteOldReadWidth = document.getElementById(
-        "option_alienSiteOldReadWidth"
-      ).value;
-      userOptions.instance = document.getElementById(
-        "option_homeInstance"
-      ).value;
-      userOptions.instance = document.getElementById(
-        "option_homeInstance"
-      ).value;
-      userOptions.instance = document.getElementById(
-        "option_homeInstance"
-      ).value;
+      userOptions.alienSiteOldReadWidth = parseInt(
+        document.getElementById("option_alienSiteOldReadWidth").value
+      );
+      userOptions.showAllImages = document.getElementById(
+        "option_showAllImages"
+      ).checked;
 
       if (userOptions.commposVertical > 85) {
         userOptions.commposVertical = 85;
@@ -280,6 +275,25 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       }
     }
   }
+  //Expand all images on page
+  function allImages(show) {
+    const clickableImages = document.querySelectorAll(
+      '[aria-label="Expand here"]'
+    );
+    ltLog(clickableImages.length, LogDebug);
+    ltLog(clickableImages, LogDebug);
+    if (show) {
+      for (let i = 0; i < clickableImages.length; i = i + 2) {
+        try {
+          clickableImages[i].click();
+          clickableImages[i].show();
+        } catch {}
+      }
+    } else {
+      //lazy - need to figure out way to handle on dom iter
+      location.reload(true);
+    }
+  }
 
   // todo maybe something safer
   function alienSiteOldStyle_compact() {
@@ -321,13 +335,29 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   }
 
   /* Script */
-  const url = window.location.href;
+  let url = document.location.href;
+  window.onload = () => {
+    if (settings.showAllImages) allImages(true); // initial expansion
+    const body = document.querySelector("body");
+    const observer = new MutationObserver((_) => {
+      if (url !== document.location.href) {
+        url = document.location.href;
+        if (settings.showAllImages) {
+          setTimeout(() => {
+            allImages(true);
+          }, 1000); // todo there has to be a better way to wait for the content to be loaded …
+        }
+      }
+    });
+    observer.observe(body, { childList: true, subtree: true });
+  };
   let count = 0;
   let eIcheck = checkedIfTrue(settings.expandImages);
   let hSBcheck = checkedIfTrue(settings.hideSideBar);
   let hoverCheck = checkedIfTrue(settings.hoverCheck);
   let unblurCheck = checkedIfTrue(settings.unblurNSFW);
   let aSOcheck = checkedIfTrue(settings.alienSiteOld);
+  let showAllImagesCheck = checkedIfTrue(settings.showAllImages);
   //Option Divs
   //Is HomeInstance Manually Set For WorkAround
 
@@ -414,6 +444,10 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           <td><textarea id='option_expandImageSpeed'>${settings.expandImageSpeed}</textarea></td>
         </tr>
         <tr>
+            <td><b>Automatically open image posts</b><br /></td>
+            <td><input type='checkbox' id='option_showAllImages'${showAllImagesCheck}/></td>
+        </tr>
+        <tr>
           <td><b>Auto unblur NSFW images</b><br /></td>
           <td><input type='checkbox' id='option_unblurNSFW' ${unblurCheck} /></td>
         </tr>
@@ -459,7 +493,6 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           src='data:image/webp;base64,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' />
       </h6>
     </header><input type='text' id='commsearch' name='commsearchinput'
-      oninput='searchComms(commsearch.value, communityArray, div)'
       placeholder='Search your subscriptions (or visted subs)' />
     <div id='ltBarSubHeader' class='clickAble'>LemmyTools ${ltVer} - <a href='#' id='LToptions'>Options</a></div>
     <div style='clear:both;'></div>
@@ -710,6 +743,12 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     options(1);
   });
 
+  const searchInput = document.getElementById("commsearch");
+  searchInput.addEventListener("input", (e) => {
+    e.preventDefault();
+    searchComms(searchInput.value, communityArray);
+  });
+
   document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
     e.preventDefault();
     options(3);
@@ -770,14 +809,14 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       localStorage.setItem("localComms", communityArray);
       localStorage.setItem("commsCount", count.toString()); // todo why store the count? communityArray.length everywhere should be easier
       //force update the page
-      searchComms("", communityArray, div);
+      searchComms("", communityArray);
     } else {
       ltLog("get localcomms from localstore", LogDebug);
       communityArray = localStorage.getItem("localComms");
 
       div.innerHTML += communityArray;
       //force update the page
-      searchComms("", communityArray, div);
+      searchComms("", communityArray);
     }
   } else {
     ltLog("On Remote Instance - Bar", LogDebug);
@@ -845,5 +884,31 @@ If you don’t see your subscribed communities here simply login to your lemmy a
         serverInfo.style.display = "none";
       } catch {}
     }
+
+    //Show All Images Functionality on button toggle.
+    try {
+      let addImageButtonArea = document.getElementsByClassName(
+        "row align-items-center mb-3 g-3"
+      );
+      if (
+        addImageButtonArea[0].innerHTML.indexOf("showAllImages") === -1 &&
+        !settings.showAllImages
+      ) {
+        addImageButtonArea[0].appendChild(
+          document.createElement("div")
+        ).innerHTML =
+          "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>";
+        const showImagesButton = document.getElementById("showAllImages");
+        showImagesButton.addEventListener("click", function () {
+          if (showImagesButton.value === "Show All Images") {
+            showImagesButton.value = "Hide All Images";
+            allImages(true);
+          } else {
+            showImagesButton.value = "Show All Images";
+            allImages(false);
+          }
+        });
+      }
+    } catch {}
   }, 500);
 })();
