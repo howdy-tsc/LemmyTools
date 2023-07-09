@@ -1,4 +1,8 @@
-<h5>LemmyTools 0.1.2.6</h5>
+<h5>LemmyTools 0.1.2.7</h5>
+
+* Added Show All Images Button or Option, 
+* Added Browse Sub on Home Instance on remote instances button.
+* Some code cleanup.
 
  0.1.2.6 - 
  * Added aliensite.Old width in options with 740px default, 
