@@ -8,8 +8,9 @@
 
 <p>Get it here: <a href="https://github.com/howdy-tsc/LemmyTools">Github</a> or <a href="https://greasyfork.org/en/scripts/469169-lemmytools">GreasyFork</a></p>
 <p><b></b>Please submit issues to the github for feature requests and problems: <a href="https://github.com/howdy-tsc/LemmyTools/issues">Github LemmyTools Issues</a></b></p>
-
-
+<br />
+<br />
+<img src="https://thesimplecorner.org/pictrs/image/ccb4f4f2-7a34-4866-9a80-eafddcfdea25.jpeg" />
 
 
 
