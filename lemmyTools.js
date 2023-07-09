@@ -18,7 +18,7 @@
   const LogInformation = 1;
   const LogImportant = 2;
   // ------------ EDIT THIS VARIABLE ---------------------
-  var homeInstance = "https://lemmy.cwagner.me/";
+  const homeInstance = "https://lemmy.cwagner.me/";
 
   // Choose a log level for the console:
   const logLevel = LogDebug;
@@ -52,15 +52,17 @@
       document.querySelector('meta[name="Description"]').content === "Lemmy"
     );
   }
+
   function notHomeAndInCommunity(url) {
     return (
-      url.includes(settings.theInstance) === false &&
+      url.includes(settings.instance) === false &&
       (url.includes("/c/") ||
         url.includes("/post/") ||
         url.includes("/comment/") ||
         url.includes("/communities"))
     );
   }
+
   function isltMobile() {
     if (/Android|iPhone/i.test(navigator.userAgent)) {
       ltLog("is mobile!");
@@ -72,7 +74,7 @@
   }
 
   //Remote Instance
-  function update(comm, page, subString, hI) {
+  function update(comm, page, subString) {
     try {
       if (comm) {
         const browsedComm = `<li>
@@ -131,247 +133,114 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     data = data.join("");
     id.innerHTML = `Results: ${count}<hr /><br />${data}`;
   }
+  const optionsKey = "LemmyToolsOptions";
 
-  //Options page, get from localstorage (site data)
-
+  function getSettingsFromLocalStorage() {
+    try {
+      return JSON.parse(localStorage.getItem(optionsKey) || "{}");
+    } catch (_) {
+      return {};
+    }
+  }
   function options(open) {
     const odiv = document.getElementById("ltOptions");
-    ltLog("Options Functions");
-    if (open == 1) {
+    ltLog(`Options Functions: ${open}`);
+    let userOptions = {};
+    if (open === 1) {
       odiv.style.display = "block";
-    } else if (open == 2) {
+    } else if (open === 2) {
       //First run set defaults or pull from localstorage.
       const mobile = isltMobile();
-
-      commposSide = localStorage.getItem("option_commposSide");
-      reverseSide = localStorage.getItem("option_reverseSide");
-      var instance = localStorage.getItem("option_homeInstance");
-      commposVertical = localStorage.getItem("option_commposVertical");
-      expandImages = localStorage.getItem("option_expandImages");
-      expandImagesize = localStorage.getItem("option_expandImagesize");
-      hoverCheck = localStorage.getItem("option_hoverCheck");
-      hideSideBar = localStorage.getItem("option_hideSideBar");
-      unblurNSFW = localStorage.getItem("option_unblurNSFW");
-      alienSiteOld = localStorage.getItem("option_alienSiteOld");
-      alienSiteOldReadWidth = localStorage.getItem(
-        "option_alienSiteOldReadWidth"
+      userOptions = Object.assign(
+        {},
+        {
+          commposSide: mobile ? "left" : "right",
+          reverseSide: mobile ? "right" : "left",
+          instance: homeInstance || window.location.origin,
+          commposVertical: 0,
+          expandImages: true,
+          hideSideBar: false,
+          expandImagesize: mobile ? 100 : 50,
+          hoverCheck: false,
+          unblurNSFW: false,
+          alienSiteOld: !mobile,
+          alienSiteOldReadWidth: 740,
+          expandImageSpeed: 0.5,
+        },
+        getSettingsFromLocalStorage()
       );
-      expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
-
-      if (localStorage.getItem("option_commposSide") == null) {
-        ltLog("First Run Defaults");
-        commposSide = "right";
-        reverseSide = "left";
-        if (mobile) {
-          commposSide = "left";
-          reverseSide = "right";
-        } else {
-          commposSide = "right";
-          reverseSide = "left";
-        }
-      }
-      if (localStorage.getItem("option_homeInstance") == null) {
-        if (homeInstance != "") {
-          instance = homeInstance;
-        } else {
-          // alert('Welcome to LemmyTools' + ltVer + '. LemmyTools has defaulted to this lemmy instance. For all LemmyTools features to work please edit the homeInstance variable in the userscript. Thank you and I hope you enjoy LemmyTools! - @Howdy');
-          instance = window.location.origin;
-        }
-      }
-      if (localStorage.getItem("option_commposVertical") == null) {
-        if (mobile) {
-          commposVertical = "0";
-        } else {
-          commposVertical = "0";
-        }
-      }
-      if (localStorage.getItem("option_expandImages") == null) {
-        expandImages = "true";
-      }
-      if (localStorage.getItem("option_hideSideBar") == null) {
-        hideSideBar = "false";
-      }
-      if (localStorage.getItem("option_expandImagesize") == null) {
-        if (mobile) {
-          expandImagesize = "100";
-        } else {
-          expandImagesize = "50";
-        }
-      }
-      if (localStorage.getItem("option_hoverCheck") == null) {
-        hoverCheck = "false";
-      }
-      if (localStorage.getItem("option_unblurNSFW") == null) {
-        unblurNSFW = "false";
-      }
-      if (localStorage.getItem("option_alienSiteOld") == null) {
-        if (mobile) {
-          alienSiteOld = "false";
-        } else {
-          alienSiteOld = "true";
-        }
-      }
-      if (localStorage.getItem("option_alienSiteOldReadWidth") == null) {
-        alienSiteOldReadWidth = "740";
-      }
-      if (localStorage.getItem("option_expandImageSpeed") == null) {
-        expandImageSpeed = "0.50";
-      }
-      localStorage.setItem("option_commposSide", commposSide);
-      localStorage.setItem("option_reverseSide", reverseSide);
-      localStorage.setItem("option_homeInstance", instance);
-      localStorage.setItem("option_commposVertical", commposVertical);
-      localStorage.setItem("option_expandImages", expandImages);
-      localStorage.setItem("option_expandImagesize", expandImagesize);
-      localStorage.setItem("option_hideSideBar", hideSideBar);
-      localStorage.setItem("option_hoverCheck", hoverCheck);
-      localStorage.setItem("option_unblurNSFW", unblurNSFW);
-      localStorage.setItem("option_alienSiteOld", alienSiteOld);
-      localStorage.setItem(
-        "option_alienSiteOldReadWidth",
-        alienSiteOldReadWidth
-      );
-      localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
-    } else if (open == 3) {
+      console.log("What", userOptions);
+      localStorage.setItem(optionsKey, JSON.stringify(userOptions));
+    } else if (open === 3) {
       //save button
       odiv.style.display = "none";
 
-      var commposSide = document.getElementsByName("option_commposSide")[0];
-      var value = commposSide.options[commposSide.selectedIndex].value;
-      commposSide = value;
-
-      let theHomeinstance = document.getElementsByName(
+      // console.log(userOptions.commposSide);
+      userOptions.commposSide =
+        document.getElementById("option_commposSide").value;
+      // console.log(userOptions.commposSide);
+      userOptions.instance = document.getElementById(
         "option_homeInstance"
-      )[0];
-      value = theHomeinstance.value;
-      theHomeinstance = value;
-
-      var commposVertical = document.getElementsByName(
+      ).value;
+      userOptions.commposVertical = document.getElementById(
         "option_commposVertical"
-      )[0];
-      value = commposVertical.value;
-      commposVertical = value;
-
-      var expandImages = document.getElementsByName("option_expandImages")[0];
-      value = expandImages.checked;
-      expandImages = value;
-
-      var expandImagesize = document.getElementsByName(
+      ).value;
+      userOptions.expandImages = document.getElementById(
+        "option_expandImages"
+      ).checked;
+      userOptions.expandImagesize = document.getElementById(
         "option_expandImagesize"
-      )[0];
-      value = expandImagesize.value;
-      expandImagesize = value;
-
-      var expandImageSpeed = document.getElementsByName(
+      ).value;
+      userOptions.expandImageSpeed = document.getElementById(
         "option_expandImageSpeed"
-      )[0];
-      value = expandImageSpeed.value;
-      expandImageSpeed = value;
-
-      var hideSideBar = document.getElementsByName("option_hideSideBar")[0];
-      value = hideSideBar.checked;
-      hideSideBar = value;
-
-      var hoverCheck = document.getElementsByName("option_hoverCheck")[0];
-      value = hoverCheck.checked;
-      hoverCheck = value;
-
-      var unblurNSFW = document.getElementsByName("option_unblurNSFW")[0];
-      value = unblurNSFW.checked;
-      unblurNSFW = value;
-
-      var alienSiteOld = document.getElementsByName("option_alienSiteOld")[0];
-      value = alienSiteOld.checked;
-      alienSiteOld = value;
-
-      var alienSiteOldReadWidth = document.getElementsByName(
+      ).value;
+      userOptions.hideSideBar =
+        document.getElementById("option_hideSideBar").checked;
+      userOptions.hoverCheck =
+        document.getElementById("option_hoverCheck").checked;
+      userOptions.unblurNSFW =
+        document.getElementById("option_unblurNSFW").checked;
+      userOptions.alienSiteOld = document.getElementById(
+        "option_alienSiteOld"
+      ).checked;
+      userOptions.alienSiteOldReadWidth = document.getElementById(
         "option_alienSiteOldReadWidth"
-      )[0];
-      value = alienSiteOldReadWidth.value;
-      alienSiteOldReadWidth = value;
+      ).value;
+      userOptions.instance = document.getElementById(
+        "option_homeInstance"
+      ).value;
+      userOptions.instance = document.getElementById(
+        "option_homeInstance"
+      ).value;
+      userOptions.instance = document.getElementById(
+        "option_homeInstance"
+      ).value;
 
-      if (commposVertical > 85) {
-        commposVertical = 85;
-      } else if (commposVertical <= -1) {
-        commposVertical = 0;
+      if (userOptions.commposVertical > 85) {
+        userOptions.commposVertical = 85;
+      } else if (userOptions.commposVertical <= -1) {
+        userOptions.commposVertical = 0;
       }
 
-      if (expandImageSpeed > 1) {
-        expandImageSpeed = 1;
-      }
-      if (expandImageSpeed < 0) {
-        expandImageSpeed = 0;
+      if (userOptions.expandImageSpeed > 1) {
+        userOptions.expandImageSpeed = 1;
+      } else if (userOptions.expandImageSpeed < 0) {
+        userOptions.expandImageSpeed = 0;
       }
 
-      var reverseSide = "";
-
-      if (commposSide == "left") {
-        reverseSide = "right";
+      if (userOptions.commposSide === "left") {
+        userOptions.reverseSide = "right";
       } else {
-        reverseSide = "left";
+        userOptions.reverseSide = "left";
       }
 
-      localStorage.setItem("option_commposSide", commposSide);
-      localStorage.setItem("option_reverseSide", reverseSide);
-      localStorage.setItem("option_homeInstance", theHomeinstance);
-      localStorage.setItem("option_commposVertical", commposVertical);
-      localStorage.setItem("option_hideSideBar", hideSideBar);
-      localStorage.setItem("option_expandImages", expandImages);
-      localStorage.setItem("option_expandImagesize", expandImagesize);
-      localStorage.setItem("option_expandImageSpeed", expandImageSpeed);
-      localStorage.setItem("option_hoverCheck", hoverCheck);
-      localStorage.setItem("option_unblurNSFW", unblurNSFW);
-      localStorage.setItem("option_alienSiteOld", alienSiteOld);
-      localStorage.setItem(
-        "option_alienSiteOldReadWidth",
-        alienSiteOldReadWidth
-      );
+      localStorage.setItem(optionsKey, JSON.stringify(userOptions));
       location.reload(true);
     }
 
-    commposSide = localStorage.getItem("option_commposSide");
-    reverseSide = localStorage.getItem("option_reverseSide");
-    instance = localStorage.getItem("option_homeInstance");
-    commposVertical = localStorage.getItem("option_commposVertical");
-    expandImages = localStorage.getItem("option_expandImages");
-    expandImagesize = localStorage.getItem("option_expandImagesize");
-    expandImageSpeed = localStorage.getItem("option_expandImageSpeed");
-    hideSideBar = localStorage.getItem("option_hideSideBar");
-    hoverCheck = localStorage.getItem("option_hoverCheck");
-    unblurNSFW = localStorage.getItem("option_unblurNSFW");
-    alienSiteOld = localStorage.getItem("option_alienSiteOld");
-    alienSiteOldReadWidth = localStorage.getItem(
-      "option_alienSiteOldReadWidth"
-    );
-
-    const userOptions = {
-      theInstance: instance,
-      positionSide: commposSide,
-      reverseSide: reverseSide,
-      positionVertical: commposVertical,
-      expandImages: expandImages,
-      expandImagesize: expandImagesize,
-      hideSideBar: hideSideBar,
-      hoverCheck: hoverCheck,
-      unblurNSFW: unblurNSFW,
-      alienSiteOld: alienSiteOld,
-      alienSiteOldReadWidth: alienSiteOldReadWidth,
-      expandImageSpeed: expandImageSpeed,
-    };
-    console.log("LemmyTools: Settings" + userOptions);
+    userOptions = getSettingsFromLocalStorage();
+    ltLog(`Settings ${JSON.stringify(userOptions)}`);
     return userOptions;
-  }
-
-  function scrollToElement(pageElement) {
-    var positionX = 0,
-      positionY = -130;
-
-    while (pageElement != null) {
-      positionX += pageElement.offsetLeft;
-      positionY += pageElement.offsetTop;
-      pageElement = pageElement.offsetParent;
-      window.scrollTo(positionX, positionY, "smooth");
-    }
   }
 
   //Used for offset removal
@@ -420,9 +289,8 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       "https://cdn.jsdelivr.net/gh/soundjester/lemmy_monkey@main/old.reddit.compact.user.js"
     );
     xhr.onload = function () {
-      const theScript = xhr.responseText;
       document.head.appendChild(document.createElement("script")).innerHTML =
-        theScript;
+        xhr.responseText;
     };
     xhr.send();
   }
@@ -430,67 +298,42 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   // LemmyTools
 
   //check if first run or load saved settings
-  let settings = options("2");
+  let settings = options(2);
 
   /* The provided restyling was graciously used with permission from the developer(s) of Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
 
-    // @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-    // @namespace    https://github.com/soundjester/lemmy_monkey
-    // @description  Reformat widescreen desktop to look more like Reddit
-    // @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
+      // @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
+      // @namespace    https://github.com/soundjester/lemmy_monkey
+      // @description  Reformat widescreen desktop to look more like Reddit
+      // @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
 
-    Thank you.
-    */
+      Thank you.
+      */
 
   //Add Compact AlienSiteOld Theme
-  if (settings.alienSiteOld == "true") {
+  if (settings.alienSiteOld === true) {
     console.log("LemmyTools: Adding alienSiteOld");
     alienSiteOldStyle_compact();
+  }
+
+  function checkedIfTrue(val) {
+    return val ? "checked" : "";
   }
 
   /* Script */
   const url = window.location.href;
   let count = 0;
-  let eIcheck;
-  let hSBcheck;
-  let hoverCheck;
-  let unblurCheck;
-  let aSOcheck;
+  let eIcheck = checkedIfTrue(settings.expandImages);
+  let hSBcheck = checkedIfTrue(settings.hideSideBar);
+  let hoverCheck = checkedIfTrue(settings.hoverCheck);
+  let unblurCheck = checkedIfTrue(settings.unblurNSFW);
+  let aSOcheck = checkedIfTrue(settings.alienSiteOld);
   //Option Divs
-  if (settings.expandImages == "true") {
-    eIcheck = "checked";
-  } else {
-    eIcheck = "";
-  }
-  if (settings.hideSideBar == "true") {
-    hSBcheck = "checked";
-  } else {
-    hSBcheck = "";
-  }
-  if (settings.hoverCheck == "true") {
-    hoverCheck = "checked";
-  } else {
-    hoverCheck = "";
-  }
-  if (settings.unblurNSFW == "true") {
-    unblurCheck = "checked";
-  } else {
-    unblurCheck = "";
-  }
-  if (settings.alienSiteOld == "true") {
-    aSOcheck = "checked";
-  } else {
-    aSOcheck = "";
-  }
-
-  var hIAlertString = "";
   //Is HomeInstance Manually Set For WorkAround
-  if (isHomeInstanceSet(homeInstance) === false) {
-    hIAlertString =
-      "<b style='color: red;'>Your Home Instance has not been manually set in the UserScript.</b><br />";
-  } else {
-    hIAlertString = "";
-  }
+
+  var hIAlertString = isHomeInstanceSet(homeInstance)
+    ? ""
+    : "<b style='color: red;'>Your Home Instance has not been manually set in the UserScript.</b><br />";
 
   //Create Lemmy Tools Elements ----------------------------------------
 
@@ -517,23 +360,23 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           <td><b>HomeInstance URL</b><br /> Make sure to edit the homeInstance variable of<br /> the UserScript for the
             remote instance Home button fix. (Temporary workaround).<br />(Ex:
             https://yourinstance.lemmy)<br />${hIAlertString}</td>
-          <td><textarea name='option_homeInstance'>${settings.theInstance}</textarea></td>
+          <td><textarea id='option_homeInstance'>${settings.instance}</textarea></td>
         </tr>
         <tr>
           <td><b>LemmyTools bar window side</b><br /> - default: right</td>
-          <td><select name='option_commposSide'>
-              <option value='${settings.positionSide}'>${settings.positionSide}</option>
+          <td><select id="option_commposSide">
+              <option value='${settings.commposSide}'>${settings.commposSide}</option>
               <option value='right'>right</option>
               <option value='left'>left</option>
             </select></td>
         </tr>
         <tr>
           <td><b>LemmyTools bar vertical position </b><br />% from top [0-85] - default: 0</td>
-          <td><textarea name='option_commposVertical'>${settings.positionVertical}</textarea></td>
+          <td><textarea id='option_commposVertical'>${settings.commposVertical}</textarea></td>
         </tr>
         <tr>
           <td><b>Keep LemmyTools Bar Open</b><br />Works best for widescreen desktops.</td>
-          <td><input type='checkbox' name='option_hoverCheck' ${hoverCheck} /></td>
+          <td><input type='checkbox' id='option_hoverCheck' ${hoverCheck} /></td>
         </tr>
         <tr>
           <td><br /><br /></td>
@@ -547,36 +390,36 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           <td><b>Compact Lemmy to old.Reddit Re-format (Lemmy v0.18) style</b><br />Like the old alien.site but lemmy!
             <br />Defaults - Desktop: On / Mobile: Off <br /><br /> Post width / comment width setting in pixels.
             Increase or Decrease to your reading preference while viewing posts. (Default 740) </td>
-          <td><input type='checkbox' name='option_alienSiteOld' ${aSOcheck} /><br /><br /><br /><textarea
-              name='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea></td>
+          <td><input type='checkbox' id='option_alienSiteOld' ${aSOcheck} /><br /><br /><br /><textarea
+              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea></td>
         </tr>
         <tr>
           <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.
           </td>
-          <td><input type='checkbox' name='option_hideSideBar' ${hSBcheck} /></td>
+          <td><input type='checkbox' id='option_hideSideBar' ${hSBcheck} /></td>
         </tr>
         <tr>
           <td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand
             images by clicking and dragging.<br />Doubleclick to open full image.</td>
-          <td><input type='checkbox' name='option_expandImages' ${eIcheck} /></td>
+          <td><input type='checkbox' id='option_expandImages' ${eIcheck} /></td>
         </tr>
         <tr>
           <td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 /
             Mobile: 100</td>
-          <td><textarea name='option_expandImagesize'>${settings.expandImagesize}</textarea></td>
+          <td><textarea id='option_expandImagesize'>${settings.expandImagesize}</textarea></td>
         </tr>
         <tr>
           <td><b>Expand Image Speed</b><br />Speed multiplier for click&drag expanding images. If your images seem to
             expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td>
-          <td><textarea name='option_expandImageSpeed'>${settings.expandImageSpeed}</textarea></td>
+          <td><textarea id='option_expandImageSpeed'>${settings.expandImageSpeed}</textarea></td>
         </tr>
         <tr>
           <td><b>Auto unblur NSFW images</b><br /></td>
-          <td><input type='checkbox' name='option_unblurNSFW' ${unblurCheck} /></td>
+          <td><input type='checkbox' id='option_unblurNSFW' ${unblurCheck} /></td>
         </tr>
         <tr>
           <td></td>
-          <td><button id='LTsaveoptions' onclick='options(3)'>Save / Close</button></td>
+          <td><button id='LTsaveoptions'>Save / Close</button></td>
         </tr>
       </tbody>
     </table>
@@ -584,9 +427,9 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   <p> Tested on Lemmy Version: ${ltTestedVer} on firefox. <br />
   <h5>LemmyTools Links</h5>
   <hr /><a href='https://thesimplecorner.org/c/lemmytools'>!lemmytools@thesimplecorner.org</a><br />Get it here: <a
-    href='https://github.com/howdy-tsc/LemmyTools'>Github</a> or <a
-    href='https://greasyfork.org/en/scripts/469169-lemmytools'>GreasyFork</a><br />Please submit issues to the github
-  for feature requests and problems: <a href='https://github.com/howdy-tsc/LemmyTools/issues'>Github LemmyTools
+    href='https://github.com/howdy-tsc/LemmyTools'>GitHub</a> or <a
+    href='https://greasyfork.org/en/scripts/469169-lemmytools'>GreasyFork</a><br />Please submit issues to the GitHub
+  for feature requests and problems: <a href='https://github.com/howdy-tsc/LemmyTools/issues'>GitHub LemmyTools
     Issues</a><br /></p><br /><a href='https://ko-fi.com/lemmytools'><img
       src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png' width='32' /><br />Enjoy LemmyTools?<br />Tip with
     coffee!</a><br /><br /><b>Attributes/Credit: </b><br />
@@ -607,18 +450,18 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   const idiv = document.createElement("div");
   idiv.setAttribute("id", "searchdiv");
   idiv.classList.add("ltmenu", "border-secondary", "card");
+  // todo on input
   idiv.innerHTML = `
   <div id='ltActiveSearchDiv' class='ltActiveSearchDiv'>
     <header id='ltBarHeader' class='card-header'>
-      <h6><a href=${settings.theInstance}>Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find
+      <h6><a href=${settings.instance}>Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find
           Subs</a> - <img width=22 height=22 class='targetImg'
           src='data:image/webp;base64,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' />
       </h6>
     </header><input type='text' id='commsearch' name='commsearchinput'
       oninput='searchComms(commsearch.value, communityArray, div)'
       placeholder='Search your subscriptions (or visted subs)' />
-    <div id='ltBarSubHeader' class='clickAble'>LemmyTools ${ltVer} - <a href='#' id='LToptions'
-        onclick='options(1)'>Options</a></div>
+    <div id='ltBarSubHeader' class='clickAble'>LemmyTools ${ltVer} - <a href='#' id='LToptions'>Options</a></div>
     <div style='clear:both;'></div>
   </div>
   <div id='ltPassiveSearchDiv' class='ltPassiveSearchDiv'><img width=30 height=30 class='targetImg'
@@ -632,8 +475,8 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   let styleString = `
   .ltmenu {
       position: fixed;
-      top: ${settings.positionVertical}%;
-      ${settings.positionSide}: 0;
+      top: ${settings.commposVertical}%;
+      ${settings.commposSide}: 0;
       font-size: .75rem;
       display: block;
       height: 100%;
@@ -672,7 +515,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     }
 
     #searchdiv {
-      ${settings.positionSide}: 0;
+      ${settings.commposSide}: 0;
       position: fixed;
       height: 100%;
       min-height: auto;
@@ -681,7 +524,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       z-index: 999;
       overflow: scroll;
       transition-timing-function: ease;
-      transition: ${settings.positionSide} .25s;
+      transition: ${settings.commposSide} .25s;
       transition-delay: 0, 0.25s;
       overflow: auto;
       -ms-overflow-style: none;
@@ -724,7 +567,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       display: none;
     }`;
 
-  if (settings.unblurNSFW == "true") {
+  if (settings.unblurNSFW) {
     styleString +=
       " .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} ";
   } else {
@@ -732,7 +575,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       " .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
   }
 
-  if (settings.hideSideBar == "true") {
+  if (settings.hideSideBar) {
     styleString +=
       ".container, .container-lg, .container-md, .container-sm, .container-xl { }" +
       ".col-md-8 {flex: 0 0 80% !important;max-width: 80%;}";
@@ -740,7 +583,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     styleString +=
       ".container, .container-lg, .container-md, .container-sm, .container-xl {}";
   }
-  if (settings.hoverCheck !== "true") {
+  if (!settings.hoverCheck) {
     styleString += `
     #myDiv:not(:hover) {
       animation: showNavOut 500ms ease-in-out both;
@@ -755,7 +598,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     .ltPassiveSearchDiv {
       display: block;
       float: ${settings.reverseSide};
-      padding-${settings.positionSide}: 200px;
+      padding-${settings.commposSide}: 200px;
     }
 
     #ltActiveSearchDiv {
@@ -768,7 +611,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     }
 
     #searchdiv {
-      ${settings.positionSide}: -200px;
+      ${settings.commposSide}: -200px;
       position: fixed;
       height: 110px;
       min-height: auto;
@@ -778,7 +621,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
       overflow: auto;
       display: block;
       transition-timing-function: ease;
-      transition: ${settings.positionSide},
+      transition: ${settings.commposSide},
       height;
       transition-duration: 0.25s, 0.25s;
       transition-delay: 0.25s, 0.25s;
@@ -794,7 +637,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     }
 
     #searchdiv:hover {
-      ${settings.positionSide}: 0;
+      ${settings.commposSide}: 0;
       position: fixed;
       height: 100%;
       min-height: auto;
@@ -806,7 +649,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     }
 
     #searchdiv:hover>#myDiv {
-      ${settings.positionSide}: 0;
+      ${settings.commposSide}: 0;
       word-wrap: break-word;
       overflow: auto;
       display: block;
@@ -831,12 +674,12 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   }
 
   //Adjust clickable area for mobile (remove brandingString)
-  if (mobile == true) {
+  if (mobile === true) {
     styleString += " #searchdiv {height: 35px;}";
   }
 
   //Adjust Comment/Post width (for reading with compact old style)
-  if (settings.alienSiteOld == "true") {
+  if (settings.alienSiteOld === true) {
     styleString += `
     #postContent,
     .md-div,
@@ -862,6 +705,16 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   document.body.appendChild(idiv);
   idiv.appendChild(div);
 
+  document.getElementById("LToptions").addEventListener("click", (e) => {
+    e.preventDefault();
+    options(1);
+  });
+
+  document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
+    e.preventDefault();
+    options(3);
+  });
+
   //Easier Subscribe Buttons ---------------------------
   ltLog("url is " + url);
   let rCommunityArray = [];
@@ -879,14 +732,14 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     } catch {}
 
     const subString =
-      `${settings.theInstance}/search?q=!${communityName}&type=All&listingType=All&page=1`.replace(
+      `${settings.instance}/search?q=!${communityName}&type=All&listingType=All&page=1`.replace(
         "#",
         ""
       );
 
     if (notHomeAndInCommunity(url)) {
       ltLog(`On remote instance community - DIRECT - Button to: ${subString}`);
-      rCommunityArray = update(community, url, subString, settings.theInstance);
+      rCommunityArray = update(community, url, subString);
       rCommunityArray = [...new Set(rCommunityArray)];
       rCommunityArray = rCommunityArray.reverse();
       div.innerHTML = rCommunityArray;
@@ -896,8 +749,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
 
   // Update homeInstance Comms for bar to use
   let communityArray = [];
-  console.log(settings.theInstance, url);
-  if (url.includes(settings.theInstance)) {
+  if (url.includes(settings.instance)) {
     ltLog("home instance do bar");
     document
       .querySelectorAll('[class="list-inline-item d-inline-block"]')
@@ -912,7 +764,6 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     communityArray = communityArray.join("");
 
     div.innerHTML += communityArray;
-    console.log(div, communityArray);
     if (div.innerHTML.length >= 20) {
       ltLog("Got Results >= 20", LogDebug);
       ltLog("setting localcomms localstore", LogDebug);
@@ -935,15 +786,15 @@ If you don’t see your subscribed communities here simply login to your lemmy a
   //Expand Images----------------------------------------------
 
   setInterval(function () {
-    if (settings.expandImages == "true") {
-      let theImages = [];
-      theImages = document.getElementsByClassName("img-expanded");
+    if (settings.expandImages === true) {
+      let theImages = document.getElementsByClassName("img-expanded");
       for (let i = 0; i < theImages.length; i++) {
         theImages[i].addEventListener("mousedown", startDrag);
       }
 
       let posX;
       let node;
+
       function startDrag(e) {
         e.preventDefault();
 
@@ -951,7 +802,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
         node.style.cursor = "nwse-resize";
         try {
           node.closest("a").setAttribute("onclick", "return false;");
-          node.srcElement.closest("a").setAttribute("overflow", "auto;");
+          node.target.closest("a").setAttribute("overflow", "auto;");
           node.preventDefault();
         } catch {}
 
@@ -959,6 +810,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
         document.addEventListener("mousemove", resize);
         document.addEventListener("mouseup", stopDrag);
       }
+
       function resize(e) {
         e.preventDefault();
         const nextPosX = e.pageX;
@@ -968,6 +820,7 @@ If you don’t see your subscribed communities here simply login to your lemmy a
           "px";
         posX = nextPosX;
       }
+
       function stopDrag(e) {
         e.preventDefault();
         node.style.cursor = "default";
@@ -982,13 +835,13 @@ If you don’t see your subscribed communities here simply login to your lemmy a
     } catch {}
 
     //sidebar settings do
-    if (settings.hideSideBar == "true") {
+    if (settings.hideSideBar === true) {
       try {
-        var sidebarSubscribed = document.getElementById("sidebarContainer");
+        const sidebarSubscribed = document.getElementById("sidebarContainer");
         sidebarSubscribed.style.display = "none";
         removeClassByWildcard("site-sideba*");
 
-        var serverInfo = document.getElementById("sidebarInfo");
+        const serverInfo = document.getElementById("sidebarInfo");
         serverInfo.style.display = "none";
       } catch {}
     }
