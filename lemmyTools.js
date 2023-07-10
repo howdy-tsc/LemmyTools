@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.0-preview";
+  const ltVer = "0.2.0.0";
   const ltTestedVer = "0.18.1";
   //--------------------------------------------
 
