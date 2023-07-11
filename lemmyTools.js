@@ -102,8 +102,8 @@
       const commsCount = localStorage.getItem("commsCount");
       if (commsCount == null || full.length < 1) {
         div.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
-If this is your first time running the script, set your lemmy homeinstance in the option page. 
-[${ltVer}] - Manually enter your home lemmy instance in script for offsite home button functionality. (temporary)]. <br /><br /> 
+If this is your first time running the script, set your lemmy homeinstance in the option page.
+[${ltVer}] - Manually enter your home lemmy instance in script for offsite home button functionality. (temporary)]. <br /><br />
 If you don’t see your subscribed communities here, simply login to your lemmy instance and then click the LemmyTools home button above. `;
       } else {
         div.innerHTML = `Communities: ${commsCount}<hr />${full}`;
@@ -170,6 +170,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
           alienSiteOldReadWidth: 740,
           expandImageSpeed: 0.5,
           showAllImages: false,
+          hideShowAllImagesButton: false,
         },
         getSettingsFromLocalStorage()
       );
@@ -210,6 +211,9 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       );
       userOptions.showAllImages = document.getElementById(
         "option_showAllImages"
+      ).checked;
+      userOptions.hideShowAllImagesButton = document.getElementById(
+        "option_hideShowAllImagesButton"
       ).checked;
 
       if (userOptions.commposVertical > 85) {
@@ -309,7 +313,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     };
     xhr.send();
   }
-    
+
   function linksInNewTab () {
    const links = document.getElementsByTagName("a");
    for (let i = 0; i < links.length; i++)
@@ -317,7 +321,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
      links[i].setAttribute('target', '_blank');
      links[i].setAttribute('rel', 'noreferrer');
    }
-    
+
   }
   // LemmyTools
 
@@ -343,7 +347,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   function checkedIfTrue(val) {
     return val ? "checked" : "";
   }
-    
+
   /* Script */
   let url = document.location.href;
   window.onload = () => {
@@ -368,6 +372,8 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   let unblurCheck = checkedIfTrue(settings.unblurNSFW);
   let aSOcheck = checkedIfTrue(settings.alienSiteOld);
   let showAllImagesCheck = checkedIfTrue(settings.showAllImages);
+  let hideShowAllImagesButtonCheck = checkedIfTrue(settings.hideShowAllImagesButton);
+
   //Option Divs
   //Is HomeInstance Manually Set For WorkAround
 
@@ -375,7 +381,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     ? ""
     : "<b style='color: red;'>Your Home Instance has not been manually set in the UserScript.</b><br />";
 
-    
+
   //Create Lemmy Tools Elements ----------------------------------------
 
   const odiv = document.createElement("div");
@@ -457,6 +463,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         <tr>
             <td><b>Automatically open image posts</b><br /></td>
             <td><input type='checkbox' id='option_showAllImages'${showAllImagesCheck}/></td>
+        </tr>
+        <tr>
+            <td><b>Hide the Show All Images button (when Auto open image posts is disabled)</b><br /></td>
+            <td><input type='checkbox' id='option_hideShowAllImagesButton'${hideShowAllImagesButtonCheck}/></td>
         </tr>
         <tr>
           <td><b>Auto unblur NSFW images</b><br /></td>
@@ -908,7 +918,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       );
       if (
         addImageButtonArea[0].innerHTML.indexOf("showAllImages") === -1 &&
-        !settings.showAllImages
+        !settings.showAllImages && !settings.hideShowAllImagesButton
       ) {
         addImageButtonArea[0].appendChild(
           document.createElement("div")
@@ -929,5 +939,5 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   	//Links Open In New Tab
 		linksInNewTab();
   }, 500);
-      
+
 })();
