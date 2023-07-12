@@ -1,12 +1,12 @@
 <h3>LemmyTools - ReadMe</h3>
 
-<p><b>Current Features: 0.2</b></p>
+<p><b>Current Features: 0.2.0.1</b></p>
 <li>All links open in new tab with noreferrer enabled</li>
 <li>Adds a positional side bar that has a searchable list of communities</li>
 <li>Click&drag to resize images</li>
 <li>Set image size after clicking thumbnail</li>
 <li>Hide Lemmy Sidebars</li>
-<li>Show all images on page automatically or by a button click</li>
+<li>Show all images on page automatically or by a button click - 0.2.0.1 - (works with all languages now and can be disabled)</li>
 <li>Adds the ability to use the old.reddit style script by soundjester/lemmy_monkey: https://github.com/soundjester/lemmy_monkey (Also: Option to edit post and comment size for easier reading).</li>
 <li>Auto unblur NSFW images</li>
 <li>A link back to home instance on remote instances</li>
