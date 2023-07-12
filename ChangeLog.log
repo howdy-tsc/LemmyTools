@@ -1,4 +1,11 @@
-<h5>LemmyTools 0.1.2.7</h5>
+<h5>LemmyTools 0.2.0.1</h5>
+0.2.0.1
+* Ability to hide showallimages button
+* Showallimages button works for all languages
+
+0.2.0.0
+* Code cleanup
+* Open all external links in new tab
 
 * Added Show All Images Button or Option, 
 * Added Browse Sub on Home Instance on remote instances button.
