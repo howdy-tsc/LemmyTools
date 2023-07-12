@@ -282,9 +282,11 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   }
   //Expand all images on page
   function allImages(show) {
-    const clickableImages = document.querySelectorAll(
-      '[aria-label="Expand here"]'
-    );
+      const clickableImages = document.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0 bg-transparent");
+    //const clickableImages = document.querySelectorAll(
+    //  // '[aria-label="Expand here"]'
+    //
+    //);
     ltLog(clickableImages.length, LogDebug);
     ltLog(clickableImages, LogDebug);
     if (show) {
