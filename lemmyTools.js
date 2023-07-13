@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.2
+// @version      0.2.0.3
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,8 +29,8 @@
   // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.2";
-  const ltTestedVer = "0.18.1";
+  const ltVer = "0.2.0.3";
+  const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
   /* Globals */
@@ -875,7 +875,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         node = e.currentTarget;
         node.style.cursor = "nwse-resize";
         try {
-          node.closest("a").setAttribute("onclick", "return false;");
+          node.closest("a").removeAttribute("href");
           node.target.closest("a").setAttribute("overflow", "auto;");
           node.preventDefault();
         } catch {}
@@ -943,7 +943,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
     } catch {}
   	//Links Open In New Tab
-		//linksInNewTab();
+		linksInNewTab();
   }, 500);
 
 })();
