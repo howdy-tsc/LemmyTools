@@ -919,20 +919,17 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         serverInfo.style.display = "none";
       } catch {}
     }
-
+    
     //Show All Images Functionality on button toggle.
     try {
-      let addImageButtonArea = document.getElementsByClassName(
-        "mb-3"
-      );
+      let addImageButtonArea = document.querySelector(".post-listings");
+      let showImage = document.createElement("div")
+      showImage.innerHTML = "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>"
       if (
-        addImageButtonArea[0].innerHTML.indexOf("showAllImages") === -1 &&
+        addImageButtonArea.innerHTML.indexOf("showAllImages") === -1 &&
         !settings.showAllImages && !settings.hideShowAllImagesButton
       ) {
-        addImageButtonArea[0].appendChild(
-          document.createElement("div")
-        ).innerHTML =
-          "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>";
+        addImageButtonArea.prepend(showImage);
         const showImagesButton = document.getElementById("showAllImages");
         showImagesButton.addEventListener("click", function () {
           if (showImagesButton.value === "Show All Images") {
@@ -946,7 +943,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
     } catch {}
   	//Links Open In New Tab
-	//linksInNewTab();
+		//linksInNewTab();
   }, 500);
 
 })();
