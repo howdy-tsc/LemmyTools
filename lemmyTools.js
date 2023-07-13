@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.1
+// @version      0.2.0.2
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.1";
+  const ltVer = "0.2.0.2";
   const ltTestedVer = "0.18.1";
   //--------------------------------------------
 
@@ -75,12 +75,12 @@
   }
 
   //Remote Instance
-  function update(comm, page, subString) {
+  function update(comm, commName, subString) {
     try {
       if (comm) {
         const browsedComm = `<li><h5>${comm}</h5></li>
 <li>
-    <a href='${homeInstance}/c/${page}' target='_blank'><button type="button" class='ltbutton'>Browse/Sub on Home Instance</button></a>
+    <a href='${homeInstance}/c/${commName}' target='_blank'><button type="button" class='ltbutton'>Browse/Sub on Home Instance</button></a>
     <br />
     <a href='${subString}' target='_blank'><button type="button" class='ltbutton'>Alternative Subscribe Method</button></a>
 </li>`;
@@ -500,7 +500,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   let brandingString = "";
   if (mobile !== true) {
     brandingString =
-      "<span style='vertical-align: super !important; writing-mode: vertical-lr; text-orientation: mixed;'>LemmyTools</span>";
+      "<span id='brandingText' style='vertical-align: super !important; writing-mode: vertical-lr; text-orientation: mixed;'>LemmyTools</span>";
   }
 
   //Comm divs
@@ -560,7 +560,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       width: 100%;
     }
 
-    .post-listings .img-fluid {
+    .post-listings .img-expanded {
       width: ${settings.expandImagesize}%
     }
 
@@ -623,7 +623,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 
     #searchdiv::-webkit-scrollbar {
       display: none;
-    }`;
+    }
+    
+`;
+
 
   if (settings.unblurNSFW) {
     styleString +=
@@ -731,10 +734,17 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       " myDiv {visibility: visible; height: auto; width: auto; overflow:scroll !important;}";
   }
 
-  //Adjust clickable area for mobile (remove brandingString)
-  if (mobile === true) {
-    styleString += " #searchdiv {height: 35px;}";
-  }
+  //For mobile layouts make the ltbar tab smaller
+    styleString += `
+		@media (max-width: 1199.98px) {
+			#brandingText {
+				display:none;
+			}
+			#searchdiv {
+				height: 35px;
+			}
+		}`;
+ 
 
   //Adjust Comment/Post width (for reading with compact old style)
   if (settings.alienSiteOld === true) {
@@ -803,7 +813,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 
     if (notHomeAndInCommunity(url)) {
       ltLog(`On remote instance community - DIRECT - Button to: ${subString}`);
-      rCommunityArray = update(community, url, subString);
+      rCommunityArray = update(community, communityName, subString);
       rCommunityArray = [...new Set(rCommunityArray)];
       rCommunityArray = rCommunityArray.reverse();
       div.innerHTML = rCommunityArray;
