@@ -946,7 +946,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
     } catch {}
   	//Links Open In New Tab
-		linksInNewTab();
+	//linksInNewTab();
   }, 500);
 
 })();
