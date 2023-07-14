@@ -286,7 +286,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   //Expand all images on page
   function allImages(show) {
     let clickableImages = document.getElementsByClassName(
-      "overflow-hidden pictrs-image img-fluid thumbnail rounded object-fit-cover"
+      "thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0 bg-transparent"
     );
 
     //ltLog(clickableImages.length, LogDebug);
@@ -294,6 +294,8 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     if (show) {
       for (let i = 0; i < clickableImages.length; i++) {
         try {
+          console.log(clickableImages[i]);
+
           clickableImages[i].click();
         } catch {}
       }
@@ -365,8 +367,8 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         url = document.location.href;
         if (settings.showAllImages) {
           // todo there has to be a better way to wait for the content to be loaded …
-          var imagesTimer = setTimeout( allImages, 5000);
-          clearTimeout(imagesTimer)
+          var imagesTimer = setTimeout(allImages, 5000);
+          clearTimeout(imagesTimer);
           //allImages(true);
         }
       }
@@ -972,7 +974,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         });
       }
     } catch {}
-  	//Links Open In New Tab
-		linksInNewTab();
+    //Links Open In New Tab
+    linksInNewTab();
   }, 500);
 })();
