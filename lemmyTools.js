@@ -168,6 +168,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
           unblurNSFW: false,
           alienSiteOld: !mobile,
           alienSiteOldReadWidth: 740,
+          widthPixels: false,
           expandImageSpeed: 0.5,
           showAllImages: false,
           hideShowAllImagesButton: false,
@@ -209,6 +210,8 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       userOptions.alienSiteOldReadWidth = parseInt(
         document.getElementById("option_alienSiteOldReadWidth").value
       );
+      userOptions.widthPixels =
+        document.getElementById("option_widthPixels").checked;
       userOptions.showAllImages = document.getElementById(
         "option_showAllImages"
       ).checked;
@@ -282,19 +285,27 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   }
   //Expand all images on page
   function allImages(show) {
-    const clickableImages = document.getElementsByClassName("thumbnail rounded overflow-hidden d-inline-block position-relative p-0 border-0 bg-transparent");
-    ltLog(clickableImages.length, LogDebug);
-    ltLog(clickableImages, LogDebug);
+    let clickableImages = document.getElementsByClassName(
+      "overflow-hidden pictrs-image img-fluid thumbnail rounded object-fit-cover"
+    );
+
+    //ltLog(clickableImages.length, LogDebug);
+    //ltLog(clickableImages, LogDebug);
     if (show) {
-      for (let i = 0; i < clickableImages.length; i = i + 2) {
+      for (let i = 0; i < clickableImages.length; i++) {
         try {
           clickableImages[i].click();
-          clickableImages[i].show();
         } catch {}
       }
     } else {
       //lazy - need to figure out way to handle on dom iter
-      location.reload(true);
+      //location.reload(true);
+      for (let i = 0; i < clickableImages.length; i++) {
+        try {
+          clickableImages[i].click();
+          clickableImages[i].click();
+        } catch {}
+      }
     }
   }
 
@@ -312,14 +323,12 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     xhr.send();
   }
 
-  function linksInNewTab () {
-   const links = document.getElementsByTagName("a");
-   for (let i = 0; i < links.length; i++)
-   {
-     links[i].setAttribute('target', '_blank');
-     links[i].setAttribute('rel', 'noreferrer');
-   }
-
+  function linksInNewTab() {
+    const links = document.getElementsByTagName("a");
+    for (let i = 0; i < links.length; i++) {
+      links[i].setAttribute("target", "_blank");
+      links[i].setAttribute("rel", "noreferrer");
+    }
   }
   // LemmyTools
 
@@ -355,9 +364,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       if (url !== document.location.href) {
         url = document.location.href;
         if (settings.showAllImages) {
-          setTimeout(() => {
-            allImages(true);
-          }, 1000); // todo there has to be a better way to wait for the content to be loaded …
+          // todo there has to be a better way to wait for the content to be loaded …
+          var imagesTimer = setTimeout( allImages, 5000);
+          clearTimeout(imagesTimer)
+          //allImages(true);
         }
       }
     });
@@ -369,8 +379,12 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   let hoverCheck = checkedIfTrue(settings.hoverCheck);
   let unblurCheck = checkedIfTrue(settings.unblurNSFW);
   let aSOcheck = checkedIfTrue(settings.alienSiteOld);
+  let widthPixelCheck = checkedIfTrue(settings.widthPixels);
+  let widthPercentCheck = checkedIfTrue(!settings.widthPixels);
   let showAllImagesCheck = checkedIfTrue(settings.showAllImages);
-  let hideShowAllImagesButtonCheck = checkedIfTrue(settings.hideShowAllImagesButton);
+  let hideShowAllImagesButtonCheck = checkedIfTrue(
+    settings.hideShowAllImagesButton
+  );
 
   //Option Divs
   //Is HomeInstance Manually Set For WorkAround
@@ -378,7 +392,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   var hIAlertString = isHomeInstanceSet(homeInstance)
     ? ""
     : "<b style='color: red;'>Your Home Instance has not been manually set in the UserScript.</b><br />";
-
 
   //Create Lemmy Tools Elements ----------------------------------------
 
@@ -436,7 +449,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
             <br />Defaults - Desktop: On / Mobile: Off <br /><br /> Post width / comment width setting in pixels.
             Increase or Decrease to your reading preference while viewing posts. (Default 740) </td>
           <td><input type='checkbox' id='option_alienSiteOld' ${aSOcheck} /><br /><br /><br /><textarea
-              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea></td>
+              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea>
+              <br /> <label for="option_widthPixels">Pixels</label> <input type='radio' id='option_widthPixels' name="widthScaler" ${widthPixelCheck}/> 
+              <label for="option_widthPercent">Percent</label> <input type='radio' id='option_widthPercent' name="widthScaler" ${widthPercentCheck}/>
+              </td>
         </tr>
         <tr>
           <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.
@@ -561,7 +577,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     }
 
     .post-listings .img-expanded {
-      width: ${settings.expandImagesize}%
+      width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"}
     }
 
     #myDiv li {
@@ -626,7 +642,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     }
     
 `;
-
 
   if (settings.unblurNSFW) {
     styleString +=
@@ -735,7 +750,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   }
 
   //For mobile layouts make the ltbar tab smaller
-    styleString += `
+  styleString += `
 		@media (max-width: 1199.98px) {
 			#brandingText {
 				display:none;
@@ -744,7 +759,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 				height: 35px;
 			}
 		}`;
- 
 
   //Adjust Comment/Post width (for reading with compact old style)
   if (settings.alienSiteOld === true) {
@@ -788,6 +802,18 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     e.preventDefault();
     options(3);
   });
+
+  // document.onreadystatechange = () => {
+  //   if (document.readyState === "interactive") {
+  //     // document ready
+  //     if (
+  //       showImagesButton.value == "Hide All Images" ||
+  //       settings.showAllImages
+  //     ) {
+  //       allImages(true);
+  //     }
+  //   }
+  // };
 
   //Easier Subscribe Buttons ---------------------------
   ltLog("url is " + url);
@@ -905,7 +931,9 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 
     //Removes the offset from images.
     try {
-      removeClassByWildcard("offset-*");
+      if (settings.expandImages) {
+        removeClassByWildcard("offset-*");
+      }
     } catch {}
 
     //sidebar settings do
@@ -919,15 +947,17 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         serverInfo.style.display = "none";
       } catch {}
     }
-    
+
     //Show All Images Functionality on button toggle.
     try {
       let addImageButtonArea = document.querySelector(".post-listings");
-      let showImage = document.createElement("div")
-      showImage.innerHTML = "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>"
+      let showImage = document.createElement("div");
+      showImage.innerHTML =
+        "<div class='col-auto'><input type='button' id='showAllImages' class='pointer btn btn-secondary text-bg-primary' value='Show All Images' /> </div>";
       if (
         addImageButtonArea.innerHTML.indexOf("showAllImages") === -1 &&
-        !settings.showAllImages && !settings.hideShowAllImagesButton
+        !settings.showAllImages &&
+        !settings.hideShowAllImagesButton
       ) {
         addImageButtonArea.prepend(showImage);
         const showImagesButton = document.getElementById("showAllImages");
@@ -942,8 +972,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         });
       }
     } catch {}
-  	//Links Open In New Tab
-		//linksInNewTab();
+    //Links Open In New Tab
+    //linksInNewTab();
   }, 500);
-
 })();
