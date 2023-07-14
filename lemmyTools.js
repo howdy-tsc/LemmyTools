@@ -451,10 +451,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
             <br />Defaults - Desktop: On / Mobile: Off <br /><br /> Post width / comment width setting in pixels.
             Increase or Decrease to your reading preference while viewing posts. (Default 740) </td>
           <td><input type='checkbox' id='option_alienSiteOld' ${aSOcheck} /><br /><br /><br /><textarea
-              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea>
-              <br /> <label for="option_widthPixels">Pixels</label> <input type='radio' id='option_widthPixels' name="widthScaler" ${widthPixelCheck}/> 
-              <label for="option_widthPercent">Percent</label> <input type='radio' id='option_widthPercent' name="widthScaler" ${widthPercentCheck}/>
-              </td>
+              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea></td>
         </tr>
         <tr>
           <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.
@@ -469,7 +466,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         <tr>
           <td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 /
             Mobile: 100</td>
-          <td><textarea id='option_expandImagesize'>${settings.expandImagesize}</textarea></td>
+          <td><textarea id='option_expandImagesize'>${settings.expandImagesize}</textarea>
+          <br /> <label for="option_widthPixels">Pixels</label> <input type='radio' id='option_widthPixels' name="widthScaler" ${widthPixelCheck}/> 
+          <label for="option_widthPercent">Percent</label> <input type='radio' id='option_widthPercent' name="widthScaler" ${widthPercentCheck}/>
+          </td>
         </tr>
         <tr>
           <td><b>Expand Image Speed</b><br />Speed multiplier for click&drag expanding images. If your images seem to
