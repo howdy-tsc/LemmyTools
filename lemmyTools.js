@@ -299,13 +299,13 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
     } else {
       //lazy - need to figure out way to handle on dom iter
-      //location.reload(true);
-      for (let i = 0; i < clickableImages.length; i++) {
-        try {
-          clickableImages[i].click();
-          clickableImages[i].click();
-        } catch {}
-      }
+      location.reload(true);
+      // for (let i = 0; i < clickableImages.length; i++) {
+      //   try {
+      //     clickableImages[i].click();
+      //     clickableImages[i].click();
+      //   } catch {}
+      // }
     }
   }
 
