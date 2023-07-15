@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.5
+// @version      0.2.0.5p1
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.5";
+  const ltVer = "0.2.0.5p1";
   const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
@@ -39,7 +39,7 @@
   let remoteCommunityArray = [];
   let prevSearchCommsQueries = [];
   prevSearchCommsQueries.push("");
-
+  let currentUrl = document.location.href;
   
 
   function isHomeInstanceSet(i2c) {
@@ -115,7 +115,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     } else {
       //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
       div.innerHTML = full;
-      
+      ltLog(query, 0);
       //if searchInput query, store it for use on another page
       if (query.length > 2)
       {
@@ -136,7 +136,15 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
-      commupdate(url, resultSet, query);
+      
+      if (currentUrl.indexOf(query) !== -1)
+      {
+      	commupdate(url, resultSet, query);
+      }
+      else
+      {
+        commupdate(url, resultSet, query);  
+      }
     }
   }
 
@@ -146,7 +154,10 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     data.forEach((_) => count++);
     data = data.join("");
     div.innerHTML = `Results: ${count}<hr /><br />${data}`;
+    if (query.length > 2)
+    {
    	searchInput.value = query;
+    }
   }
   const optionsKey = "LemmyToolsOptions";
 
@@ -888,20 +899,25 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 
       div.innerHTML += communityArray;
      //If previous search display previous results
-     try {
-       let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
-       let latestQueryArray = [];
-       latestQueryArray = latestQueryString.split(",");
+     
 
-       ltLog("string: " + latestQueryString + " Array: " + latestQueryArray, latestQueryArray.length, LogDebug);
-       searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
-     }
-     catch {
+      try {
+      	let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
+        let latestQueryArray = [];
+        latestQueryArray = latestQueryString.split(",");
+        if (currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !== -1) {
+         searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
+        }
+        else {
+         searchComms("-f", communityArray);
+       		}
+     		}
+     	catch {
     	 searchComms("-f", communityArray);
-     }
-      
+     		}   
     }
-  } else {
+  } 
+  else {
     ltLog("On Remote Instance - Bar", LogDebug);
   }
 
