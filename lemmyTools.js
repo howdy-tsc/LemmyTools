@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.4
+// @version      0.2.0.5
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.4";
+  const ltVer = "0.2.0.5";
   const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
@@ -37,6 +37,10 @@
 
   const mobile = isltMobile();
   let remoteCommunityArray = [];
+  let prevSearchCommsQueries = [];
+  prevSearchCommsQueries.push("");
+
+  
 
   function isHomeInstanceSet(i2c) {
     return i2c.length > 3;
@@ -97,8 +101,8 @@
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
-
-    if (query === "") {
+  
+    if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
       const commsCount = localStorage.getItem("commsCount");
       if (commsCount == null || full.length < 1) {
         div.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
@@ -111,6 +115,13 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     } else {
       //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
       div.innerHTML = full;
+      
+      //if searchInput query, store it for use on another page
+      if (query.length > 2)
+      {
+      prevSearchCommsQueries.push(query);
+   	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
+      }
       ltLog(`Searching for:${query}`, LogDebug);
       const children = div.getElementsByTagName("li");
       ltLog(`Children found: ${children.length}`, LogDebug);
@@ -125,16 +136,17 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
-      commupdate(url, resultSet);
+      commupdate(url, resultSet, query);
     }
   }
 
-  function commupdate(page, data) {
+  function commupdate(page, data, query) {
     ltLog("LTbar Update");
     let count = -1;
     data.forEach((_) => count++);
     data = data.join("");
     div.innerHTML = `Results: ${count}<hr /><br />${data}`;
+   	searchInput.value = query;
   }
   const optionsKey = "LemmyToolsOptions";
 
@@ -527,6 +539,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   idiv.setAttribute("id", "searchdiv");
   idiv.classList.add("ltmenu", "border-secondary", "card");
   // todo on input
+    
   idiv.innerHTML = `
   <div id='ltActiveSearchDiv' class='ltActiveSearchDiv'>
     <header id='ltBarHeader' class='card-header'>
@@ -558,8 +571,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       min-height: auto;
       z-index: 999;
       overflow: scroll;
-      border: thick double;
-      border-right: none !important;
       outline: 1px solid grey !important;
     }
 
@@ -626,7 +637,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       overflow: scroll;
       z-index: 1000;
       padding: 0.5%;
-      border: thick double;
     }
 
     #myDiv::-webkit-scrollbar {
@@ -871,14 +881,25 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       localStorage.setItem("localComms", communityArray);
       localStorage.setItem("commsCount", count.toString()); // todo why store the count? communityArray.length everywhere should be easier
       //force update the page
-      searchComms("", communityArray);
+      searchComms("-f", communityArray);
     } else {
       ltLog("get localcomms from localstore", LogDebug);
       communityArray = localStorage.getItem("localComms");
 
       div.innerHTML += communityArray;
-      //force update the page
-      searchComms("", communityArray);
+     //If previous search display previous results
+     try {
+       let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
+       let latestQueryArray = [];
+       latestQueryArray = latestQueryString.split(",");
+
+       ltLog("string: " + latestQueryString + " Array: " + latestQueryArray, latestQueryArray.length, LogDebug);
+       searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
+     }
+     catch {
+    	 searchComms("-f", communityArray);
+     }
+      
     }
   } else {
     ltLog("On Remote Instance - Bar", LogDebug);
