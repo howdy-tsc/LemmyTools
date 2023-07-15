@@ -1,6 +1,6 @@
 <h3>LemmyTools - ReadMe</h3>
 
-<p><b>Current Features: 0.2.0.1</b></p>
+<p><b>Current Features: 0.2.0.4</b></p>
 <li>All links open in new tab with noreferrer enabled</li>
 <li>Adds a positional side bar that has a searchable list of communities</li>
 <li>Click&drag to resize images</li>
