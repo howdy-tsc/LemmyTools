@@ -40,7 +40,6 @@
   let prevSearchCommsQueries = [];
   prevSearchCommsQueries.push("");
   let currentUrl = document.location.href;
-  
 
   function isHomeInstanceSet(i2c) {
     return i2c.length > 3;
@@ -101,8 +100,8 @@
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
-  
-    if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
+
+    if (query == "-f" && prevSearchCommsQueries.length < 2) {
       const commsCount = localStorage.getItem("commsCount");
       if (commsCount == null || full.length < 1) {
         div.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
@@ -113,14 +112,13 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         div.innerHTML = `Communities: ${commsCount}<hr />${full}`;
       }
     } else {
-      //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
+      //This searches the pushed communityArray with the query, saves it to an array, removes any duplicate values, sorts and then pushes to the commupdate function.
       div.innerHTML = full;
       ltLog(query, 0);
       //if searchInput query, store it for use on another page
-      if (query.length > 2)
-      {
-      prevSearchCommsQueries.push(query);
-   	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
+      if (query.length > 2) {
+        prevSearchCommsQueries.push(query);
+        localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
       }
       ltLog(`Searching for:${query}`, LogDebug);
       const children = div.getElementsByTagName("li");
@@ -136,14 +134,11 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
-      
-      if (currentUrl.indexOf(query) !== -1)
-      {
-      	commupdate(url, resultSet, query);
-      }
-      else
-      {
-        commupdate(url, resultSet, query);  
+
+      if (currentUrl.indexOf(query) !== -1) {
+        commupdate(url, resultSet, query);
+      } else {
+        commupdate(url, resultSet, query);
       }
     }
   }
@@ -154,9 +149,8 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     data.forEach((_) => count++);
     data = data.join("");
     div.innerHTML = `Results: ${count}<hr /><br />${data}`;
-    if (query.length > 2)
-    {
-   	searchInput.value = query;
+    if (query.length > 2) {
+      searchInput.value = query;
     }
   }
   const optionsKey = "LemmyToolsOptions";
@@ -550,7 +544,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   idiv.setAttribute("id", "searchdiv");
   idiv.classList.add("ltmenu", "border-secondary", "card");
   // todo on input
-    
+
   idiv.innerHTML = `
   <div id='ltActiveSearchDiv' class='ltActiveSearchDiv'>
     <header id='ltBarHeader' class='card-header'>
@@ -898,26 +892,28 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       communityArray = localStorage.getItem("localComms");
 
       div.innerHTML += communityArray;
-     //If previous search display previous results
-     
+      //If previous search display previous results
 
       try {
-      	let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
+        let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
         let latestQueryArray = [];
         latestQueryArray = latestQueryString.split(",");
-        if (currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !== -1) {
-         searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
+        if (
+          currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !==
+          -1
+        ) {
+          searchComms(
+            latestQueryArray[latestQueryArray.length - 1],
+            communityArray
+          );
+        } else {
+          searchComms("-f", communityArray);
         }
-        else {
-         searchComms("-f", communityArray);
-       		}
-     		}
-     	catch {
-    	 searchComms("-f", communityArray);
-     		}   
+      } catch {
+        searchComms("-f", communityArray);
+      }
     }
-  } 
-  else {
+  } else {
     ltLog("On Remote Instance - Bar", LogDebug);
   }
 
