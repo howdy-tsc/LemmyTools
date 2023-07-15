@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.3
+// @version      0.2.0.4
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -26,10 +26,10 @@
   // const logLevel = LogInformation;
   // const logLevel = LogImportant;
   // ------------ END EDIT AREA --------------------------
-  // Fixes remote Instance home link. Example: var homeInstance = 'https://lemmy.world';
+  // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.3";
+  const ltVer = "0.2.0.4";
   const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
@@ -506,12 +506,11 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 	<h5>Attributes/Credit: </h5>
 	<li><b>@cwagner@lemmy.cwagner.me</b> - For coding, code cleanup, and mentoring.</li>
  	<li><b>Charles Machalow - csm10495</b> - Coding contribution(s).</li> 
+  	<li><b>jimmyhiggs337</b> - COding contribution(s).</li>
   <li>The provided style pack option of 'Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)' was graciously used with
     permission from the developer(s). <br />Please support their project here:<a
       href='https://github.com/soundjester/lemmy_monkey'> Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)</a></li>
-<br /><br /><a href='https://ko-fi.com/lemmytools'><img
-      src='https://storage.ko-fi.com/cdn/nav-logo-stroke.png' width='32' /><br />Enjoy LemmyTools?<br />Tip with
-    coffee!</a>
+
 `;
 
   //Adjust clickable area for mobile (add brandingString if desktop)
