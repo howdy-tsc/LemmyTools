@@ -1,4 +1,12 @@
-<h5>LemmyTools 0.2.0.1</h5>
+<h5>LemmyTools 0.2.0.4</h5>
+
+0.2.0.4
+* fixed "show all images" glitch in my other PR that caused images AND links to open (oops)
+* added ability to scale images via percent or pixel
+* disabled offset removal if image scaling is off because I personally did not like it lol
+* changed i = i+2 to i++ in the allimages() function because it was skipping some photos
+* removed .show() from the allimages() function because it was unnecessary
+
 0.2.0.1
 * Ability to hide showallimages button
 * Showallimages button works for all languages
