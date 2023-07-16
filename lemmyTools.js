@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.5p1
+// @version      0.2.0.5p2
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.5p1";
+  const ltVer = "0.2.0.5p2";
   const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
@@ -115,7 +115,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     } else {
       //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
       div.innerHTML = full;
-      ltLog(query, 0);
       //if searchInput query, store it for use on another page
       if (query.length > 2)
       {
@@ -576,7 +575,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       position: fixed;
       top: ${settings.commposVertical}%;
       ${settings.commposSide}: 0;
-      font-size: .75rem;
+      font-size: .9rem;
       display: block;
       height: 100%;
       min-height: auto;
