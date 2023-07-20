@@ -40,7 +40,11 @@
   let prevSearchCommsQueries = [];
   prevSearchCommsQueries.push("");
   let currentUrl = document.location.href;
-  
+
+  /**
+   * @type {Map<string, {Text: string, Color: string, Url?: string}>}
+   */
+  let userMap;
 
   function isHomeInstanceSet(i2c) {
     return i2c.length > 3;
@@ -101,8 +105,8 @@
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
-  
-    if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
+
+    if (query == "-f" && prevSearchCommsQueries.length < 2) {
       const commsCount = localStorage.getItem("commsCount");
       if (commsCount == null || full.length < 1) {
         div.innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}</b><br /><br />
@@ -113,13 +117,12 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         div.innerHTML = `Communities: ${commsCount}<hr />${full}`;
       }
     } else {
-      //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
+      //This searches the pushed communityArray with the query, saves it to an array, removes any duplicate values, sorts and then pushes to the commupdate function.
       div.innerHTML = full;
       //if searchInput query, store it for use on another page
-      if (query.length > 2)
-      {
-      prevSearchCommsQueries.push(query);
-   	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
+      if (query.length > 2) {
+        prevSearchCommsQueries.push(query);
+        localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
       }
       ltLog(`Searching for:${query}`, LogDebug);
       const children = div.getElementsByTagName("li");
@@ -135,14 +138,11 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
-      
-      if (currentUrl.indexOf(query) !== -1)
-      {
-      	commupdate(url, resultSet, query);
-      }
-      else
-      {
-        commupdate(url, resultSet, query);  
+
+      if (currentUrl.indexOf(query) !== -1) {
+        commupdate(url, resultSet, query);
+      } else {
+        commupdate(url, resultSet, query);
       }
     }
   }
@@ -153,11 +153,11 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     data.forEach((_) => count++);
     data = data.join("");
     div.innerHTML = `Results: ${count}<hr /><br />${data}`;
-    if (query.length > 2)
-    {
-   	searchInput.value = query;
+    if (query.length > 2) {
+      searchInput.value = query;
     }
   }
+
   const optionsKey = "LemmyToolsOptions";
 
   function getSettingsFromLocalStorage() {
@@ -167,6 +167,29 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       return {};
     }
   }
+
+  /**
+   * Gets all currently tagged users
+   *
+   * @return {Map<string, {Text: string, Color: string, Url: string}>} A Map of tagged users
+   */
+  function getUserCommentsFromLocalStorage() {
+    try {
+      const notes = localStorage.getItem(optionsKey + "-userNotes") || "[]";
+      return new Map(JSON.parse(notes));
+    } catch (e) {
+      console.error(e);
+      return new Map();
+    }
+  }
+
+  function saveUserCommentsToLocalStorage() {
+    localStorage.setItem(
+      optionsKey + "-userNotes",
+      JSON.stringify(Array.from(userMap))
+    );
+  }
+
   function options(open) {
     const odiv = document.getElementById("ltOptions");
     ltLog(`Options Functions: ${open}`);
@@ -198,6 +221,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         getSettingsFromLocalStorage()
       );
       localStorage.setItem(optionsKey, JSON.stringify(userOptions));
+      userMap = getUserCommentsFromLocalStorage();
     } else if (open === 3) {
       //save button
       odiv.style.display = "none";
@@ -305,6 +329,142 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       }
     }
   }
+
+  const colors = new Map([
+    ["transparent", "inherit"],
+    ["tomato", "white"],
+    ["darkorange", "white"],
+    ["gold", "black"],
+    ["yellowgreen", "white"],
+    ["lightseagreen", "white"],
+    ["teal", "white"],
+    ["indianred", "black"],
+    ["lightcoral", "black"],
+    ["lightpink", "black"],
+    ["mistyrose", "black"],
+    ["purple", "white"],
+    ["crimson", "white"],
+    ["teal", "white"],
+    ["darkslategray", "white"],
+  ]);
+
+  function addNotesToLinks(userNodes) {
+    const userNameRegex = /\/u\/([^@]+@.+)$/;
+    for (const node of userNodes) {
+      let userName;
+      try {
+        userName = node.href.match(userNameRegex)[1];
+      } catch (error) {
+        console.error(error, node, node.href);
+      }
+      let alreadyHadSpan = false;
+      let span;
+      const existing = node.getElementsByClassName("userNote");
+      if (existing.length === 1) {
+        alreadyHadSpan = true;
+        span = existing[0];
+      } else span = document.createElement("span");
+
+      span.innerHTML = "🏷";
+      if (userMap.has(userName)) {
+        span.innerHTML = userMap.get(userName).Text;
+        span.style.backgroundColor = userMap.get(userName).Color;
+        span.style.color = colors.get(userMap.get(userName).Color);
+      }
+      span.classList.add("userNote", "badge");
+      span.dataset.user = userName;
+      if (!alreadyHadSpan) {
+        span.addEventListener("click", tagClick);
+        node.appendChild(span);
+      }
+      node.classList.add("hasNote");
+    }
+  }
+
+  function tagUsers() {
+    setInterval(() => {
+      const userNodes = document.querySelectorAll(
+        ".person-listing:not(.hasNote)"
+      );
+      addNotesToLinks(userNodes);
+    }, 500);
+  }
+
+  function tagClick(clickEvent) {
+    clickEvent.preventDefault();
+    const userName = clickEvent.currentTarget.dataset.user;
+    const dialog = document.createElement("dialog");
+    let colorOptions = "";
+    colors.forEach(
+      (val, key) =>
+        (colorOptions += `<option style="color: ${val}; background-color: ${key}" value="${key}">${key}</option>`)
+    );
+    dialog.classList.add("userTagger");
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        closeDialog(dialog);
+      }
+    });
+    dialog.innerHTML = `<div style="width: 350px;">
+  <strong>${userName}</strong>
+  <form id="userTag">
+    <div>
+      <label for="userTagText">Text</label>
+      <input type="text" id="userTagText" value="">
+    </div>
+    <div>
+      <label for="userTagColor">Color</label>
+      <select id="userTagColor">
+        ${colorOptions}
+      </select>
+    </div>
+    <div>
+      <button type="submit">✓ save tag</button>
+      <button formmethod="dialog">× cancel</button>
+    </div>
+  </form>
+</div>`;
+
+    const userTagText = dialog.querySelector("#userTagText");
+    const userTagColor = dialog.querySelector("#userTagColor");
+    if (userMap.has(userName)) {
+      userTagText.value = userMap.get(userName).Text;
+      userTagColor.value = userMap.get(userName).Color;
+    }
+    const form = dialog.querySelector("#userTag");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (e.submitter.formMethod === "dialog") {
+        closeDialog(dialog);
+        return;
+      }
+      if (userTagText.value.length) {
+        if (!userMap.has(userName))
+          userMap.set(userName, { Text: "", Color: "" });
+        userMap.get(userName).Text = userTagText.value;
+        userMap.get(userName).Color = userTagColor.value;
+      } else {
+        userMap.delete(userName);
+      }
+      addNotesToLinks(document.querySelectorAll(`[href="/u/${userName}"]`));
+      saveUserCommentsToLocalStorage();
+      closeDialog(dialog);
+    });
+    document.body.appendChild(dialog);
+    dialog.showModal();
+  }
+  function closeDialog(dialog) {
+    dialog.close();
+    dialog.remove();
+  }
+  function ready(fn) {
+    if (document.readyState !== "loading") {
+      fn();
+    } else {
+      document.addEventListener("DOMContentLoaded", fn);
+    }
+  }
+
   //Expand all images on page
   function allImages(show) {
     let clickableImages = document.getElementsByClassName(
@@ -354,6 +514,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       links[i].setAttribute("rel", "noreferrer");
     }
   }
+
   // LemmyTools
 
   //check if first run or load saved settings
@@ -361,13 +522,13 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
 
   /* The provided restyling was graciously used with permission from the developer(s) of Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
 
-      // @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-      // @namespace    https://github.com/soundjester/lemmy_monkey
-      // @description  Reformat widescreen desktop to look more like Reddit
-      // @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
+        // @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
+        // @namespace    https://github.com/soundjester/lemmy_monkey
+        // @description  Reformat widescreen desktop to look more like Reddit
+        // @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
 
-      Thank you.
-      */
+        Thank you.
+        */
 
   //Add Compact AlienSiteOld Theme
   if (settings.alienSiteOld === true) {
@@ -549,7 +710,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
   idiv.setAttribute("id", "searchdiv");
   idiv.classList.add("ltmenu", "border-secondary", "card");
   // todo on input
-    
+
   idiv.innerHTML = `
   <div id='ltActiveSearchDiv' class='ltActiveSearchDiv'>
     <header id='ltBarHeader' class='card-header'>
@@ -661,7 +822,26 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     #searchdiv::-webkit-scrollbar {
       display: none;
     }
-    
+    .userNote {
+      margin-left: 0.5em;
+      //padding-left: 0.25em;
+      //padding-right: 0.25em;
+      font-size: 0.9em;
+    }
+    .userTagger {
+        border-radius: var(--bs-border-radius);
+    }
+    .userTagger::backdrop {
+      background: rgba(0, 0, 0, 0.7);
+    }
+    form#userTag {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    form#userTag label {
+        width: 60px;
+    }
 `;
 
   if (settings.unblurNSFW) {
@@ -824,18 +1004,6 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
     options(3);
   });
 
-  // document.onreadystatechange = () => {
-  //   if (document.readyState === "interactive") {
-  //     // document ready
-  //     if (
-  //       showImagesButton.value == "Hide All Images" ||
-  //       settings.showAllImages
-  //     ) {
-  //       allImages(true);
-  //     }
-  //   }
-  // };
-
   //Easier Subscribe Buttons ---------------------------
   ltLog("url is " + url);
   let rCommunityArray = [];
@@ -867,7 +1035,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       communityArray = rCommunityArray;
     }
   }, 1000);
-
+  tagUsers();
   // Update homeInstance Comms for bar to use
   let communityArray = [];
   if (url.includes(settings.instance)) {
@@ -897,26 +1065,28 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
       communityArray = localStorage.getItem("localComms");
 
       div.innerHTML += communityArray;
-     //If previous search display previous results
-     
+      //If previous search display previous results
 
       try {
-      	let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
+        let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
         let latestQueryArray = [];
         latestQueryArray = latestQueryString.split(",");
-        if (currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !== -1) {
-         searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
+        if (
+          currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !==
+          -1
+        ) {
+          searchComms(
+            latestQueryArray[latestQueryArray.length - 1],
+            communityArray
+          );
+        } else {
+          searchComms("-f", communityArray);
         }
-        else {
-         searchComms("-f", communityArray);
-       		}
-     		}
-     	catch {
-    	 searchComms("-f", communityArray);
-     		}   
+      } catch {
+        searchComms("-f", communityArray);
+      }
     }
-  } 
-  else {
+  } else {
     ltLog("On Remote Instance - Bar", LogDebug);
   }
 
@@ -1009,7 +1179,7 @@ If you don’t see your subscribed communities here, simply login to your lemmy 
         });
       }
     } catch {}
-    //Links Open In New Tab
+    //Links Open in New Tab
     linksInNewTab();
   }, 500);
 })();
