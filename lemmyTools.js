@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.5p2
+// @version      0.2.0.6
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -29,7 +29,7 @@
   // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.5p2";
+  const ltVer = "0.2.0.6";
   const ltTestedVer = "0.18.2";
   //--------------------------------------------
 
