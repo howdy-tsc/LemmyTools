@@ -1,4 +1,9 @@
 <h5>LemmyTools 0.2.0.4</h5>
+0.2.0.7
+* added LemmyTools topbar implementation
+
+0.2.0.6
+* cwagner added user tagger
 
 0.2.0.4
 * fixed "show all images" glitch in my other PR that caused images AND links to open (oops)
