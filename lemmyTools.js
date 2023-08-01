@@ -786,11 +786,12 @@ No communities? Login to lemmy and reload page.`;
       display: none;
       width: 100%;
     }
-
+    
     .post-listings .img-expanded {
-      width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"}
+      width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"};
+      max-height: none !important;
     }
-
+    
     #myDiv li {
       list-style-type: none;
     }
