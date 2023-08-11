@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.7
+// @version      0.2.0.8
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -21,17 +21,19 @@
   const LogImportant = 2;
   // ------------ EDIT THIS VARIABLE ---------------------
   const homeInstance = "";
-
+	// -----------------------------------------------------
+  // homeInstance - Fixes remote Instance home link. Example: const homeInstance = "https://lemmy.world";
+    
   // Choose a log level for the console:
   const logLevel = LogDebug;
   // const logLevel = LogInformation;
   // const logLevel = LogImportant;
   // ------------ END EDIT AREA --------------------------
-  // Fixes remote Instance home link. Example: const homeInstance = 'https://lemmy.world';
+ 
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.7";
-  const ltTestedVer = "0.18.2";
+  const ltVer = "0.2.0.8";
+  const ltTestedVer = "0.18.3";
   //--------------------------------------------
 
   /* Globals */
@@ -104,7 +106,7 @@
   
     if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
       const commsCount = localStorage.getItem("commsCount");
-      if (commsCount == null || full.length < 1) {
+      if (commsCount == null || commsCount == 0 || full.length < 1) {
         commsAreaStatic[0].innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}!</b><br /><br />
 First time? Set your lemmy homeinstance in the option page and in the UserScript.<br />
 No communities? Login to lemmy and reload page.`;
@@ -154,12 +156,12 @@ No communities? Login to lemmy and reload page.`;
    
     for (let i = 0; i < commsAreaSearch.length; i++)
     {
-  	commsAreaSearch[i].innerHTML = `Communities: ${count} - <hr />${data}`;
+  	commsAreaSearch[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
     }
 
     for (let i = 0; i < commsAreaStatic.length; i++)
     {
-  	commsAreaStatic[i].innerHTML = `Communities: ${count} - <hr />${data}`;
+  	commsAreaStatic[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
     }
     if (query.length > 2)
     {
@@ -210,7 +212,7 @@ No communities? Login to lemmy and reload page.`;
       userOptions = Object.assign(
         {},
         {
-          commposSide: mobile ? "left" : "top",
+          commposSide: mobile ? "left" : "right",
           reverseSide: mobile ? "left" : "right",
           instance: homeInstance || window.location.origin,
           commposVertical: 0,
@@ -219,8 +221,6 @@ No communities? Login to lemmy and reload page.`;
           expandImagesize: mobile ? 100 : 50,
           hoverCheck: false,
           unblurNSFW: false,
-          alienSiteOld: !mobile,
-          alienSiteOldReadWidth: 740,
           widthPixels: false,
           expandImageSpeed: 0.5,
           showAllImages: false,
@@ -259,15 +259,9 @@ No communities? Login to lemmy and reload page.`;
         document.getElementById("option_hoverCheck").checked;
       userOptions.unblurNSFW =
         document.getElementById("option_unblurNSFW").checked;
-      userOptions.alienSiteOld = document.getElementById(
-        "option_alienSiteOld"
-      ).checked;
       userOptions.linksInNewTab = document.getElementById(
         "option_linksInNewTab"
       ).checked;
-      userOptions.alienSiteOldReadWidth = parseInt(
-        document.getElementById("option_alienSiteOldReadWidth").value
-      );
       userOptions.widthPixels =
         document.getElementById("option_widthPixels").checked;
       userOptions.showAllImages = document.getElementById(
@@ -505,19 +499,6 @@ No communities? Login to lemmy and reload page.`;
     }
   }
 
-  // todo maybe something safer
-  function alienSiteOldStyle_compact() {
-    const xhr = new XMLHttpRequest();
-    xhr.open(
-      "GET",
-      "https://cdn.jsdelivr.net/gh/soundjester/lemmy_monkey@main/old.reddit.compact.user.js"
-    );
-    xhr.onload = function () {
-      document.head.appendChild(document.createElement("script")).innerHTML =
-        xhr.responseText;
-    };
-    xhr.send();
-  }
 
   function linksInNewTab() {
     const links = document.getElementsByTagName("a");
@@ -541,12 +522,6 @@ No communities? Login to lemmy and reload page.`;
 
       Thank you.
       */
-
-  //Add Compact AlienSiteOld Theme
-  if (settings.alienSiteOld === true) {
-    console.log("LemmyTools: Adding alienSiteOld");
-    alienSiteOldStyle_compact();
-  }
 
   function checkedIfTrue(val) {
     return val ? "checked" : "";
@@ -576,7 +551,6 @@ No communities? Login to lemmy and reload page.`;
   let hSBcheck = checkedIfTrue(settings.hideSideBar);
   let hoverCheck = checkedIfTrue(settings.hoverCheck);
   let unblurCheck = checkedIfTrue(settings.unblurNSFW);
-  let aSOcheck = checkedIfTrue(settings.alienSiteOld);
   let widthPixelCheck = checkedIfTrue(settings.widthPixels);
   let widthPercentCheck = checkedIfTrue(!settings.widthPixels);
   let showAllImagesCheck = checkedIfTrue(settings.showAllImages);
@@ -596,7 +570,8 @@ No communities? Login to lemmy and reload page.`;
 
   const odiv = document.createElement("div");
   odiv.setAttribute("id", "ltOptions");
-  odiv.classList.add("ltoptions", "border-secondary", "card");
+  odiv.setAttribute("style", "display: none;")
+  odiv.classList.add("card", "border-secondary", "ltoptions");
   odiv.innerHTML = `
     <h4>LemmyTools ${ltVer} Options</h4>
   </hr>
@@ -643,13 +618,6 @@ No communities? Login to lemmy and reload page.`;
         <tr>
           <td><b>Site Style and Behaviors:</b></td>
           <td></td>
-        </tr>
-        <tr>
-          <td><b>Compact Lemmy to old.Reddit Re-format (Lemmy v0.18) style</b><br />Like the old alien.site but lemmy!
-            <br />Defaults - Desktop: On / Mobile: Off <br /><br /> Post width / comment width setting in pixels.
-            Increase or Decrease to your reading preference while viewing posts. (Default 740) </td>
-          <td><input type='checkbox' id='option_alienSiteOld' ${aSOcheck} /><br /><br /><br /><textarea
-              id='option_alienSiteOldReadWidth'>${settings.alienSiteOldReadWidth}</textarea></td>
         </tr>
         <tr>
           <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.
@@ -709,8 +677,8 @@ No communities? Login to lemmy and reload page.`;
 	<li><b>@cwagner@lemmy.cwagner.me</b> - For coding, code cleanup, and mentoring.</li>
  	<li><b>Charles Machalow - csm10495</b> - Coding contribution(s).</li> 
   	<li><b>jimmyhiggs337</b> - Coding contribution(s).</li>
-  <li>The provided style pack option of 'Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)' was graciously used with
-    permission from the developer(s). <br />Please support their project here:<a
+  <li>The provided style pack option of 'Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)' was removed in ver 0.2.0.8 due
+    to changes in lemmy-ui security. <br />You may still use and support their project here:<a
       href='https://github.com/soundjester/lemmy_monkey'> Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)</a></li>
 
 `;
@@ -778,6 +746,12 @@ No communities? Login to lemmy and reload page.`;
       width: 100%;
     }
 
+	  .ltActiveSearchDiv img:hover{
+      margin-top:-5px;
+      border:10px yellow;
+      }
+
+
     .ltmenu input {
       width: 100%;
     }
@@ -785,13 +759,13 @@ No communities? Login to lemmy and reload page.`;
     .ltPassiveSearchDiv {
       display: none;
       width: 100%;
-    }
-    
+    }	
+
     .post-listings .img-expanded {
       width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"};
-      max-height: none !important;
+			max-height: none !important;
     }
-    
+
     #myDiv li {
       list-style-type: none;
     }
@@ -992,23 +966,7 @@ No communities? Login to lemmy and reload page.`;
 			}
 		}`;
 
-  //Adjust Comment/Post width (for reading with compact old style)
-  if (settings.alienSiteOld === true) {
-    styleString += `
-    #postContent,
-    .md-div,
-    .alert-warning {
-      max-width: 740px !important;
-    }
 
-    .mb-3.row {
-      max-width: ${settings.alienSiteOldReadWidth}px !important;
-    }
-
-    .comment {
-      max-width: ${settings.alienSiteOldReadWidth}px !important;
-    }`;
-  }
 
 
   if (settings.commposSide != "top")
@@ -1224,7 +1182,7 @@ No communities? Login to lemmy and reload page.`;
     document
       .querySelectorAll('[class="list-inline-item d-inline-block"]')
       .forEach(function (el) {
-        communityArray.push("<li>" + el.innerHTML + "</li>");
+        communityArray.push("<li>" + el.innerHTML.toLowerCase() + "</li>");
       });
     communityArray = [...new Set(communityArray)];
     if (count === 0 || count == null) {
@@ -1240,15 +1198,14 @@ No communities? Login to lemmy and reload page.`;
       localStorage.setItem("localComms", communityArray);
       localStorage.setItem("commsCount", count.toString()); // todo why store the count? communityArray.length everywhere should be easier
       //force update the page
-      searchComms("-f", communityArray);
+      searchComms(searchInput.value, communityArray);
     } else {
       ltLog("get localcomms from localstore", LogDebug);
       communityArray = localStorage.getItem("localComms");
 
        commsAreaStatic[0].innerHTML += communityArray;
-     //If previous search display previous results
      
-
+      //If previous search display previous results
       try {
       	let latestQueryString = localStorage.getItem("prevSearchCommsQueries");
         let latestQueryArray = [];
@@ -1257,11 +1214,11 @@ No communities? Login to lemmy and reload page.`;
          searchComms(latestQueryArray[latestQueryArray.length - 1], communityArray);
         }
         else {
-         searchComms("-f", communityArray);
+         searchComms(searchInput.value, communityArray);
        		}
      		}
      	catch {
-    	 searchComms("-f", communityArray);
+    	 searchComms(searchInput.value, communityArray);
      		}   
     }
   } 
