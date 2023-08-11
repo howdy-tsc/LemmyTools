@@ -1,4 +1,10 @@
-<h5>LemmyTools 0.2.0.7</h5>
+<h5>LemmyTools 0.2.0.8</h5>
+0.2.0.8
+* Community list to lower case for better alphabetical sort reliability, 
+* options page breaking on some themes (without a page refresh), 
+* removed old.reddit style option due to lemmy-ui security changes, 
+* changed default bar position to: right on desktop until top bar fully implemented.
+
 0.2.0.7
 * added LemmyTools topbar implementation
 
