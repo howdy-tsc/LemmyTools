@@ -1,6 +1,6 @@
 <h3>LemmyTools - ReadMe</h3>
 
-<p><b>Current Features: 0.2.0.8</b></p>
+<p><b>Current Features: 0.2.0.9</b></p>
 <li>LemmyTools top bar implemented</li>
 <li>User Tagger </li>
 <li>All links open in new tab with noreferrer enabled</li>
