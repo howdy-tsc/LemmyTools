@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.8
+// @version      0.2.0.9
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
@@ -32,7 +32,7 @@
  
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.8";
+  const ltVer = "0.2.0.9";
   const ltTestedVer = "0.18.3";
   //--------------------------------------------
 
@@ -355,7 +355,7 @@ No communities? Login to lemmy and reload page.`;
   ]);
 
   function addNotesToLinks(userNodes) {
-    const userNameRegex = /\/u\/([^@]+@.+)$/;
+	const userNameRegex = /\/u\/(.+)$/;
     for (const node of userNodes) {
       let userName;
       try {
