@@ -1324,7 +1324,8 @@ No communities? Login to lemmy and reload page.`;
   }
 })();
   function isLemmySite() {
+    const meta = document.querySelector('meta[name="Description"]');
     return (
-      document.querySelector('meta[name="Description"]').content === "Lemmy"
+      meta && meta.content === "Lemmy"
     );
   }
