@@ -1,4 +1,7 @@
-<h5>LemmyTools 0.2.0.9</h5>
+<h5>LemmyTools 0.2.1.0</h5>
+0.2.1.0
+* Added conentBlocking features. Users can now block posts/comment by adding filters in the settings. 
+
 0.2.0.9
 * User tagger fix for local instance users.
 
