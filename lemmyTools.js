@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         LemmyTools
 // @namespace    https://thesimplecorner.org/c/lemmytools
-// @version      0.2.0.9
+// @version      0.2.1.0
 // @description  A small suite of tools to make Lemmy easier.
 // @author       howdy@thesimplecorner.org
 // @author       @cwagner@lemmy.cwagner.me
 // @grant        none
 // @include      https://*
+// @downloadURL https://update.greasyfork.org/scripts/469169/LemmyTools.user.js
+// @updateURL https://update.greasyfork.org/scripts/469169/LemmyTools.meta.js
 // ==/UserScript==
 
 (function () {
@@ -16,13 +18,18 @@
   }
   else //is Lemmy Do!
   {
-  const LogDebug = 0;
-  const LogInformation = 1;
-  const LogImportant = 2;
   // ------------ EDIT THIS VARIABLE ---------------------
   const homeInstance = "";
 	// -----------------------------------------------------
   // homeInstance - Fixes remote Instance home link. Example: const homeInstance = "https://lemmy.world";
+    
+    
+  /* NOTHING NEEDS CHANGED BELOW */
+    
+    
+  const LogDebug = 0;
+  const LogInformation = 1;
+  const LogImportant = 2;
     
   // Choose a log level for the console:
   const logLevel = LogDebug;
@@ -32,8 +39,8 @@
  
   //Nothing below needs editing.
   // -------------- VERSION -------------------
-  const ltVer = "0.2.0.9";
-  const ltTestedVer = "0.18.3";
+  const ltVer = "0.2.1.0";
+  const ltTestedVer = "0.19.0";
   //--------------------------------------------
 
   /* Globals */
@@ -87,8 +94,6 @@
         const browsedComm = `<li><h5>${comm}</h5></li>
 <li>
     <a href='${homeInstance}/c/${commName}' target='_blank'><button type="button" class='ltbutton'>Browse/Sub on Home Instance</button></a>
-    <br />
-    <a href='${subString}' target='_blank'><button type="button" class='ltbutton'>Alternative Subscribe Method</button></a>
 </li>`;
         remoteCommunityArray.push(browsedComm);
       }
@@ -122,15 +127,15 @@ No communities? Login to lemmy and reload page.`;
       prevSearchCommsQueries.push(query);
    	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
       }
-      ltLog(`Searching for:${query}`, LogDebug);
+      //ltLog(`Searching for:${query}`, LogDebug);
       const children = commsAreaStatic[0].getElementsByTagName("li");
-      ltLog(`Children found: ${children.length}`, LogDebug);
+      //ltLog(`Children found: ${children.length}`, LogDebug);
       let data = [""];
       let found;
       for (let i = 0; i < children.length; i++) {
         if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
           found = children[i].innerHTML + "<br />";
-          ltLog(`Found: ${found}`, LogDebug);
+          //ltLog(`Found: ${found}`, LogDebug);
           data.push(found);
         }
       }
@@ -222,6 +227,8 @@ No communities? Login to lemmy and reload page.`;
           hoverCheck: false,
           unblurNSFW: false,
           widthPixels: false,
+          blockContent: false,
+          blockFilters: "example,filter,nsfw,elon,tesla",
           expandImageSpeed: 0.5,
           showAllImages: false,
           hideShowAllImagesButton: false,
@@ -259,6 +266,10 @@ No communities? Login to lemmy and reload page.`;
         document.getElementById("option_hoverCheck").checked;
       userOptions.unblurNSFW =
         document.getElementById("option_unblurNSFW").checked;
+      userOptions.blockContent =
+        document.getElementById("option_blockContent").checked;
+      userOptions.blockFilters =
+        document.getElementById("option_blockFilters").value.replace(/\s/g, "").split(",");
       userOptions.linksInNewTab = document.getElementById(
         "option_linksInNewTab"
       ).checked;
@@ -507,6 +518,35 @@ No communities? Login to lemmy and reload page.`;
       links[i].setAttribute("rel", "noreferrer");
     }
   }
+    
+  function blockContent(filters) {
+    const blockFilters = filters;
+    const posts = document.getElementsByClassName("post-listing");
+    const comments = document.getElementsByClassName("comment");
+    
+   
+    var blockedCount = 0;
+    for (let y = 0; y < blockFilters.length; y++) {
+      if (blockFilters[y].length >= 1)
+        {
+        for (let i = 0; i < posts.length; i++) {
+          if (posts[i].innerHTML.toLowerCase().indexOf(blockFilters[y].toLowerCase()) !== -1) {
+            blockedCount++
+            posts[i].setAttribute("style", "display: none !important;");
+            //posts[i].innerHTML = "<div class='card small'>Post blocked due to filter: " + blockFilters[y] + "</div>"
+          }
+        }
+        for (let x = 0; x < comments.length; x++) {
+          if (comments[x].innerHTML.toLowerCase().indexOf(blockFilters[y].toLowerCase()) !== -1) {
+            blockedCount++
+            comments[x].setAttribute("style", "display: none !important;");
+            //comments[x].innerHTML = "<div class='card small'>Post blocked due to filter: " + blockFilters[y] + "</div>"
+          }
+        }
+      }
+    }
+    ltLog("content blocking has blocked: " + blockedCount + " posts.", 2)
+  }
 
   // LemmyTools
 
@@ -551,6 +591,7 @@ No communities? Login to lemmy and reload page.`;
   let hSBcheck = checkedIfTrue(settings.hideSideBar);
   let hoverCheck = checkedIfTrue(settings.hoverCheck);
   let unblurCheck = checkedIfTrue(settings.unblurNSFW);
+  let blockContentCheck = checkedIfTrue(settings.blockContent);
   let widthPixelCheck = checkedIfTrue(settings.widthPixels);
   let widthPercentCheck = checkedIfTrue(!settings.widthPixels);
   let showAllImagesCheck = checkedIfTrue(settings.showAllImages);
@@ -573,7 +614,7 @@ No communities? Login to lemmy and reload page.`;
   odiv.setAttribute("style", "display: none;")
   odiv.classList.add("card", "border-secondary", "ltoptions");
   odiv.innerHTML = `
-    <h4>LemmyTools ${ltVer} Options</h4>
+    <h4>LemmyTools ${ltVer} Options - <button class='pointer btn btn-secondary text-bg-primary' id='LTsaveoptions'>Save&Close</button></h4>
   </hr>
   <div class='table-responsive'>
     <table class='table'>
@@ -585,7 +626,7 @@ No communities? Login to lemmy and reload page.`;
       </tr>
       <tbody>
         <tr>
-          <td><b>LemmyTools Settings:</b></td>
+          <td><b>LemmyTools Settings: </b></td>
           <td></td>
         </tr>
         <tr>
@@ -620,7 +661,7 @@ No communities? Login to lemmy and reload page.`;
           <td></td>
         </tr>
         <tr>
-          <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> More room for images on feed.
+          <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> 
           </td>
           <td><input type='checkbox' id='option_hideSideBar' ${hSBcheck} /></td>
         </tr>
@@ -659,15 +700,23 @@ No communities? Login to lemmy and reload page.`;
           <td><input type='checkbox' id='option_linksInNewTab' ${linksCheck} /></td>
         </tr>
         <tr>
+          <td><b>Content Blocking: (Blocks posts and comments matching your desired filters.).</b><br /></td>
+          <td><input type='checkbox' id='option_blockContent' ${blockContentCheck} /></td>
+        </tr>
+        <tr>
+          <td>Add filters seperated by commas. Do not include any special characters.<br />
+          <textarea id='option_blockFilters'>${settings.blockFilters}</textarea></td>
+        </tr>
+        <tr>
           <td></td>
-          <td><button id='LTsaveoptions'>Save / Close</button></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
   </div>
-  <p> Tested on Lemmy Version: ${ltTestedVer} on firefox. <br />
-  <h5>LemmyTools Links</h5>
-  <hr /><a href='https://thesimplecorner.org/c/lemmytools'>!lemmytools@thesimplecorner.org</a><br />Get it here: <a
+  <p> Tested on Lemmy Version: ${ltTestedVer} on Firefox. <br />
+
+  <hr /><Get it here: <a
     href='https://github.com/howdy-tsc/LemmyTools'>GitHub</a> or <a
     href='https://greasyfork.org/en/scripts/469169-lemmytools'>GreasyFork</a><br />Please submit issues to the GitHub
   for feature requests and problems: <a href='https://github.com/howdy-tsc/LemmyTools/issues'>GitHub LemmyTools
@@ -677,10 +726,6 @@ No communities? Login to lemmy and reload page.`;
 	<li><b>@cwagner@lemmy.cwagner.me</b> - For coding, code cleanup, and mentoring.</li>
  	<li><b>Charles Machalow - csm10495</b> - Coding contribution(s).</li> 
   	<li><b>jimmyhiggs337</b> - Coding contribution(s).</li>
-  <li>The provided style pack option of 'Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)' was removed in ver 0.2.0.8 due
-    to changes in lemmy-ui security. <br />You may still use and support their project here:<a
-      href='https://github.com/soundjester/lemmy_monkey'> Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)</a></li>
-
 `;
 
   //Adjust clickable area for mobile (add brandingString if desktop)
@@ -1041,7 +1086,7 @@ No communities? Login to lemmy and reload page.`;
       -ms-overflow-style: none;
       scrollbar-width: none;
       z-index: 99999999 !important;
-
+"mailx" stuck linux
       }
       #topDiv img:hover{
       margin-top:-5px;
@@ -1318,9 +1363,14 @@ No communities? Login to lemmy and reload page.`;
     //Links Open In New Tab
     if (settings.linksInNewTab == true)
     {
-    linksInNewTab();
+    	linksInNewTab();
     }
+    if (settings.blockContent == true)
+    {
+    	blockContent(settings.blockFilters);
+    };
   }, 500);
+    
   }
 })();
   function isLemmySite() {
