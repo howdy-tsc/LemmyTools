@@ -21,7 +21,7 @@
   // ------------ EDIT THIS VARIABLE ---------------------
   const homeInstance = "";
 	// -----------------------------------------------------
-  // homeInstance - Fixes remote Instance home link. Example: const homeInstance = "https://lemmy.world";
+  //Example: const homeInstance = "https://lemmy.world";
     
     
   /* NOTHING NEEDS CHANGED BELOW */
@@ -546,9 +546,10 @@ No communities? Login to lemmy and reload page.`;
             //comments[x].innerHTML = "<div class='card small'>Post blocked due to filter: " + blockFilters[y] + "</div>"
           }
         }
-         localStorage.setItem("currentBlockCount", blockedCount);
+         
       }
     }
+    localStorage.setItem("currentBlockCount", blockedCount);
     ltLog("content blocking has blocked: " + blockedCount + " posts.", 2)
   }
     
