@@ -40,7 +40,7 @@
   //Nothing below needs editing.
   // -------------- VERSION -------------------
   const ltVer = "0.2.1.0";
-  const ltTestedVer = "0.19.0";
+  const ltTestedVer = "0.19.1";
   //--------------------------------------------
 
   /* Globals */
@@ -217,7 +217,7 @@ No communities? Login to lemmy and reload page.`;
       userOptions = Object.assign(
         {},
         {
-          commposSide: mobile ? "left" : "right",
+          commposSide: mobile ? "top" : "top",
           reverseSide: mobile ? "left" : "right",
           instance: homeInstance || window.location.origin,
           commposVertical: 0,
@@ -228,7 +228,7 @@ No communities? Login to lemmy and reload page.`;
           unblurNSFW: false,
           widthPixels: false,
           blockContent: false,
-          blockFilters: "example,filter,nsfw,elon,tesla",
+          blockFilters: "nsfw,elon,alien site",
           expandImageSpeed: 0.5,
           showAllImages: false,
           hideShowAllImagesButton: false,
@@ -241,6 +241,7 @@ No communities? Login to lemmy and reload page.`;
     } else if (open === 3) {
       //save button
       odiv.style.display = "none";
+      localStorage.setItem("currentBlockCount", 0);
 
       userOptions.commposSide =
         document.getElementById("option_commposSide").value;
@@ -269,7 +270,7 @@ No communities? Login to lemmy and reload page.`;
       userOptions.blockContent =
         document.getElementById("option_blockContent").checked;
       userOptions.blockFilters =
-        document.getElementById("option_blockFilters").value.replace(/\s/g, "").split(",");
+        document.getElementById("option_blockFilters").value.split(",");
       userOptions.linksInNewTab = document.getElementById(
         "option_linksInNewTab"
       ).checked;
@@ -523,15 +524,17 @@ No communities? Login to lemmy and reload page.`;
     const blockFilters = filters;
     const posts = document.getElementsByClassName("post-listing");
     const comments = document.getElementsByClassName("comment");
-    
+   
    
     var blockedCount = 0;
     for (let y = 0; y < blockFilters.length; y++) {
       if (blockFilters[y].length >= 1)
         {
+          blockFilters[y] = addslashes(blockFilters[y]);
         for (let i = 0; i < posts.length; i++) {
           if (posts[i].innerHTML.toLowerCase().indexOf(blockFilters[y].toLowerCase()) !== -1) {
             blockedCount++
+            
             posts[i].setAttribute("style", "display: none !important;");
             //posts[i].innerHTML = "<div class='card small'>Post blocked due to filter: " + blockFilters[y] + "</div>"
           }
@@ -543,25 +546,21 @@ No communities? Login to lemmy and reload page.`;
             //comments[x].innerHTML = "<div class='card small'>Post blocked due to filter: " + blockFilters[y] + "</div>"
           }
         }
+         localStorage.setItem("currentBlockCount", blockedCount);
       }
     }
     ltLog("content blocking has blocked: " + blockedCount + " posts.", 2)
   }
+    
+	function addslashes( str ) {
+    return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+	}
 
   // LemmyTools
 
   //check if first run or load saved settings
   let settings = options(2);
 
-  /* The provided restyling was graciously used with permission from the developer(s) of Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-
-      // @name         Compact Lemmy to old.Reddit Re-format (Lemmy v0.18)
-      // @namespace    https://github.com/soundjester/lemmy_monkey
-      // @description  Reformat widescreen desktop to look more like Reddit
-      // @author       mershed_perderders, DarkwingDuck, dx1@lemmy.world, Djones4822, Jakylla
-
-      Thank you.
-      */
 
   function checkedIfTrue(val) {
     return val ? "checked" : "";
@@ -700,13 +699,15 @@ No communities? Login to lemmy and reload page.`;
           <td><input type='checkbox' id='option_linksInNewTab' ${linksCheck} /></td>
         </tr>
         <tr>
-          <td><b>Content Blocking: (Blocks posts and comments matching your desired filters.).</b><br /></td>
+          <td><b>Content Blocking: (Blocks posts and comments matching your desired filters).</b><br /></td>
           <td><input type='checkbox' id='option_blockContent' ${blockContentCheck} /></td>
         </tr>
         <tr>
-          <td>Add filters seperated by commas. Do not include any special characters.<br />
-          <textarea id='option_blockFilters'>${settings.blockFilters}</textarea></td>
+          <td>Add filters seperated by commas. Avoid <br />
+          <textarea style="width:100%; "id='option_blockFilters'>${settings.blockFilters}</textarea></td>
+          <td>Posts/Comments blocked from <br /> filters on this page:<br />${localStorage.getItem("currentBlockCount")}</td>
         </tr>
+ 
         <tr>
           <td></td>
           <td></td>
@@ -896,10 +897,10 @@ No communities? Login to lemmy and reload page.`;
 
   if (settings.unblurNSFW) {
     styleString +=
-      " .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} ";
+      " .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} .img-blur-icon {display: none !important;} ";
   } else {
     styleString +=
-      " .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
+      " .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} .img-blur-icon  {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
   }
 
   if (settings.hideSideBar) {
@@ -1365,6 +1366,7 @@ No communities? Login to lemmy and reload page.`;
     {
     	linksInNewTab();
     }
+    //Block Content
     if (settings.blockContent == true)
     {
     	blockContent(settings.blockFilters);
