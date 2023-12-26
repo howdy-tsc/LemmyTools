@@ -21,7 +21,7 @@
   // ------------ EDIT THIS VARIABLE ---------------------
   const homeInstance = "";
 	// -----------------------------------------------------
-  //Example: const homeInstance = "https://lemmy.world";
+  // homeInstance - Fixes remote Instance home link. Example: const homeInstance = "https://lemmy.world";
     
     
   /* NOTHING NEEDS CHANGED BELOW */
@@ -228,7 +228,7 @@ No communities? Login to lemmy and reload page.`;
           unblurNSFW: false,
           widthPixels: false,
           blockContent: false,
-          blockFilters: "nsfw,elon,alien site",
+          blockFilters: "",
           expandImageSpeed: 0.5,
           showAllImages: false,
           hideShowAllImagesButton: false,
@@ -704,9 +704,9 @@ No communities? Login to lemmy and reload page.`;
           <td><input type='checkbox' id='option_blockContent' ${blockContentCheck} /></td>
         </tr>
         <tr>
-          <td>Add filters seperated by commas. Avoid <br />
+          <td>Add filters seperated by commas. Ex: filter,filter two,filter3 <br />
           <textarea style="width:100%; "id='option_blockFilters'>${settings.blockFilters}</textarea></td>
-          <td>Posts/Comments blocked from <br /> filters on this page:<br />${localStorage.getItem("currentBlockCount")}</td>
+          <td>Posts/Comments blocked from filters on this page:<br />${localStorage.getItem("currentBlockCount")}</td>
         </tr>
  
         <tr>
@@ -1054,7 +1054,7 @@ No communities? Login to lemmy and reload page.`;
                 Communities</a>
             </h5>
           </header>
-      LemmyTools ${ltVer} - <a href='#' id='LToptions'>Options</a>
+      LemmyTools ${ltVer}
       <div class="commsAreaSearch">
       </div>
       `;
