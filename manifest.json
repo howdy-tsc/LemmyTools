@@ -6,24 +6,24 @@
   "version": "0.3",
   "homepage_url": "https://github.com/howdy-tsc/LemmyTools",
   "icons": {
-    "48": "icons/lemmy-tools.png"
+    "48": "assets/lemmy-tools.png"
   },
 
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["ltMain.js"],
-      "run_at": "document_end"
+      "js": ["ltMain.js"]
     }
   ],
 
   "permissions": [
-    "storage"
+    "storage",
+    "webRequest"
   ],
   
   "browser_specific_settings": {
     "gecko": {
-      "id": "Lemmytools@thesimplecorner.org",
+      "id": "LemmyTools@thesimplecorner.org",
       "strict_min_version": "42.0"
     }
   }

@@ -8,22 +8,6 @@ let prevSearchCommsQueries = [];
 prevSearchCommsQueries.push("");
 let currentUrl = document.location.href;
 
-
-function isltMobile() {
-  if (/Android|iPhone/i.test(navigator.userAgent)) {
-    ltLog("is mobile!");
-    return true;
-  } else {
-    ltLog("is desktop!");
-    return false;
-  }
-}
-
-function ltLog(msg, level) {
-  level = level || LogImportant;
-  if (level < logLevel) return;
-  console.log("[LemmyTools]", msg);
-}
 const blockFilterArray = ["Elon", "Telsa", "Hexbear" ];
 let userOptions = {
   commposSide: mobile ? "top" : "top",
@@ -44,36 +28,6 @@ let userOptions = {
   linksInNewTab:false,
 };
 
-
-
-  /**
-   * @type {Map<string, {Text: string, Color: string, Url?: string}>}
-   */
-  let userMap;
-  /**
-   * Gets all currently tagged users
-   *
-   * @return {Map<string, {Text: string, Color: string, Url: string}>} A Map of tagged users
-   */
-
-
-
-function saveUserCommentsToLocalStorage() {
-  
-  let userTagger = JSON.stringify(userTagger);
-  browser.storage.local.set({userTagger}).then(setItem("userTagger"), onError);
-}
-
-function setItem(desc)
-{
-  ltLog("Set " + desc);
-}
-
-function onError()
-{
-  ltLog("Something went wrong with storage");
-}
-
 const readLocalStorage = async (key) => {
   return new Promise((resolve, reject) => {
     browser.storage.local.get([key], function (result) {
@@ -89,17 +43,6 @@ const readLocalStorage = async (key) => {
   });
 };
 
-function getData() {
-  const key1 = readLocalStorage('userOptions');
-  const key2 = readLocalStorage('userTagger');
-
-  Promise.all([key1, key2]).then(values => {
-    
-      lemmyTools(values);
-  });
-}
-
-
 //Kicks off addon if lemmy.
 (function () {
   "use strict";
@@ -111,14 +54,6 @@ function getData() {
   getData();
   }
 })();
-function isLemmySite() {
-  const meta = document.querySelector('meta[name="Description"]');
-  return (
-    meta && meta.content === "Lemmy"
-  );
-}
-    
-
 
 //MAIN ------------------------------
 function lemmyTools(values){
@@ -137,7 +72,7 @@ function lemmyTools(values){
     ltLog(tags);
   }
 
-    //observe
+//observe
 var tgt = document.querySelector('#app');
 var cfg = {
       childList: true,
@@ -152,31 +87,74 @@ var monitor = new MutationObserver(function(mutations){
   refresh(settings);
   monitor.disconnect();
   monitor.observe(tgt, cfg);
-
 });
 
 
 monitor.observe(tgt, cfg);
+addElements(settings);
 }
 
 //When page refresh do.
 function refresh(settings){
   blockContent(settings.blockFilters);
   showAllTheImages(settings);
-  //Expandable images.
-  setInterval(function () {
-    expandImages(settings);
-  }, 500);
+  expandImages(settings);
 }
 
+function getData() {
+  const key1 = readLocalStorage('userOptions');
+  const key2 = readLocalStorage('userTagger');
 
+  Promise.all([key1, key2]).then(values => {
+    
+      lemmyTools(values);
+  });
+}
 
+function isLemmySite() {
+  const meta = document.querySelector('meta[name="Description"]');
+  return (
+    meta && meta.content === "Lemmy"
+  );
+}
+
+function isltMobile() {
+    if (/Android|iPhone/i.test(navigator.userAgent)) {
+      ltLog("is mobile!");
+      return true;
+    } else {
+      ltLog("is desktop!");
+      return false;
+    }
+}
+  
+function ltLog(msg, level) {
+    level = level || LogImportant;
+    if (level < logLevel) return;
+    console.log("[LemmyTools]", msg);
+}
+
+function saveUserCommentsToLocalStorage() {
+  
+  let userTagger = JSON.stringify(userTagger);
+  browser.storage.local.set({userTagger}).then(setItem("userTagger"), onError);
+}
+
+function setItem(desc)
+{
+  ltLog("Set " + desc);
+}
+
+function onError()
+{
+  ltLog("Something went wrong with storage");
+}
 
 function addslashes( str ) {
   return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
-  }
+}
 
-  function blockContent(filters) {
+function blockContent(filters) {
     const blockFilters = filters;
     const posts = document.getElementsByClassName("post-listing");
     const comments = document.getElementsByClassName("comment");
@@ -207,7 +185,7 @@ function addslashes( str ) {
     }
     localStorage.setItem("currentBlockCount", blockedCount);
     ltLog("content blocking has blocked: " + blockedCount + " posts.", 2)
-  }
+}
 
 function expandImages(settings){
       //Expand Images----------------------------------------------
@@ -324,3 +302,148 @@ function showAllTheImages(settings){
         }
       } catch {}
 }
+
+function addElements(settings)
+{
+  const ltRootDiv = document.createElement("div");
+  ltRootDiv.setAttribute("id", "ltRootDiv");
+  let ltBarUrl = browser.runtime.getURL("ltBar.html");
+  let ltBarStyleUrl = browser.runtime.getURL("ltBar.css");
+
+  document.body.prepend(ltRootDiv);
+
+  fetch(ltBarUrl).then((response) => response.text())
+  .then((html) => {
+      document.getElementById("ltRootDiv").innerHTML = html;
+      if (settings.commposSide == "top"){
+        let notUsing = document.getElementById("myDiv");
+        notUsing.parentNode.removeChild(notUsing);
+      }
+      else
+      {
+        let notUsing = document.getElementById("topDiv");
+        notUsing.pa
+        rentNode.removeChild(notUsing);
+      }
+        document.getElementById("lemmyLogo").src = browser.runtime.getURL("ltCornerLogo.webp");
+        document.getElementById("lemmyOptionsIcon").src = browser.runtime.getURL("ltOptionsLogo.png");
+
+
+  let commsAreaSearch = document.getElementsByClassName("commsAreaSearch");
+  let commsAreaStatic = document.getElementsByClassName("commsAreaStatic");
+  let dropDownComms = document.getElementById("dropDownComms");
+  let topDivCommsBox = document.getElementById("topDivCommsBox");
+ 
+   document.getElementById("lemmyOptionsIcon").addEventListener("click", (e) => {
+         e.preventDefault();
+         options(1);
+       });
+  //  document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
+  //    e.preventDefault();
+  //    options(3);
+  //  });
+   document.getElementById("lemmyLogo").addEventListener("click", (e) => {
+     e.preventDefault();
+     window.location = settings.instance;
+   });    
+
+   dropDownComms.addEventListener("click", (e) => {
+    e.preventDefault();
+    dropDownComms = e;
+    window.scrollTo(0, 0);
+    dropDownComms.target.innerHTML = 
+      dropDownComms.target.innerHTML == " (Show All) " ? dropDownComms.target.innerHTML = " (Hide All) " : dropDownComms.target.innerHTML = " (Show All) ";
+    topDivCommsBox.style.display =
+      topDivCommsBox.style.display == "block" ? topDivCommsBox.style.display = "none" : topDivCommsBox.style.display = "block";
+    searchComms(searchInput.value, communityArray);
+  });
+
+});
+
+fetch(ltBarStyleUrl).then((response) => response.text())
+.then((style) => {
+  document.head.appendChild(document.createElement("style")).innerHTML = style;
+});
+  
+}
+
+//Searches communityArray for results in LemmyTools Sidebar.
+function searchComms(query, full) {
+    ltLog(`commsearch evt searchinput${query}${commsAreaStatic}`, LogDebug);
+    const url = window.location.href;
+    query = query || "";
+    query = query.toLowerCase();
+  
+    if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
+      const commsCount = localStorage.getItem("commsCount");
+      if (commsCount == null || commsCount == 0 || full.length < 1) {
+        commsAreaStatic[0].innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}!</b><br /><br />
+First time? Set your lemmy homeinstance in the option page and in the UserScript.<br />
+No communities? Login to lemmy and reload page.`;
+      } else {
+        commsAreaStatic[0].innerHTML = `Communities: ${commsCount} - <hr />${full}`;
+      }
+    } else {
+      //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
+      commsAreaStatic[0].innerHTML = full;
+      //if searchInput query, store it for use on another page
+      if (query.length > 2)
+      {
+      prevSearchCommsQueries.push(query);
+   	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
+      }
+      //ltLog(`Searching for:${query}`, LogDebug);
+      const children = commsAreaStatic[0].getElementsByTagName("li");
+      //ltLog(`Children found: ${children.length}`, LogDebug);
+      let data = [""];
+      let found;
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
+          found = children[i].innerHTML + "<br />";
+          //ltLog(`Found: ${found}`, LogDebug);
+          data.push(found);
+        }
+      }
+      const resultSet = [...new Set(data)];
+      resultSet.sort();
+      
+      if (currentUrl.indexOf(query) !== -1)
+      {
+      	commupdate(url, resultSet, query);
+      }
+      else
+      {
+        commupdate(url, resultSet, query);  
+      }
+    }
+}
+
+function commupdate(page, data, query) {
+    ltLog("LTbar Update");
+    let count = -1;
+    data.forEach((_) => count++);
+    data = data.join("");
+   
+    for (let i = 0; i < commsAreaSearch.length; i++)
+    {
+  	commsAreaSearch[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
+    }
+
+    for (let i = 0; i < commsAreaStatic.length; i++)
+    {
+  	commsAreaStatic[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
+    }
+    if (query.length > 2)
+    {
+   	searchInput.value = query;
+    }
+}
+
+function getSettingsFromLocalStorage() {
+    try {
+      return JSON.parse(localStorage.getItem(optionsKey) || "{}");
+    } catch (_) {
+      return {};
+    }
+}
+
