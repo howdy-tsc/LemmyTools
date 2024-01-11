@@ -26,6 +26,10 @@ let userOptions = {
   showAllImages: false,
   hideShowAllImagesButton: false,
   linksInNewTab:false,
+  currentBlockCount: 0,
+  totalBlockCount: 0,
+  communities: [""],
+  communityUpdateDateTime: ""
 };
 
 const readLocalStorage = async (key) => {
@@ -69,6 +73,8 @@ function lemmyTools(values){
   }
   else {
     ltLog(settings);
+    userOptions.instance="https://lemmy.zip";
+    browser.storage.local.set({userOptions}).then(setItem("userOptions"), onError);
     ltLog(tags);
   }
 
@@ -92,6 +98,7 @@ var monitor = new MutationObserver(function(mutations){
 
 monitor.observe(tgt, cfg);
 addElements(settings);
+getCommunities(settings);
 }
 
 //When page refresh do.
@@ -99,6 +106,7 @@ function refresh(settings){
   blockContent(settings.blockFilters);
   showAllTheImages(settings);
   expandImages(settings);
+  getCommunities(settings);
 }
 
 function getData() {
@@ -142,7 +150,7 @@ function saveUserCommentsToLocalStorage() {
 
 function setItem(desc)
 {
-  ltLog("Set " + desc);
+  //ltLog("Set " + desc);
 }
 
 function onError()
@@ -158,7 +166,6 @@ function blockContent(filters) {
     const blockFilters = filters;
     const posts = document.getElementsByClassName("post-listing");
     const comments = document.getElementsByClassName("comment");
-   
    
     var blockedCount = 0;
     for (let y = 0; y < blockFilters.length; y++) {
@@ -183,7 +190,9 @@ function blockContent(filters) {
          
       }
     }
-    localStorage.setItem("currentBlockCount", blockedCount);
+    userOptions.currentBlockCount = blockedCount;
+    userOptions.totalBlockCount += blockedCount;
+    browser.storage.local.set(userOptions).then(setItem("userOptions"), onError);
     ltLog("content blocking has blocked: " + blockedCount + " posts.", 2)
 }
 
@@ -355,7 +364,13 @@ function addElements(settings)
       dropDownComms.target.innerHTML == " (Show All) " ? dropDownComms.target.innerHTML = " (Hide All) " : dropDownComms.target.innerHTML = " (Show All) ";
     topDivCommsBox.style.display =
       topDivCommsBox.style.display == "block" ? topDivCommsBox.style.display = "none" : topDivCommsBox.style.display = "block";
-    searchComms(searchInput.value, communityArray);
+    searchComms(searchInput.value, settings.communities);
+  });
+
+  const searchInput = document.getElementById("commsearch");
+  searchInput.addEventListener("input", (e) => {
+    e.preventDefault();
+    searchComms(searchInput.value, settings.communities);
   });
 
 });
@@ -367,40 +382,35 @@ fetch(ltBarStyleUrl).then((response) => response.text())
   
 }
 
-//Searches communityArray for results in LemmyTools Sidebar.
 function searchComms(query, full) {
-    ltLog(`commsearch evt searchinput${query}${commsAreaStatic}`, LogDebug);
+    searchInput = document.getElementById("commsearch");
+    ltLog(`${query}`, LogDebug);
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
   
-    if ((query == "-f") && (prevSearchCommsQueries.length < 2)) {
-      const commsCount = localStorage.getItem("commsCount");
-      if (commsCount == null || commsCount == 0 || full.length < 1) {
-        commsAreaStatic[0].innerHTML = `<hr /><b>Welcome to LemmyTools! Ver ${ltVer}!</b><br /><br />
-First time? Set your lemmy homeinstance in the option page and in the UserScript.<br />
-No communities? Login to lemmy and reload page.`;
-      } else {
-        commsAreaStatic[0].innerHTML = `Communities: ${commsCount} - <hr />${full}`;
-      }
-    } else {
       //This searches the pushed communityArray with the query, saves it to a array, removes any duplicate values, sorts and then pushes to the commupdate function.
-      commsAreaStatic[0].innerHTML = full;
+      document.querySelector('.commsAreaStatic').innerHTML = full;
       //if searchInput query, store it for use on another page
       if (query.length > 2)
       {
       prevSearchCommsQueries.push(query);
    	  localStorage.setItem("prevSearchCommsQueries", prevSearchCommsQueries);
       }
+      else
+      {
+        commupdate(url, full, query);
+      }
+      
       //ltLog(`Searching for:${query}`, LogDebug);
-      const children = commsAreaStatic[0].getElementsByTagName("li");
+      const children = document.querySelector('.commsAreaStatic').getElementsByTagName("li");
       //ltLog(`Children found: ${children.length}`, LogDebug);
       let data = [""];
       let found;
       for (let i = 0; i < children.length; i++) {
         if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
           found = children[i].innerHTML + "<br />";
-          //ltLog(`Found: ${found}`, LogDebug);
+          ltLog(`Found: ${found}`, LogDebug);
           data.push(found);
         }
       }
@@ -415,24 +425,27 @@ No communities? Login to lemmy and reload page.`;
       {
         commupdate(url, resultSet, query);  
       }
-    }
+
 }
 
 function commupdate(page, data, query) {
+   searchInput = document.getElementById("commsearch");
+   commsAreaSearch = document.querySelector('.commsAreaSearch');
+   commsAreaStatic = document.querySelector('.commsAreaStatic');
+    ltLog(data);
     ltLog("LTbar Update");
     let count = -1;
     data.forEach((_) => count++);
     data = data.join("");
    
-    for (let i = 0; i < commsAreaSearch.length; i++)
-    {
-  	commsAreaSearch[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
-    }
+    // data.forEach((element) => {
+    //   document.querySelector('.commsAreaStatic').innerHTML = element;
+    //   document.querySelector('.commsAreaSearch').innerHTML = element;
+    //   }
+    // );
+    document.querySelector('.commsAreaStatic').innerHTML = data;
+    document.querySelector('.commsAreaSearch').innerHTML = data;
 
-    for (let i = 0; i < commsAreaStatic.length; i++)
-    {
-  	commsAreaStatic[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
-    }
     if (query.length > 2)
     {
    	searchInput.value = query;
@@ -447,3 +460,92 @@ function getSettingsFromLocalStorage() {
     }
 }
 
+function checkAuthenticated(){
+  if (document.cookie.indexOf('jwt=') == -1){
+    ltLog("Not logged in!");
+    return false
+  }
+  else
+  {
+    ltLog("Logged in!");
+    return true
+  }
+}
+
+function getCommunities(settings){
+
+
+
+    function updateCommsAreas(userData, settings){
+      let communityNames = [];
+      userData.my_user.follows.forEach(function(value, index, array) {
+        let icon = "";
+        try {
+          if (value["community"]["icon"])
+          {
+            icon ="<img src='" 
+            + value["community"]["icon"] 
+            + "' width=\"20\" height=\"20\" />";
+          }
+        }
+        catch {
+          icon = "";
+        }
+        let commShortName= value["community"]["actor_id"];
+        commShortName=commShortName.split("//")[1];
+        commShortName=commShortName.split("/c/")[0];
+        let commArrayItem = "<li> ► " 
+          + "<a href='" 
+          + settings.instance + "/c/" + value["community"]["name"] + "@" + commShortName
+          + "'>"
+          + icon
+          + value["community"]["title"] 
+          + "</a></li> ";
+        communityNames.push(commArrayItem.toLowerCase());
+      });
+      communityNames = communityNames.join("");
+      settings.communities = communityNames;
+      settings.communityUpdateDateTime = Date.now();
+      browser.storage.local.set({userOptions}).then(setItem("userOptions.communities"), onError);
+      document.querySelector('.commsAreaStatic').innerHTML = communityNames;
+      document.querySelector('.commsAreaSearch').innerHTML = communityNames;
+    }
+
+  if (checkAuthenticated()){
+    const token = getCookie("jwt");
+    const element = document.querySelector('.commsAreaStatic');
+    const headers = { 'Authorization': 'Bearer ' + token,
+    'mode': 'no-cors',
+    'Content-Type': 'application/json',
+  }; // auth header with bearer token
+    ltLog(Date.now());
+    ltLog(settings.communityUpdateDateTime);
+    if (((Date.now() - settings.communityUpdateDateTime) >= 300000) || (settings.communityUpdateDateTime == ""))
+    {
+      ltLog("Updating Comms from API");
+    fetch(settings.instance+'/api/v3/site', { headers })
+      .then(response => response.json())
+      .then(data => updateCommsAreas(data, settings));
+    }
+    
+  }
+  else
+  {
+    ltLog("Not Authenticated");
+    ltLog("Get Comms from Storage...");
+    document.querySelector('.commsAreaStatic').innerHTML = settings.communities;
+    document.querySelector('.commsAreaSearch').innerHTML = settings.communities;
+  }
+
+}
+
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}

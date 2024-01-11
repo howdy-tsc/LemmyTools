@@ -161,7 +161,7 @@ No communities? Login to lemmy and reload page.`;
    
     for (let i = 0; i < commsAreaSearch.length; i++)
     {
-  	commsAreaSearch[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
+  	  commsAreaSearch[i].innerHTML = `Communities: ${count}<hr /> ${data}`;
     }
 
     for (let i = 0; i < commsAreaStatic.length; i++)
@@ -1054,7 +1054,7 @@ No communities? Login to lemmy and reload page.`;
       </div>
       `;
        document.body.prepend(topDivCommsBox);
-       document.body.prepend(topDiv);  div
+       document.body.prepend(topDiv);  
 
        document.getElementById("dropDownComms").addEventListener("click", (e) => {
         e.preventDefault();
