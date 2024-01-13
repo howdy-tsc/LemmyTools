@@ -318,6 +318,7 @@ function addElements(settings)
   ltRootDiv.setAttribute("id", "ltRootDiv");
   let ltBarUrl = browser.runtime.getURL("ltBar.html");
   let ltBarStyleUrl = browser.runtime.getURL("ltBar.css");
+  let ltSettingsUrl = browser.runtime.getURL("ltSettings.html");
 
   document.body.prepend(ltRootDiv);
 
@@ -334,7 +335,7 @@ function addElements(settings)
         notUsing.pa
         rentNode.removeChild(notUsing);
       }
-        document.getElementById("lemmyLogo").src = browser.runtime.getURL("ltCornerLogo.webp");
+        document.getElementById("lemmyLogo").src = browser.runtime.getURL("ltLogo.png");
         document.getElementById("lemmyOptionsIcon").src = browser.runtime.getURL("ltOptionsLogo.png");
 
 
@@ -347,16 +348,13 @@ function addElements(settings)
          e.preventDefault();
          options(1);
        });
-  //  document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
-  //    e.preventDefault();
-  //    options(3);
-  //  });
    document.getElementById("lemmyLogo").addEventListener("click", (e) => {
      e.preventDefault();
      window.location = settings.instance;
    });    
 
    dropDownComms.addEventListener("click", (e) => {
+    ltLog("Dropdown click");
     e.preventDefault();
     dropDownComms = e;
     window.scrollTo(0, 0);
@@ -373,6 +371,18 @@ function addElements(settings)
     searchComms(searchInput.value, settings.communities);
   });
 
+});
+const ltSettingsDiv = document.createElement("div");
+ltSettingsDiv.setAttribute("id", "ltSettingsDiv");
+document.body.prepend(ltSettingsDiv);
+
+fetch(ltSettingsUrl).then((response) => response.text())
+.then((html) => {
+  document.getElementById("ltSettingsDiv").innerHTML = html;
+  document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
+    e.preventDefault();
+    options(3);
+  });
 });
 
 fetch(ltBarStyleUrl).then((response) => response.text())
@@ -409,8 +419,8 @@ function searchComms(query, full) {
       let found;
       for (let i = 0; i < children.length; i++) {
         if (children[i].innerHTML.toLowerCase().indexOf(query) !== -1) {
-          found = children[i].innerHTML + "<br />";
-          ltLog(`Found: ${found}`, LogDebug);
+          found = "<li>" + children[i].innerHTML + "</li>";
+          //ltLog(`Found: ${found}`, LogDebug);
           data.push(found);
         }
       }
@@ -432,19 +442,18 @@ function commupdate(page, data, query) {
    searchInput = document.getElementById("commsearch");
    commsAreaSearch = document.querySelector('.commsAreaSearch');
    commsAreaStatic = document.querySelector('.commsAreaStatic');
-    ltLog(data);
-    ltLog("LTbar Update");
-    let count = -1;
-    data.forEach((_) => count++);
-    data = data.join("");
+   let arrayCount = data.length;
+   data = data.join("");
    
     // data.forEach((element) => {
     //   document.querySelector('.commsAreaStatic').innerHTML = element;
     //   document.querySelector('.commsAreaSearch').innerHTML = element;
     //   }
     // );
-    document.querySelector('.commsAreaStatic').innerHTML = data;
-    document.querySelector('.commsAreaSearch').innerHTML = data;
+    document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
+    document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
+    document.querySelector('.commsAreaStatic').innerHTML += data;
+    document.querySelector('.commsAreaSearch').innerHTML += data;
 
     if (query.length > 2)
     {
@@ -467,14 +476,11 @@ function checkAuthenticated(){
   }
   else
   {
-    ltLog("Logged in!");
     return true
   }
 }
 
 function getCommunities(settings){
-
-
 
     function updateCommsAreas(userData, settings){
       let communityNames = [];
@@ -491,24 +497,41 @@ function getCommunities(settings){
         catch {
           icon = "";
         }
-        let commShortName= value["community"]["actor_id"];
+        let commShortName = value["community"]["actor_id"];
         commShortName=commShortName.split("//")[1];
         commShortName=commShortName.split("/c/")[0];
-        let commArrayItem = "<li> ► " 
+        try{
+          if (value["community"]["description"].length > 3){
+          let commShortDescription=value["community"]["description"];
+          trimmedDesc = commShortDescription.substr(0, 250);
+          trimmedDesc += "..."
+          }
+          else
+          trimmedDesc=""
+        }
+        catch{trimmedDesc=""}
+
+        let commArrayItem = "<li>" 
           + "<a href='" 
           + settings.instance + "/c/" + value["community"]["name"] + "@" + commShortName
-          + "'>"
+          + "'> ► "
           + icon
-          + value["community"]["title"] 
-          + "</a></li> ";
+          + value["community"]["title"]
+          + "<span class='description'>"
+          + "@" + commShortName + "<br />"
+          + trimmedDesc
+          + "</span></a></li> ";
         communityNames.push(commArrayItem.toLowerCase());
       });
+      let arrayCount = communityNames.length;
       communityNames = communityNames.join("");
       settings.communities = communityNames;
       settings.communityUpdateDateTime = Date.now();
       browser.storage.local.set({userOptions}).then(setItem("userOptions.communities"), onError);
-      document.querySelector('.commsAreaStatic').innerHTML = communityNames;
-      document.querySelector('.commsAreaSearch').innerHTML = communityNames;
+      document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
+      document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
+      document.querySelector('.commsAreaStatic').innerHTML += communityNames;
+      document.querySelector('.commsAreaSearch').innerHTML += communityNames;
     }
 
   if (checkAuthenticated()){
@@ -517,9 +540,8 @@ function getCommunities(settings){
     const headers = { 'Authorization': 'Bearer ' + token,
     'mode': 'no-cors',
     'Content-Type': 'application/json',
-  }; // auth header with bearer token
-    ltLog(Date.now());
-    ltLog(settings.communityUpdateDateTime);
+  }; 
+    // get from API every 5 mins.
     if (((Date.now() - settings.communityUpdateDateTime) >= 300000) || (settings.communityUpdateDateTime == ""))
     {
       ltLog("Updating Comms from API");
@@ -527,14 +549,22 @@ function getCommunities(settings){
       .then(response => response.json())
       .then(data => updateCommsAreas(data, settings));
     }
+    else
+    {
+      //ltLog("Update Comms from API on cooldown.");
+    }
     
   }
   else
   {
     ltLog("Not Authenticated");
     ltLog("Get Comms from Storage...");
-    document.querySelector('.commsAreaStatic').innerHTML = settings.communities;
-    document.querySelector('.commsAreaSearch').innerHTML = settings.communities;
+    communityNames = userOptions.communities
+    let arrayCount = communityNames.length
+    document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
+    document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
+    document.querySelector('.commsAreaStatic').innerHTML += communityNames;
+    document.querySelector('.commsAreaSearch').innerHTML += communityNames;es;
   }
 
 }
@@ -549,3 +579,85 @@ function getCookie(name) {
   }
   return null;
 }
+
+function options(open) {
+  const odiv = document.getElementById("ltOptions");
+  ltLog(`Options Functions: ${open}`);
+  let userOptions = {};
+  if (open === 1) {
+    odiv.style.display = "block";
+  } else if (open === 3) {
+    //save button
+    odiv.style.display = "none";
+    localStorage.setItem("currentBlockCount", 0);
+
+    userOptions.commposSide =
+      document.getElementById("option_commposSide").value;
+    userOptions.instance = document.getElementById(
+      "option_homeInstance"
+    ).value;
+    userOptions.commposVertical = parseInt(
+      document.getElementById("option_commposVertical").value
+    );
+    userOptions.expandImages = document.getElementById(
+      "option_expandImages"
+    ).checked;
+    userOptions.expandImagesize = parseInt(
+      document.getElementById("option_expandImagesize").value,
+      10
+    );
+    userOptions.expandImageSpeed = parseFloat(
+      document.getElementById("option_expandImageSpeed").value
+    );
+    userOptions.hideSideBar =
+      document.getElementById("option_hideSideBar").checked;
+    userOptions.hoverCheck =
+      document.getElementById("option_hoverCheck").checked;
+    userOptions.unblurNSFW =
+      document.getElementById("option_unblurNSFW").checked;
+    userOptions.blockContent =
+      document.getElementById("option_blockContent").checked;
+    userOptions.blockFilters =
+      document.getElementById("option_blockFilters").value.split(",");
+    userOptions.linksInNewTab = document.getElementById(
+      "option_linksInNewTab"
+    ).checked;
+    userOptions.widthPixels =
+      document.getElementById("option_widthPixels").checked;
+    userOptions.showAllImages = document.getElementById(
+      "option_showAllImages"
+    ).checked;
+    userOptions.hideShowAllImagesButton = document.getElementById(
+      "option_hideShowAllImagesButton"
+    ).checked;
+
+    if (userOptions.commposVertical > 85) {
+      userOptions.commposVertical = 85;
+    } else if (userOptions.commposVertical <= -1) {
+      userOptions.commposVertical = 0;
+    }
+
+    if (userOptions.expandImageSpeed > 1) {
+      userOptions.expandImageSpeed = 1;
+    } else if (userOptions.expandImageSpeed < 0) {
+      userOptions.expandImageSpeed = 0;
+    }
+
+    if (userOptions.commposSide === "left") {
+      userOptions.reverseSide = "right";
+    } else {
+      userOptions.reverseSide = "left";
+    }
+
+    localStorage.setItem(optionsKey, JSON.stringify(userOptions));
+    location.reload(true);
+  }
+
+  userOptions = getSettingsFromLocalStorage();
+  ltLog(`Settings ${JSON.stringify(userOptions)}`);
+  return userOptions;
+}
+
+
+
+

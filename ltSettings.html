@@ -1,0 +1,111 @@
+<div id='ltOptions' style='display:none;'>
+<h4>LemmyTools ${ltVer} Options - <button class='pointer btn btn-secondary text-bg-primary' id='LTsaveoptions'>Save&Close</button></h4>
+  </hr>
+  <div class='table-responsive ltOptionsTable'>
+    <table class='table'>
+      <thead class='pointer'>
+        <tr>
+          <th>Option:</th>
+          <th>Value:</th>
+      </thead>
+      </tr>
+      <tbody>
+        <tr>
+          <td><b>LemmyTools Settings: </b></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><b>HomeInstance URL</b><br /> Make sure to edit the homeInstance variable of<br /> the UserScript for the
+            remote instance Home button fix. (Temporary workaround).<br />(Ex:
+            https://yourinstance.lemmy)<br />${hIAlertString}</td>
+          <td><textarea id='option_homeInstance'>${settings.instance}</textarea></td>
+        </tr>
+        <tr>
+          <td><b>LemmyTools bar window side</b><br /> - default: right</td>
+          <td><select id="option_commposSide">
+              <option value='${settings.commposSide}'>${settings.commposSide}</option>
+							<option value='top'>top</option>
+              <option value='right'>right</option>
+              <option value='left'>left</option>
+            </select></td>
+        </tr>
+        <tr>
+          <td><b>LemmyTools bar vertical position </b><br />% from top [0-85] - default: 0</td>
+          <td><textarea id='option_commposVertical'>${settings.commposVertical}</textarea></td>
+        </tr>
+        <tr>
+          <td><b>Keep LemmyTools Bar Open</b><br />Works best for widescreen desktops.</td>
+          <td><input type='checkbox' id='option_hoverCheck' ${hoverCheck} /></td>
+        </tr>
+        <tr>
+          <td><br /><br /></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><b>Site Style and Behaviors:</b></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><b>Hide Lemmy Sidebars</b><br /> (Trending, ServerInfo, Communities)<br /> 
+          </td>
+          <td><input type='checkbox' id='option_hideSideBar' ${hSBcheck} /></td>
+        </tr>
+        <tr>
+          <td><b>Expandable Images</b><br />Acts as an auto-expander and adds the ability to manually<br /> expand
+            images by clicking and dragging.<br />Doubleclick to open full image.</td>
+          <td><input type='checkbox' id='option_expandImages' ${eIcheck} /></td>
+        </tr>
+        <tr>
+          <td><b>Auto Expand Size</b><br />Size of post image after opening a image post.<br /> Desktop Default: 50 /
+            Mobile: 100</td>
+          <td><textarea id='option_expandImagesize'>${settings.expandImagesize}</textarea>
+          <br /> <label for="option_widthPixels">Pixels</label> <input type='radio' id='option_widthPixels' name="widthScaler" ${widthPixelCheck}/> 
+          <label for="option_widthPercent">Percent</label> <input type='radio' id='option_widthPercent' name="widthScaler" ${widthPercentCheck}/>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Expand Image Speed</b><br />Speed multiplier for click&drag expanding images. If your images seem to
+            expand<br /> too fast or slow, increase or decrease this value. [Values 0 to 1.0]<br /> Default: 0.50 </td>
+          <td><textarea id='option_expandImageSpeed'>${settings.expandImageSpeed}</textarea></td>
+        </tr>
+        <tr>
+            <td><b>Automatically open image posts</b><br /></td>
+            <td><input type='checkbox' id='option_showAllImages'${showAllImagesCheck}/></td>
+        </tr>
+        <tr>
+            <td><b>Hide the Show All Images button (when Auto open image posts is disabled)</b><br /></td>
+            <td><input type='checkbox' id='option_hideShowAllImagesButton'${hideShowAllImagesButtonCheck}/></td>
+        </tr>
+        <tr>
+          <td><b>Auto unblur NSFW images</b><br /></td>
+          <td><input type='checkbox' id='option_unblurNSFW' ${unblurCheck} /></td>
+        </tr>
+        <tr>
+          <td><b>Open ALL links in new tab.</b><br /></td>
+          <td><input type='checkbox' id='option_linksInNewTab' ${linksCheck} /></td>
+        </tr>
+        <tr>
+          <td><b>Content Blocking: (Blocks posts and comments matching your desired filters).</b><br /></td>
+          <td><input type='checkbox' id='option_blockContent' ${blockContentCheck} /></td>
+        </tr>
+        <tr>
+          <td>Add filters seperated by commas. Ex: filter,filter two,filter3 <br />
+          <textarea style="width:100%; "id='option_blockFilters'>${settings.blockFilters}</textarea></td>
+          <td>Posts/Comments blocked from filters on this page:<br />${localStorage.getItem("currentBlockCount")}</td>
+        </tr>
+ 
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p> Tested on Lemmy Version: ${ltTestedVer} on Firefox. <br />
+  <hr />Get it here: <a href='https://github.com/howdy-tsc/LemmyTools'>GitHub</a> or 
+  <a href='https://greasyfork.org/en/scripts/469169-lemmytools'>GreasyFork</a>
+  <br />Please submit issues to the GitHub for feature requests and problems: 
+  <a href='https://github.com/howdy-tsc/LemmyTools/issues'>GitHub LemmyTools Issues</a><br /></p>
+
+
+</div>

@@ -1,0 +1,49 @@
+<!-- TOP BAR -->
+<div id="topDiv" class="topDivRoot card border-secondary">
+<div class="topDivSearch">
+<a id="homeLink" href=""><img id="lemmyLogo" width=22 height=22 class="targetImg" alt="Link to your home instance." title="Link to your home instance." src="" /></a>
+<img id="lemmyOptionsIcon" width=22 height=22 class="targetImg" alt="LemmyTools Options" title="LemmyTools Options" src="" />
+<input type="text" id="commsearch" name="commsearchinput" placeholder="Search your communities" />
+<a id="dropDownComms" href="#" alt="Show All Your Communities and Manage" title="Show All Your Communities and Manage" > (Show All) </a>
+</div>
+<div class="topDivBar">
+<div class="commsAreaStatic">
+</div>
+</div>
+</div>
+<div id="topDivCommsBox">
+<header id='ltBarHeader' class='card-header'>
+  <h5><a href=${settings.instance}>Home</a> - <a href='https://lemmyverse.net/communities' target='_new'>Find
+      Communities</a>
+  </h5>
+</header>
+<div class="commsAreaSearch">
+</div>
+</div>
+
+<!-- SIDE BAR -->
+<div id="myDiv" class="ltcommsbar">
+  <div id="searchdiv" class="ltmenu border-secondary card">
+  <div id="ltActiveSearchDiv" class="ltActiveSearchDiv">
+  <header id="ltBarHeader" class="card-header">
+  <h6>
+  <a id="homeLink" href=${settings.instance}>Home</a>
+   - 
+  <a href="https://lemmyverse.net/communities" target="_new">Find Subs</a>
+   - 
+  <img id="lemmyLogo" width=22 height=22 class="targetImg" src="" />
+  <img id="lemmyOptionsIcon" width=22 height=22 class="targetImg" alt="LemmyTools Options" 
+  title="LemmyTools Options"
+  src="" />
+  </h6>
+  </header>
+  <input type="text" id="commsearch" name="commsearchinput" 
+  placeholder="Search your communities" />
+  <div id="ltBarSubHeader" class="clickAble"></div>
+  <div style="clear:both;"></div>
+  </div>
+  <div id="ltPassiveSearchDiv" class="ltPassiveSearchDiv"><img width=30 height=30 class="targetImg" src="" />
+  </div><br />
+  </div>
+  <div class='commsAreaStatic'></div>
+  </div>

@@ -1,0 +1,355 @@
+.ltmenu {
+    position: fixed;
+    top: ${settings.commposVertical}%;
+    ${settings.commposSide}: 0;
+    font-size: .9rem;
+    display: block;
+    height: 100%;
+    min-height: auto;
+    z-index: 999;
+    overflow: scroll;
+    outline: 1px solid grey !important;
+  }
+
+  .ltActiveSearchDiv {
+    font-size: 0.9rem;
+    width: 100%;
+  }
+
+    .ltActiveSearchDiv img:hover{
+    margin-top:-5px;
+    border:10px yellow;
+    }
+
+
+  .ltmenu input {
+    width: 100%;
+  }
+
+  .ltPassiveSearchDiv {
+    display: none;
+    width: 100%;
+  }	
+
+  .post-listings .img-expanded {
+    width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"};
+          max-height: none !important;
+  }
+
+  #myDiv li {
+    list-style-type: none;
+  }
+
+  #myDiv hr {
+    display: block;
+  }
+
+  #searchdiv {
+    ${settings.commposSide}: 0;
+    position: fixed;
+    height: 100%;
+    min-height: auto;
+    width: 240px;
+    display: block;
+    z-index: 999;
+    overflow: scroll;
+    transition-timing-function: ease;
+    transition: ${settings.commposSide} .25s;
+    transition-delay: 0, 0.25s;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .ltbutton {
+    background-color: #ccffe5;
+  }
+
+  .ltPassiveSearchDiv {
+    display: none;
+  }
+
+  #ltOptions {
+    float:left;
+    width: 100%;
+    height: 100%;
+    top: 35px;
+    left: 0;
+    display:none;
+  }
+
+ .ltOptionsTable {
+  width:66%;
+ }
+  #myDiv::-webkit-scrollbar {
+    display: none;
+  }
+
+  #myDiv {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  #searchdiv::-webkit-scrollbar {
+    display: none;
+  }
+  .userNote {
+    margin-left: 0.5em;
+    font-size: 0.9em;
+  }
+  .userTagger {
+      border-radius: var(--bs-border-radius);
+  }
+  .userTagger::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  form#userTag {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+  }
+  form#userTag label {
+      width: 60px;
+  }
+
+
+/*
+if (settings.unblurNSFW) {
+  .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} .img-blur-icon {display: none !important;} ";
+} else {
+  .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} .img-blur-icon  {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
+}
+
+if (settings.hideSideBar) {
+  
+    ".container, .container-lg, .container-md, .container-sm, .container-xl { }" +
+    ".col-md-8 {flex: 0 0 80% !important;max-width: 80%;}";
+} else {
+  
+    ".container, .container-lg, .container-md, .container-sm, .container-xl {}";
+}
+if (!settings.hoverCheck) {
+  
+  #myDiv:not(:hover) {
+    animation: showNavOut 500ms ease-in-out both;
+    display: none;
+    height: 0;
+    transition-timing-function: ease;
+    transition: height;
+    transition-duration: 1.0;
+    transition-delay: 0.5s;
+  }
+
+  .ltPassiveSearchDiv {
+    display: block;
+    float: ${settings.reverseSide};
+    padding-${settings.commposSide}: 200px;
+  }
+
+  #ltActiveSearchDiv {
+    display: none;
+    animation: showNav 500ms ease-in-out both;
+  }
+
+  #sidebarSubscribed {
+    display: none;
+  }
+
+  #searchdiv {
+    ${settings.commposSide}: -200px;
+    position: fixed;
+    height: 110px;
+    min-height: auto;
+    width: 240px;
+    display: block;
+    z-index: 999;
+    overflow: auto;
+    display: block;
+    transition-timing-function: ease;
+    transition: ${settings.commposSide},
+    height;
+    transition-duration: 0.25s, 0.25s;
+    transition-delay: 0.25s, 0.25s;
+    /*animation: showNavOut 250ms ease-in-out both;*/ /*Breaks things?*/
+
+/*
+  }
+
+  #searchdiv:hover .ltActiveSearchDiv {
+    display: block;
+  }
+
+  #searchdiv:hover .ltPassiveSearchDiv {
+    display: none;
+  }
+
+  #searchdiv:hover {
+    ${settings.commposSide}: 0;
+    position: fixed;
+    height: 100%;
+    min-height: auto;
+    width: 240px;
+    display: block;
+    z-index: 999;
+    display: block;
+    overflow: auto;
+  }
+
+  #searchdiv:hover>#myDiv {
+    ${settings.commposSide}: 0;
+    word-wrap: break-word;
+    overflow: auto;
+    display: block;
+    height: 100%;
+    width: 240px;
+    animation: showNav 500ms ease-in-out both;
+  }
+
+  @keyframes showNav {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes showNavOut {  from {opacity: 1;}  to {opacity: 0;}}`;
+} else {
+  myDiv {visibility: visible; height: auto; width: auto; overflow:scroll !important;}";
+}
+*/
+
+
+
+      #topDiv
+      {
+      z-index: 99999999 !important;
+      }
+      #topDiv input
+      {
+
+      }
+      
+
+      #topDivCommsBox .commsAreaSearch {
+        width:35%;
+        max-width: 500px;
+      }
+      #topDivCommsBox .commsAreaSearch li{
+        border-radius:10px;
+        padding:5px;
+      }
+      #topDivCommsBox .description{
+        display:none;
+      }
+      #topDivCommsBox li:hover {
+        font-weight: bolder;
+        font-size: 1.25em;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      #topDivCommsBox li:hover a {
+        /* color: var(--bs-secondary); */
+      }
+      #topDivCommsBox li:hover .description{
+        font-weight: 300;
+        display:block;
+        font-size: .7em;
+        color: var(--Folded-text-primary);
+      }
+      #topDiv img:hover{
+      margin-top:-5px;
+      border:10px yellow;
+      }
+
+      .topDivBar
+      {
+      width: 100%;
+      overflow:hidden;
+      -ms-overflow-style: none;
+      overflow-x: auto;
+      white-space: nowrap;
+      }
+      
+      .topDivBar br {
+      display: none;
+      }
+      .topDivBar li {
+        padding:none;
+      }
+      .topDivBar li, a {
+      display:inline-block;
+      padding-right: 5px;
+      margin-top: 4px;
+      }
+      .topDivBar .description{
+        display:none;
+      }
+      .topDivBar li:hover a {
+        color: var(--Folded-text-primary);
+      }
+
+      .topDivBar hr {
+      display:none;
+      }
+      .topDivBar img {
+      display:none;
+      }
+      .topDivRoot
+      {
+      height:35px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width:100%;
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 99999999 !important;
+      border:2px;
+      display: inline-flex;
+			flex-direction: row;
+      }
+      .topDivSearch
+      {
+      min-width: 330px;
+      overflow:hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      z-index: 99999999 !important;
+      border: 5px #111;
+      }
+      .topDivSearch #lemmyLogo
+      {
+        margin-left:5px;
+      }
+
+
+      #topDivCommsBox
+      {
+      float:left;
+      width: 100%;
+      height: 100%;
+      top: 35px;
+      left: 0;
+      display:none;
+      }
+
+      #root 
+      {
+      margin-top: 35px !important;
+      }     
+
+      .navbar{
+        height:40px !important;
+      }
+
+      /* For mobile layouts make the ltbar tab smaller */
+
+      @media (max-width: 1199.98px) {
+        #brandingText {
+            display:none;
+        }
+        #searchdiv {
+            height: 35px;
+        }
+    }
