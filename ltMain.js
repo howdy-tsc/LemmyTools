@@ -29,6 +29,7 @@ let userOptions = {
   currentBlockCount: 0,
   totalBlockCount: 0,
   communities: [""],
+  communityDescriptions: [""],
   communityUpdateDateTime: ""
 };
 
@@ -79,26 +80,33 @@ function lemmyTools(values){
   }
 
 //observe
-var tgt = document.querySelector('#app');
-var cfg = {
-      childList: true,
-      attributes: true,
-      characterData: true,
-      subtree: true,
-      attributeOldValue: true,
-      characterDataOldValue: true
-    };
-  
-var monitor = new MutationObserver(function(mutations){
-  refresh(settings);
-  monitor.disconnect();
+waitForElm('#app').then((elm) => {
+  var tgt = document.querySelector('#app');
+
+  var cfg = {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeOldValue: true,
+        characterDataOldValue: true
+      };
+    
+  var monitor = new MutationObserver(function(mutations){
+    refresh(settings);
+    monitor.disconnect();
+    monitor.observe(tgt, cfg);
+  });
   monitor.observe(tgt, cfg);
 });
 
 
-monitor.observe(tgt, cfg);
 addElements(settings);
 getCommunities(settings);
+
+//
+
+     
 }
 
 //When page refresh do.
@@ -107,6 +115,7 @@ function refresh(settings){
   showAllTheImages(settings);
   expandImages(settings);
   getCommunities(settings);
+
 }
 
 function getData() {
@@ -352,7 +361,7 @@ function addElements(settings)
      e.preventDefault();
      window.location = settings.instance;
    });    
-
+   const searchInput = document.getElementById("#commsearch");
    dropDownComms.addEventListener("click", (e) => {
     ltLog("Dropdown click");
     e.preventDefault();
@@ -365,11 +374,7 @@ function addElements(settings)
     searchComms(searchInput.value, settings.communities);
   });
 
-  const searchInput = document.getElementById("commsearch");
-  searchInput.addEventListener("input", (e) => {
-    e.preventDefault();
-    searchComms(searchInput.value, settings.communities);
-  });
+
 
 });
 const ltSettingsDiv = document.createElement("div");
@@ -394,7 +399,7 @@ fetch(ltBarStyleUrl).then((response) => response.text())
 
 function searchComms(query, full) {
     searchInput = document.getElementById("commsearch");
-    ltLog(`${query}`, LogDebug);
+    ltLog(`Searching for: ${query}`, LogDebug);
     const url = window.location.href;
     query = query || "";
     query = query.toLowerCase();
@@ -409,12 +414,14 @@ function searchComms(query, full) {
       }
       else
       {
-        commupdate(url, full, query);
+        commupdate(url, full, '');
+        return
       }
       
       //ltLog(`Searching for:${query}`, LogDebug);
-      const children = document.querySelector('.commsAreaStatic').getElementsByTagName("li");
-      //ltLog(`Children found: ${children.length}`, LogDebug);
+      const children = document.querySelector('.commsAreaStatic').getElementsByTagName('li');
+      ltLog(`${children}`);
+      ltLog(`Children found: ${children.length}`, LogDebug);
       let data = [""];
       let found;
       for (let i = 0; i < children.length; i++) {
@@ -426,6 +433,7 @@ function searchComms(query, full) {
       }
       const resultSet = [...new Set(data)];
       resultSet.sort();
+      ltLog(`Found: ${resultSet}`);
       
       if (currentUrl.indexOf(query) !== -1)
       {
@@ -442,23 +450,20 @@ function commupdate(page, data, query) {
    searchInput = document.getElementById("commsearch");
    commsAreaSearch = document.querySelector('.commsAreaSearch');
    commsAreaStatic = document.querySelector('.commsAreaStatic');
-   let arrayCount = data.length;
-   data = data.join("");
+   let arrayCount = data.length -1;
    
-    // data.forEach((element) => {
-    //   document.querySelector('.commsAreaStatic').innerHTML = element;
-    //   document.querySelector('.commsAreaSearch').innerHTML = element;
-    //   }
-    // );
+
+    data = data.join("");
     document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
     document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
     document.querySelector('.commsAreaStatic').innerHTML += data;
     document.querySelector('.commsAreaSearch').innerHTML += data;
 
-    if (query.length > 2)
+    if (query.length > 2) 
     {
-   	searchInput.value = query;
+        searchInput.value=query;
     }
+
 }
 
 function getSettingsFromLocalStorage() {
@@ -484,6 +489,7 @@ function getCommunities(settings){
 
     function updateCommsAreas(userData, settings){
       let communityNames = [];
+      let communityDescriptions = [];
       userData.my_user.follows.forEach(function(value, index, array) {
         let icon = "";
         try {
@@ -516,56 +522,92 @@ function getCommunities(settings){
           + settings.instance + "/c/" + value["community"]["name"] + "@" + commShortName
           + "'> ► "
           + icon
+          + "<span class='lt-postTitle'>"
           + value["community"]["title"]
+          + "</span>"
           + "<span class='description'>"
           + "@" + commShortName + "<br />"
           + trimmedDesc
-          + "</span></a></li> ";
+          + "</span>"
+          + "</a></li> ";
         communityNames.push(commArrayItem.toLowerCase());
+
+        let commDescItem = "<span class='description'>"
+        + "@" + commShortName + "<br />"
+        + trimmedDesc
+        + "</span>";
+
+        communityDescriptions.push(commDescItem);
       });
       let arrayCount = communityNames.length;
       communityNames = communityNames.join("");
       settings.communities = communityNames;
       settings.communityUpdateDateTime = Date.now();
       browser.storage.local.set({userOptions}).then(setItem("userOptions.communities"), onError);
+      localStorage.setItem("communityNames", communityNames);
+      localStorage.setItem("communityDescriptions", communityDescriptions);
       document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
       document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
       document.querySelector('.commsAreaStatic').innerHTML += communityNames;
       document.querySelector('.commsAreaSearch').innerHTML += communityNames;
-    }
-
-  if (checkAuthenticated()){
-    const token = getCookie("jwt");
-    const element = document.querySelector('.commsAreaStatic');
-    const headers = { 'Authorization': 'Bearer ' + token,
-    'mode': 'no-cors',
-    'Content-Type': 'application/json',
-  }; 
-    // get from API every 5 mins.
-    if (((Date.now() - settings.communityUpdateDateTime) >= 300000) || (settings.communityUpdateDateTime == ""))
-    {
-      ltLog("Updating Comms from API");
-    fetch(settings.instance+'/api/v3/site', { headers })
-      .then(response => response.json())
-      .then(data => updateCommsAreas(data, settings));
-    }
-    else
-    {
-      //ltLog("Update Comms from API on cooldown.");
-    }
     
-  }
-  else
-  {
-    ltLog("Not Authenticated");
-    ltLog("Get Comms from Storage...");
-    communityNames = userOptions.communities
-    let arrayCount = communityNames.length
-    document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
-    document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
-    document.querySelector('.commsAreaStatic').innerHTML += communityNames;
-    document.querySelector('.commsAreaSearch').innerHTML += communityNames;es;
-  }
+      
+    }
+  
+      waitForElm('#commsearch').then(elm => {
+      console.log('Element is ready');
+      const searchInput = document.getElementById('commsearch');
+      let latestQueryString = "";
+      try{latestQueryString = localStorage.getItem("prevSearchCommsQueries");
+      latestQueryArray = latestQueryString.split(",");}
+      catch{};
+      let latestQueryArray = [];
+      
+      
+      if (searchInput.getAttribute('listener') !== 'true') {
+      searchInput.addEventListener("input", (e) => {
+        e.preventDefault();
+        searchComms(searchInput.value, localStorage.getItem('communityNames'));
+      });
+      }
+
+      if (currentUrl.indexOf(latestQueryArray[latestQueryArray.length - 1]) !== -1) {
+        ltLog("current search query" + latestQueryArray);
+        const lastSearch = latestQueryArray[latestQueryArray.length - 1];
+        searchComms(lastSearch, localStorage.getItem('communityNames'));   
+      }
+      else
+      {
+        if (checkAuthenticated()){
+        const token = getCookie("jwt");
+        const element = document.querySelector('.commsAreaStatic');
+        const headers = { 'Authorization': 'Bearer ' + token,
+        'mode': 'no-cors',
+        'Content-Type': 'application/json'}; 
+        // get from API every 5 mins.
+        if (((Date.now() - settings.communityUpdateDateTime) >= 300000) || (settings.communityUpdateDateTime == ""))
+        {
+          ltLog("Updating Comms from API");
+        fetch(settings.instance+'/api/v3/site', { headers })
+          .then(response => response.json())
+          .then(data => updateCommsAreas(data, settings));
+        }
+    
+        }
+        else
+        {
+          ltLog("Not Authenticated");
+          ltLog("Get Comms from Storage...");
+          communityNames = settings.communities
+          let arrayCount = communityNames.length
+          document.querySelector('.commsAreaStatic').innerHTML = "Communities: " + arrayCount;
+          document.querySelector('.commsAreaSearch').innerHTML = "Communities: " + arrayCount;
+          document.querySelector('.commsAreaStatic').innerHTML += communityNames;
+          document.querySelector('.commsAreaSearch').innerHTML += communityNames;
+        }
+      }
+    });
+
 
 }
 
@@ -658,6 +700,22 @@ function options(open) {
   return userOptions;
 }
 
+function waitForElm(selector) {
+  return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+          return resolve(document.querySelector(selector));
+      }
 
+      const observer = new MutationObserver(mutations => {
+          if (document.querySelector(selector)) {
+              observer.disconnect();
+              resolve(document.querySelector(selector));
+          }
+      });
 
-
+      observer.observe(document.body, {
+          childList: true,
+          subtree: true
+      });
+  });
+}
