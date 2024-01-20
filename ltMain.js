@@ -102,15 +102,14 @@ waitForElm('#app').then((elm) => {
 
 
 addElements(settings);
+setCSSSettings(settings);
 getCommunities(settings);
-
-//
-
      
 }
 
 //When page refresh do.
 function refresh(settings){
+
   blockContent(settings.blockFilters);
   showAllTheImages(settings);
   expandImages(settings);
@@ -341,8 +340,7 @@ function addElements(settings)
       else
       {
         let notUsing = document.getElementById("topDiv");
-        notUsing.pa
-        rentNode.removeChild(notUsing);
+        notUsing.parentNode.removeChild(notUsing);
       }
         document.getElementById("lemmyLogo").src = browser.runtime.getURL("ltLogo.png");
         document.getElementById("lemmyOptionsIcon").src = browser.runtime.getURL("ltOptionsLogo.png");
@@ -384,16 +382,43 @@ document.body.prepend(ltSettingsDiv);
 fetch(ltSettingsUrl).then((response) => response.text())
 .then((html) => {
   document.getElementById("ltSettingsDiv").innerHTML = html;
+  addSettingsToOptionsPage(settings);
   document.getElementById("LTsaveoptions").addEventListener("click", (e) => {
     e.preventDefault();
     options(3);
   });
 });
 
+
+
 fetch(ltBarStyleUrl).then((response) => response.text())
 .then((style) => {
   document.head.appendChild(document.createElement("style")).innerHTML = style;
 });
+  
+}
+
+function addSettingsToOptionsPage(settings)
+{
+  let settingsHTML = document.getElementById('ltOptions');
+  let regex = /\$\{settings\.[A-Za-z]+\}/g;
+  
+
+  let matches = settingsHTML.innerHTML.match(regex);
+  ltLog("Options:" + matches);
+  matches.forEach(replaceVals);
+
+  function replaceVals(item, index, arr)
+  {
+    let origItem = item;
+    item = item.replace('${', '').replace('}', '');
+    item = eval(item);
+    let settingsDiv = document.getElementById('ltOptions');
+    ltLog(origItem + " : " + item);
+    settingsDiv.innerHTML = settingsDiv.innerHTML.replace(origItem, item);
+  }
+  
+
   
 }
 
@@ -718,4 +743,124 @@ function waitForElm(selector) {
           subtree: true
       });
   });
+}
+
+function setCSSSettings(settings)
+{
+  let styleString = `
+  .ltmenu {
+    top: ${settings.commposVertical}%;
+    ${settings.commposSide}: 0;
+}
+.post-listings .img-expanded {
+    width: ${settings.expandImagesize}${settings.widthPixels ? "px" : "%"};
+}
+#searchdiv {
+    ${settings.commposSide}: 0;
+    transition: ${settings.commposSide} .25s;
+}
+if (settings.unblurNSFW) {
+    .img-blur {filter: none !important; -webkit-filter: none !important; -moz-filter: none !important; -o-filter: none !important; -ms-filter: none !important;} .img-blur-icon {display: none !important;} ";
+  } else {
+    .img-blur {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} .img-blur-icon  {filter: blur !important; -webkit-filter: blur !important; -moz-filter: blur !important; -o-filter: blur !important; -ms-filter: blur !important;} ";
+  }
+  
+  if (settings.hideSideBar) {
+    
+      ".container, .container-lg, .container-md, .container-sm, .container-xl { }" +
+      ".col-md-8 {flex: 0 0 80% !important;max-width: 80%;}";
+  } else {
+    
+      ".container, .container-lg, .container-md, .container-sm, .container-xl {}";
+  }
+  `
+  if (!settings.hoverCheck) {
+   styleString += ` 
+    #myDiv:not(:hover) {
+      animation: showNavOut 500ms ease-in-out both;
+      display: none;
+      height: 0;
+      transition-timing-function: ease;
+      transition: height;
+      transition-duration: 1.0;
+      transition-delay: 0.5s;
+    }
+  
+    .ltPassiveSearchDiv {
+      display: block;
+      float: ${settings.reverseSide};
+      padding-${settings.commposSide}: 200px;
+    }
+  
+    #ltActiveSearchDiv {
+      display: none;
+      animation: showNav 500ms ease-in-out both;
+    }
+  
+    #sidebarSubscribed {
+      display: none;
+    }
+  
+    #searchdiv {
+      ${settings.commposSide}: -200px;
+      position: fixed;
+      height: 110px;
+      min-height: auto;
+      width: 240px;
+      display: block;
+      z-index: 999;
+      overflow: auto;
+      display: block;
+      transition-timing-function: ease;
+      transition: ${settings.commposSide},
+      height;
+      transition-duration: 0.25s, 0.25s;
+      transition-delay: 0.25s, 0.25s;
+    }
+  
+    #searchdiv:hover .ltActiveSearchDiv {
+      display: block;
+    }
+  
+    #searchdiv:hover .ltPassiveSearchDiv {
+      display: none;
+    }
+  
+    #searchdiv:hover {
+      ${settings.commposSide}: 0;
+      position: fixed;
+      height: 100%;
+      min-height: auto;
+      width: 240px;
+      display: block;
+      z-index: 999;
+      display: block;
+      overflow: auto;
+    }
+  
+    #searchdiv:hover>#myDiv {
+      ${settings.commposSide}: 0;
+      word-wrap: break-word;
+      overflow: auto;
+      display: block;
+      height: 100%;
+      width: 240px;
+      animation: showNav 500ms ease-in-out both;
+    }
+  
+    @keyframes showNav {
+      from {
+        opacity: 0;
+      }
+  
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes showNavOut {  from {opacity: 1;}  to {opacity: 0;}}`;
+  } else {
+    styleString += `myDiv {visibility: visible; height: auto; width: auto; overflow:scroll !important;}"`;
+  }
+
+  document.head.appendChild(document.createElement("style")).innerHTML = styleString;
 }
