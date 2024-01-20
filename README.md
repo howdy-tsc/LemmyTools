@@ -1,6 +1,6 @@
 # LemmyTools - ReadMe
 
-## <p><b>NOTICE: The user addon script version of lemmy tools will no longer be receiving updates from me past 0.2.1.0. I am in the process of developing an browser addon version of LemmyTools. Check back soon for information on it soon!</b></p>
+## <p><b>NOTICE: The user addon script version of LemmyToolswill no longer be receiving updates from me past 0.2.1.0. I am in the process of developing a browser addon version of LemmyTools. Check back soon for information on it soon!</b></p>
 
 <p><b>Current Features: 0.2.1.0</b></p>
 <li>Content Block - Block posts and comments by word or phrase.</li>li>
