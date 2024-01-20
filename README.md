@@ -3,7 +3,7 @@
 ## <p><b>NOTICE: The user addon script version of LemmyTools will no longer be receiving updates from me past 0.2.1.0. I am in the process of developing a browser addon version of LemmyTools. Check back soon for information on it soon!</b></p>
 
 <p><b>Current Features: 0.2.1.0</b></p>
-<li>Content Block - Block posts and comments by word or phrase.</li>li>
+<li>Content Block - Block posts and comments by word or phrase.</li>
 <li>LemmyTools top bar implemented</li>
 <li>User Tagger </li>
 <li>All links open in new tab with noreferrer enabled</li>
