@@ -1,0 +1,134 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fff;
+  --fg: #1a1a1a;
+  --muted: #666;
+  --accent: #4a7;
+  --border: #ddd;
+  --section-bg: #f7f7f8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d1f21;
+    --fg: #eee;
+    --muted: #aaa;
+    --accent: #6c9;
+    --border: #333;
+    --section-bg: #26282b;
+  }
+}
+
+body {
+  margin: 0;
+  width: 280px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+header h1 { margin: 0; font-size: 1rem; flex: 1; }
+.muted { color: var(--muted); font-size: 0.8em; }
+
+.icon-btn {
+  background: transparent;
+  border: 0;
+  color: var(--fg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+.icon-btn:hover {
+  background: var(--section-bg);
+  color: var(--accent);
+}
+
+.status {
+  font-size: 0.8em;
+  color: var(--muted);
+  padding: 0.4rem 0.75rem;
+  background: var(--section-bg);
+  border-bottom: 1px solid var(--border);
+}
+.status.ok      { color: var(--accent); }
+.status.warn    { color: #c80; }
+.status.hidden  { display: none; }
+
+section {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+section h2 {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  gap: 0.5rem;
+}
+.row.toggle { cursor: pointer; }
+.row.toggle:hover { color: var(--accent); }
+.row label, .row span { flex: 1; }
+.row small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
+select {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font: inherit;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+footer {
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+footer button {
+  flex: 1;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+footer button:hover { filter: brightness(1.1); }
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.85em;
+}
+footer a:hover { text-decoration: underline; }

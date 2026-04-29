@@ -1,0 +1,322 @@
+/* LemmyTools — extension stylesheet.
+ *
+ * Dynamic values (sidebar position, image size, etc.) are exposed as
+ * CSS custom properties set on :root by the content script. That keeps
+ * this file static and CSP-compliant.
+ */
+
+:root {
+  --lt-comm-pos-vertical: 0%;
+  --lt-comm-pos-side: right;        /* logical fallback only; real switching uses [data-lt-side] */
+  --lt-expand-image-size: 50%;
+}
+
+/* Sidebar surface */
+.ltmenu {
+  position: fixed;
+  top: var(--lt-comm-pos-vertical);
+  font-size: 0.9rem;
+  display: block;
+  height: 100%;
+  min-height: auto;
+  z-index: 999;
+  overflow: scroll;
+  outline: 1px solid grey !important;
+}
+
+[data-lt-side="left"] .ltmenu,
+.ltmenu[data-lt-side="left"]   { left: 0; }
+[data-lt-side="right"] .ltmenu,
+.ltmenu[data-lt-side="right"]  { right: 0; }
+
+#searchdiv {
+  position: fixed;
+  height: 100%;
+  min-height: auto;
+  width: 240px;
+  display: block;
+  z-index: 999;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  transition: left 0.25s ease, right 0.25s ease;
+}
+#searchdiv[data-lt-side="left"]  { left: 0; }
+#searchdiv[data-lt-side="right"] { right: 0; }
+
+.ltActiveSearchDiv {
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.ltActiveSearchDiv img:hover {
+  margin-top: -5px;
+  border: 10px yellow;
+}
+
+.ltmenu input { width: 100%; }
+
+/* Collapsed-state handle. Hidden by default; only shown when the
+ * sidebar is in hover-to-reveal mode (data-lt-hover="auto"). Pulls
+ * its colors from Lemmy's Bootstrap theme variables so it matches
+ * whichever Lemmy theme is active, with safe fallbacks. */
+.ltPassiveSearchDiv {
+  display: none;
+  position: absolute;
+  top: 0;
+  width: 28px;
+  height: 90px;
+  padding: 6px 3px;
+  box-sizing: border-box;
+  background: var(--bs-primary, #4a7);
+  color: var(--bs-light, #fff);
+  border: 1px solid var(--bs-border-color, rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  opacity: 0.85;
+}
+
+.ltPassiveSearchDiv:hover {
+  transform: scale(1.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+}
+
+.ltPassiveLogo {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.ltPassiveChevron {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.post-listings .img-expanded {
+  width: var(--lt-expand-image-size);
+  max-height: none !important;
+}
+
+#myDiv li        { list-style-type: none; }
+#myDiv hr        { display: block; }
+
+.ltbutton {
+  background-color: var(--bs-success-bg-subtle, #ccffe5);
+  color: var(--bs-body-color, inherit);
+  border: 1px solid var(--bs-border-color, transparent);
+}
+
+/* Inline settings affordance shown in both the top-bar and sidebar
+ * headers. Uses theme variables so it blends with the active Lemmy
+ * color scheme. */
+.ltSettingsBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05em;
+  line-height: 1;
+  text-decoration: none;
+  color: inherit;
+  width: 22px;
+  height: 22px;
+  margin: 0 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.2s ease;
+}
+.ltSettingsBtn:hover,
+.ltSettingsBtn:focus-visible {
+  background-color: var(--bs-secondary-bg, rgba(0, 0, 0, 0.08));
+  color: var(--bs-primary, currentColor);
+  text-decoration: none;
+  transform: rotate(30deg);
+  outline: none;
+}
+
+#myDiv::-webkit-scrollbar,
+#searchdiv::-webkit-scrollbar { display: none; }
+
+#myDiv {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.userNote {
+  margin-left: 0.5em;
+  font-size: 0.9em;
+}
+
+.userTagger { border-radius: var(--bs-border-radius); }
+.userTagger::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+form#userTag {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+form#userTag label { width: 60px; }
+
+/* Hover-mode collapsing — applied when [data-lt-hover="auto"] is set */
+[data-lt-hover="auto"] #myDiv:not(:hover) {
+  animation: showNavOut 500ms ease-in-out both;
+  display: none;
+  height: 0;
+}
+
+[data-lt-hover="auto"] .ltPassiveSearchDiv { display: flex; }
+[data-lt-hover="auto"] #ltActiveSearchDiv  { display: none;  animation: showNav 500ms ease-in-out both; }
+[data-lt-hover="auto"] #sidebarSubscribed  { display: none;  }
+
+[data-lt-hover="auto"] #searchdiv {
+  height: 90px;
+  width: 240px;
+  overflow: visible;
+}
+/* Shift the sidebar by (sidebar width − handle width) so only the
+ * coloured handle is visible against the viewport edge. 240 − 28 = 212. */
+[data-lt-hover="auto"] #searchdiv[data-lt-side="left"]  { left: -212px; }
+[data-lt-hover="auto"] #searchdiv[data-lt-side="right"] { right: -212px; }
+
+/* Hide the card background/border/outline in collapsed mode so no
+ * theme bleed shows between the viewport edge and the handle. */
+[data-lt-hover="auto"] #searchdiv:not(:hover) {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Pull-tab pinned to the visible edge of the sidebar. */
+[data-lt-hover="auto"] #searchdiv[data-lt-side="left"]  .ltPassiveSearchDiv {
+  right: 0;
+  border-radius: 0 6px 6px 0;
+}
+[data-lt-hover="auto"] #searchdiv[data-lt-side="right"] .ltPassiveSearchDiv {
+  left: 0;
+  border-radius: 6px 0 0 6px;
+}
+
+/* Chevron points toward where the panel will slide out from. */
+[data-lt-hover="auto"] #searchdiv[data-lt-side="left"]  .ltPassiveChevron {
+  border-width: 4px 0 4px 5px;
+  border-color: transparent transparent transparent currentColor;
+}
+[data-lt-hover="auto"] #searchdiv[data-lt-side="right"] .ltPassiveChevron {
+  border-width: 4px 5px 4px 0;
+  border-color: transparent currentColor transparent transparent;
+}
+
+/* One short pulse on first load so the handle is noticeable, then
+ * relies on the resting opacity (0.85) to stay subtle. */
+[data-lt-hover="auto"] .ltPassiveSearchDiv {
+  animation: ltPulse 1.8s ease-in-out 0.5s 1;
+}
+@keyframes ltPulse {
+  0%, 100% { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); }
+  50%      { box-shadow: 0 0 0 3px var(--bs-primary, #4a7),
+                         0 2px 8px rgba(0, 0, 0, 0.3); }
+}
+
+[data-lt-hover="auto"] #searchdiv:hover .ltActiveSearchDiv  { display: block; }
+[data-lt-hover="auto"] #searchdiv:hover .ltPassiveSearchDiv { display: none;  }
+
+[data-lt-hover="auto"] #searchdiv:hover {
+  height: 100%;
+  width: 240px;
+  overflow: auto;
+}
+[data-lt-hover="auto"] #searchdiv[data-lt-side="left"]:hover  { left: 0; }
+[data-lt-hover="auto"] #searchdiv[data-lt-side="right"]:hover { right: 0; }
+
+[data-lt-hover="auto"] #searchdiv:hover > #myDiv {
+  word-wrap: break-word;
+  overflow: auto;
+  display: block;
+  height: 100%;
+  width: 240px;
+  animation: showNav 500ms ease-in-out both;
+}
+
+@keyframes showNav    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes showNavOut { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 1199.98px) {
+  #brandingText { display: none; }
+  #searchdiv    { height: 35px; }
+}
+
+/* Top-bar layout */
+#topDiv { z-index: 99999999 !important; }
+
+.topDivSearch {
+  min-width: 330px;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  z-index: 99999999 !important;
+}
+
+#topDiv img:hover {
+  margin-top: -5px;
+  border: 10px yellow;
+}
+
+.topDivBar {
+  width: 100%;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.topDivBar br  { display: none; }
+.topDivBar li,
+.topDivBar a   { display: inline-block; padding-right: 5px; margin-top: 4px; }
+.topDivBar hr  { display: none; }
+.topDivBar img { display: none; }
+
+.topDivRoot {
+  height: 35px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 99999999 !important;
+  border: 2px;
+  display: inline-flex;
+  flex-direction: row;
+}
+
+#topDivCommsBox {
+  float: left;
+  width: 100%;
+  height: 100%;
+  top: 35px;
+  left: 0;
+}
+
+[data-lt-topbar="on"] #root { margin-top: 35px !important; }
+
+/* NSFW unblur */
+[data-lt-unblur="on"] .img-blur {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+[data-lt-unblur="on"] .img-blur-icon { display: none !important; }
+
+/* Hide-sidebar layout tweak */
+[data-lt-hide-sidebar="on"] .col-md-8 {
+  flex: 0 0 80% !important;
+  max-width: 80%;
+}

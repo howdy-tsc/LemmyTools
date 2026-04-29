@@ -1,0 +1,119 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fff;
+  --fg: #1a1a1a;
+  --muted: #666;
+  --accent: #4a7;
+  --border: #ccc;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d1f21;
+    --fg: #eee;
+    --muted: #aaa;
+    --accent: #6c9;
+    --border: #444;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 1.5rem;
+  max-width: 820px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 1;
+}
+header h1 { margin: 0; font-size: 1.4rem; flex: 1; }
+
+#status {
+  color: var(--accent);
+  font-size: 0.9rem;
+  min-width: 8em;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button.primary:hover { filter: brightness(1.1); }
+
+section {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--border);
+}
+section h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--accent);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0;
+}
+.row.column {
+  grid-template-columns: 1fr;
+}
+.row label small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-top: 2px;
+}
+.row label .inline-label,
+.row .inline-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: normal;
+  margin-left: 0.5rem;
+}
+.row .inline { display: inline-flex; gap: 0.5rem; align-items: center; }
+
+input[type="text"],
+input[type="url"],
+input[type="number"],
+select,
+textarea {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  min-width: 12rem;
+  font: inherit;
+}
+
+textarea { width: 100%; }
+input[type="checkbox"] { width: 18px; height: 18px; }
+
+footer {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 1rem;
+}
+footer a { color: var(--accent); }

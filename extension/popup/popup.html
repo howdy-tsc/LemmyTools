@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>LemmyTools</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/lemmy-logo.webp" alt="" width="20" height="20">
+    <h1>LemmyTools</h1>
+    <span id="version" class="muted"></span>
+    <button type="button" id="header-options" class="icon-btn" title="Open full settings" aria-label="Open full settings">
+      &#9881;
+    </button>
+  </header>
+
+  <div id="lemmy-status" class="status"></div>
+
+  <section>
+    <h2>Layout</h2>
+    <div class="row">
+      <label for="commposSide">Bar position</label>
+      <select id="commposSide">
+        <option value="top">top</option>
+        <option value="right">right</option>
+        <option value="left">left</option>
+      </select>
+    </div>
+    <label class="row toggle">
+      <span>Keep bar always open</span>
+      <input type="checkbox" id="hoverCheck">
+    </label>
+    <label class="row toggle">
+      <span>Hide Lemmy sidebars</span>
+      <input type="checkbox" id="hideSideBar">
+    </label>
+  </section>
+
+  <section>
+    <h2>Images</h2>
+    <label class="row toggle">
+      <span>Expandable images</span>
+      <input type="checkbox" id="expandImages">
+    </label>
+    <label class="row toggle">
+      <span>Auto-open image posts</span>
+      <input type="checkbox" id="showAllImages">
+    </label>
+    <label class="row toggle">
+      <span>Auto-unblur NSFW</span>
+      <input type="checkbox" id="unblurNSFW">
+    </label>
+  </section>
+
+  <section>
+    <h2>Behaviour</h2>
+    <label class="row toggle">
+      <span>Open all links in new tab</span>
+      <input type="checkbox" id="linksInNewTab">
+    </label>
+    <label class="row toggle">
+      <span>
+        Block content
+        <small>edit filters in full settings</small>
+      </span>
+      <input type="checkbox" id="blockContent">
+    </label>
+  </section>
+
+  <footer>
+    <button type="button" id="open-options">⚙ Open full settings</button>
+    <a id="reload-link" href="#">Reload tab</a>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

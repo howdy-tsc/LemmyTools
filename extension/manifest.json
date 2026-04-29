@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "LemmyTools",
+  "version": "0.3.0.0",
+  "description": "A small suite of tools to make Lemmy easier — sidebar, user tagger, content blocking, image expansion, and more.",
+  "author": "howdy@thesimplecorner.org",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "lemmytools@thesimplecorner.org",
+      "strict_min_version": "115.0"
+    }
+  },
+
+  "icons": {
+    "48": "icons/lemmy-logo.webp",
+    "96": "icons/lemmy-logo.webp"
+  },
+
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+
+  "action": {
+    "default_title": "LemmyTools",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/lemmy-logo.webp",
+      "32": "icons/lemmy-logo.webp"
+    }
+  },
+
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["lib/storage.js", "content/lemmytools.js"],
+      "css": ["content/lemmytools.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "options_ui": {
+    "page": "options/options.html",
+    "browser_style": false,
+    "open_in_tab": true
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/lemmy-logo.webp", "popup/popup.html"],
+      "matches": ["*://*/*"]
+    }
+  ]
+}

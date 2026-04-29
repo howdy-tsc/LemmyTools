@@ -1,6 +1,19 @@
-<h5>LemmyTools 0.2.1.0</h5>
+<h5>LemmyTools 0.3.0.0</h5>
+0.3.0.0 - Firefox WebExtension
+* Userscript retired; project is now a Firefox WebExtension (Manifest V3).
+* Toolbar button with quick-toggle popup for the most-used features.
+* Settings moved to browser.storage.local (one-time migration from existing userscript localStorage).
+* Embedded CSS extracted to a CSP-clean stylesheet; dynamic values driven by CSS custom properties.
+* Stricter Lemmy site detection so the script no longer injects on unrelated pages.
+* Replaced multiple setInterval polls with a single MutationObserver and delegated event listeners.
+* Compiled blockContent filters to a single regex; per-element scan tracked with a data attribute.
+* HTML escaping for instance URLs and community names embedded in templates.
+* Bug fixes: corrupt regex in offset removal, dead setTimeout/clearTimeout pair, identical if/else
+  branches in community search, unguarded regex .match(), array-as-string in search history,
+  stray "mailx" string in CSS template, console.log noise.
+
 0.2.1.0
-* Added conentBlocking features. Users can now block posts/comment by adding filters in the settings. 
+* Added conentBlocking features. Users can now block posts/comment by adding filters in the settings.
 
 0.2.0.9
 * User tagger fix for local instance users.
