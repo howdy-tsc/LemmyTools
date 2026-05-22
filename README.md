@@ -4,9 +4,11 @@ A small suite of tools to make Lemmy easier — now a Firefox WebExtension.
 
 > **Note:** the original Greasemonkey/Tampermonkey userscript has been retired. The repository now ships only the Firefox addon under [`extension/`](./extension). The last userscript release was 0.2.1.0; the addon picks up at 0.3.0.0.
 
-## Features (0.3.0.0)
+## Features (0.3.1.1)
 
 - **LemmyTools bar** — top bar (default), or a flush-edge pull-tab on the left or right of the screen with a searchable list of your subscribed communities. The collapsed-state handle, gear icon, and helper button all pick up `--bs-primary` and other Bootstrap variables, so they blend with whichever Lemmy theme you're using.
+- **Community Groups** — organize subscribed communities into named, collapsible groups in the LemmyTools bar
+- **Community list sort** — alphabetical (default) or by most recently visited
 - **Three ways into settings**
   - Click the LemmyTools toolbar button → quick-toggle popup
   - Click the gear (⚙) on the LemmyTools bar (works in top, left, and right layouts)
@@ -14,10 +16,10 @@ A small suite of tools to make Lemmy easier — now a Firefox WebExtension.
   - Or use Firefox's `about:addons` → LemmyTools → Preferences
 - **User Tagger** — click any user to attach a coloured note that follows them across the site
 - **Content Block** — hide posts and comments matching keyword filters (compiled to a single regex for speed)
-- **Image tools** — click-and-drag resize for expanded images, auto-expand image posts, auto-unblur NSFW, "Show all images" button
+- **Image tools** — click-and-drag resize for expanded images, three-mode image-post picker (auto-open all, manual button, or neither), auto-unblur NSFW
 - **Hide Lemmy's built-in sidebars** for more reading space
 - **Browse/Subscribe** to a remote community on your home instance with one click
-- **Open all links in a new tab** with `rel=noreferrer` (optional)
+- **Open links in a new tab** — off, external links only, or all links (including internal Lemmy navigation), with `rel=noreferrer`
 
 ## Installing
 
@@ -25,13 +27,13 @@ A small suite of tools to make Lemmy easier — now a Firefox WebExtension.
 
 1. Open `about:debugging#/runtime/this-firefox`
 2. **Load Temporary Add-on…**
-3. Select `extension/manifest.json` (or `lemmytools-0.3.0.0.xpi` if you've packaged it)
+3. Select `extension/manifest.json` (or `lemmytools-0.3.1.1.xpi` if you've packaged it)
 
 The addon stays loaded until Firefox restarts.
 
 ### Permanent install (XPI)
 
-A packaged `lemmytools-0.3.0.0.xpi` lives in the repo root. To install it:
+A packaged `lemmytools-0.3.1.1.xpi` lives in the repo root. To install it:
 
 - **Firefox Developer Edition, Nightly, or ESR** — open `about:config`, set `xpinstall.signatures.required` to `false`, then drag the `.xpi` onto the Firefox window
 - **Stable Firefox** — the addon must be signed via AMO. Submit the XPI to <https://addons.mozilla.org/developers/> for review
@@ -41,16 +43,19 @@ A packaged `lemmytools-0.3.0.0.xpi` lives in the repo root. To install it:
 ```bash
 # with zip
 cd extension
-zip -r -FS ../lemmytools-0.3.0.0.xpi . -x '*.DS_Store'
+zip -r -FS ../lemmytools-0.3.1.1.xpi . -x '*.DS_Store'
 
 # or, if you don't have zip installed (e.g. plain WSL)
 cd extension
 python3 -c "import zipfile,os
-with zipfile.ZipFile('../lemmytools-0.3.0.0.xpi','w',zipfile.ZIP_DEFLATED) as z:
+with zipfile.ZipFile('../lemmytools-0.3.1.1.xpi','w',zipfile.ZIP_DEFLATED) as z:
     for r,_,fs in os.walk('.'):
         for f in fs:
             p=os.path.join(r,f)
             z.write(p, os.path.relpath(p,'.'))"
+
+# Windows PowerShell
+Compress-Archive -Path extension\* -DestinationPath lemmytools-0.3.1.1.xpi -CompressionLevel Optimal
 ```
 
 Either form must be run from inside `extension/` so `manifest.json` lands at the archive root — Firefox rejects XPIs where the manifest is nested in a subdirectory.
