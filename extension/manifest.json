@@ -1,19 +1,21 @@
 {
   "manifest_version": 3,
   "name": "LemmyTools",
-  "version": "0.3.0.0",
+  "version": "0.3.1.1",
   "description": "A small suite of tools to make Lemmy easier — sidebar, user tagger, content blocking, image expansion, and more.",
-  "author": "howdy@thesimplecorner.org",
+  "author": "howdy@lemmytools.app",
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "lemmytools@thesimplecorner.org",
-      "strict_min_version": "115.0"
+      "id": "howdy@lemmytools.app",
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
 
   "icons": {
-    "48": "icons/lemmy-logo.webp",
     "96": "icons/lemmy-logo.webp"
   },
 
@@ -24,8 +26,7 @@
     "default_title": "LemmyTools",
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "16": "icons/lemmy-logo.webp",
-      "32": "icons/lemmy-logo.webp"
+      "96": "icons/lemmy-logo.webp"
     }
   },
 

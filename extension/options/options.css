@@ -117,3 +117,183 @@ footer {
   margin-top: 1rem;
 }
 footer a { color: var(--accent); }
+
+#discoveredCount { color: var(--muted); margin-bottom: 0.4rem; }
+#discoveredList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+#discoveredList:empty { display: none; }
+#discoveredList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.5rem;
+}
+#discoveredList li:last-child { border-bottom: none; }
+#discoveredList button {
+  font-size: 0.8rem;
+  padding: 0.15rem 0.4rem;
+}
+
+#groupsList { gap: 0.5rem; }
+.muted-note { color: var(--muted); font-style: italic; }
+
+/* Compact, inline group manager — one pill per group, side by side. */
+.lt-groups-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.lt-group-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.lt-group-pill .lt-group-name {
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 600;
+  min-width: 4rem;
+  width: auto;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font: inherit;
+  color: var(--fg);
+}
+.lt-group-pill .lt-group-name:hover {
+  border-color: var(--border);
+}
+.lt-group-pill .lt-group-name:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+}
+.lt-group-pill .lt-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  background: rgba(128, 128, 128, 0.12);
+  border-radius: 999px;
+}
+.lt-group-pill button {
+  font-size: 0.85rem;
+  padding: 0.1rem 0.35rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 3px;
+  line-height: 1;
+}
+.lt-group-pill button:hover {
+  background: rgba(128, 128, 128, 0.15);
+  color: var(--fg);
+}
+.lt-group-pill .lt-group-delete:hover {
+  background: rgba(220, 70, 70, 0.15);
+  color: #d44;
+}
+
+/* Shared subscribed-community picker — one search drives chip toggles
+ * across every group at once. Sits above the group list. */
+.lt-shared-picker {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+  margin-bottom: 0.75rem;
+  background: var(--bg);
+}
+.lt-shared-picker-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.lt-shared-picker-search {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.lt-shared-picker-results {
+  list-style: none;
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+  max-height: 380px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.lt-shared-picker-results:empty { display: none; }
+.lt-shared-picker-results > li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.lt-shared-picker-results > li:last-child { border-bottom: none; }
+.lt-shared-picker-key {
+  font-family: ui-monospace, monospace;
+  word-break: break-all;
+  color: var(--fg);
+}
+.lt-shared-picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.lt-shared-picker-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  user-select: none;
+  background: transparent;
+  color: var(--fg);
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.lt-shared-picker-chip:hover {
+  border-color: var(--accent);
+}
+.lt-shared-picker-chip.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+/* The native checkbox stays in the DOM (drives the change event) but
+ * the chip itself is the visible affordance — hide the box. */
+.lt-shared-picker-chip input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+}
+.lt-shared-picker-more {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem !important;
+  display: block !important;
+}

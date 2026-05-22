@@ -82,6 +82,10 @@ section h2 {
   padding: 0.25rem 0;
   gap: 0.5rem;
 }
+.row.column {
+  flex-direction: column;
+  align-items: stretch;
+}
 .row.toggle { cursor: pointer; }
 .row.toggle:hover { color: var(--accent); }
 .row label, .row span { flex: 1; }
@@ -91,6 +95,27 @@ section h2 {
   font-size: 0.8em;
   font-weight: normal;
 }
+
+input[type="url"] {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+input[type="url"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(72, 170, 119, 0.2);
+}
+
+#home-section.warn input[type="url"] {
+  border-color: #c80;
+}
+#home-section.warn #instance-hint { color: #c80; }
 
 select {
   background: var(--bg);

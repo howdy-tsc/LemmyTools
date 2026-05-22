@@ -17,6 +17,18 @@
 
   <div id="lemmy-status" class="status"></div>
 
+  <section id="home-section">
+    <h2>Home instance</h2>
+    <div class="row column">
+      <input type="url" id="instance" placeholder="https://your.instance"
+             autocomplete="off" spellcheck="false">
+      <small id="instance-hint" class="muted">
+        Off-instance features (Browse / subscribe on home, discovered
+        communities) need this set.
+      </small>
+    </div>
+  </section>
+
   <section>
     <h2>Layout</h2>
     <div class="row">
@@ -55,10 +67,14 @@
 
   <section>
     <h2>Behaviour</h2>
-    <label class="row toggle">
-      <span>Open all links in new tab</span>
-      <input type="checkbox" id="linksInNewTab">
-    </label>
+    <div class="row">
+      <label for="linksInNewTab">Links in new tab</label>
+      <select id="linksInNewTab">
+        <option value="off">Off</option>
+        <option value="external">External only</option>
+        <option value="all">All links</option>
+      </select>
+    </div>
     <label class="row toggle">
       <span>
         Block content

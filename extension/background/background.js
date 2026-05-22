@@ -10,7 +10,6 @@ browser.runtime.onInstalled.addListener(async () => {
     await browser.storage.local.set({
       LemmyToolsOptions: {
         commposSide: "top",
-        reverseSide: "right",
         instance: "",
         commposVertical: 0,
         expandImages: true,
@@ -24,7 +23,7 @@ browser.runtime.onInstalled.addListener(async () => {
         expandImageSpeed: 0.5,
         showAllImages: false,
         hideShowAllImagesButton: false,
-        linksInNewTab: false
+        linksInNewTab: "off"
       }
     });
   }

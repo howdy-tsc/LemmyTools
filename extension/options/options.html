@@ -32,9 +32,9 @@
         </select>
       </div>
 
-      <div class="row">
+      <div class="row" id="commposVerticalRow">
         <label for="commposVertical"><strong>Bar vertical position</strong>
-          <small>% from top, 0–85</small></label>
+          <small>% from top, 0–85 — only applies when bar is on the side</small></label>
         <input type="number" id="commposVertical" min="0" max="85" step="1">
       </div>
 
@@ -42,6 +42,15 @@
         <label for="hoverCheck"><strong>Keep LemmyTools bar always open</strong>
           <small>best on widescreen desktops</small></label>
         <input type="checkbox" id="hoverCheck">
+      </div>
+
+      <div class="row">
+        <label for="commsSortMode"><strong>Community list sort</strong>
+          <small>alphabetical (default) or by most recently visited</small></label>
+        <select id="commsSortMode">
+          <option value="alpha">Alphabetical</option>
+          <option value="recent">Recently visited</option>
+        </select>
       </div>
     </section>
 
@@ -77,14 +86,13 @@
       </div>
 
       <div class="row">
-        <label for="showAllImages"><strong>Automatically open image posts</strong></label>
-        <input type="checkbox" id="showAllImages">
-      </div>
-
-      <div class="row">
-        <label for="hideShowAllImagesButton"><strong>Hide “Show All Images” button</strong>
-          <small>only matters when auto-open is off</small></label>
-        <input type="checkbox" id="hideShowAllImagesButton">
+        <label for="imagePostMode"><strong>Image posts</strong>
+          <small>auto-open all, show a manual button, or neither</small></label>
+        <select id="imagePostMode">
+          <option value="auto">Auto-open all image posts</option>
+          <option value="manual">Show “Open all images” button</option>
+          <option value="hidden">Don’t auto-open or show button</option>
+        </select>
       </div>
 
       <div class="row">
@@ -92,9 +100,51 @@
         <input type="checkbox" id="unblurNSFW">
       </div>
 
+      <fieldset class="row column">
+        <legend><strong>Open links in new tab</strong>
+          <small>“External” opens only links that leave the current site. “All” also forces internal Lemmy navigation into a new tab.</small>
+        </legend>
+        <label class="inline-label">
+          <input type="radio" name="linksInNewTab" value="off"> Off
+        </label>
+        <label class="inline-label">
+          <input type="radio" name="linksInNewTab" value="external"> External links only
+        </label>
+        <label class="inline-label">
+          <input type="radio" name="linksInNewTab" value="all"> All links
+        </label>
+      </fieldset>
+    </section>
+
+    <section>
+      <h2>Community Groups</h2>
+      <div class="row column">
+        <small>Organize your subscribed communities into named, collapsible
+          groups in the LemmyTools bar. Use the search below to find a
+          community, then click a group chip to add or remove it. Manage
+          the list of groups in the bar at the bottom of this section.</small>
+      </div>
+      <div id="groupsPicker" class="row column"></div>
+      <div id="groupsList" class="row column"></div>
       <div class="row">
-        <label for="linksInNewTab"><strong>Open ALL links in new tab</strong></label>
-        <input type="checkbox" id="linksInNewTab">
+        <span class="inline">
+          <input type="text" id="newGroupName" placeholder="New group name" />
+          <button type="button" id="addGroup">+ Add group</button>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Discovered Communities</h2>
+      <div class="row column">
+        <small>Communities you've encountered while browsing other Lemmy
+          instances. They appear in the LemmyTools bar with a one-click
+          "Browse/Sub on home" link.</small>
+        <div id="discoveredCount" aria-live="polite"></div>
+        <ul id="discoveredList"></ul>
+        <span class="inline">
+          <button type="button" id="discoveredClear">Clear all</button>
+        </span>
       </div>
     </section>
 
@@ -121,11 +171,7 @@
         <a href="https://github.com/howdy-tsc/LemmyTools/issues" target="_blank" rel="noreferrer">Issues</a>
       </p>
       <h3>Credits</h3>
-      <ul>
-        <li><strong>@cwagner@lemmy.cwagner.me</strong> — coding, code cleanup, mentoring</li>
-        <li><strong>Charles Machalow (csm10495)</strong> — coding contribution(s)</li>
-        <li><strong>jimmyhiggs337</strong> — coding contribution(s)</li>
-      </ul>
+      <ul id="creditsList"></ul>
     </footer>
   </form>
 

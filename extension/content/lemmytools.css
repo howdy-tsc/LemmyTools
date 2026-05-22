@@ -117,6 +117,126 @@
   border: 1px solid var(--bs-border-color, transparent);
 }
 
+/* Discover tab — injected next to Lemmy's Subscribed/Local/All buttons.
+ * Inherits Lemmy's btn-* classes from the cloned All anchor's className
+ * for theme parity; the rules below add a distinct active state so it
+ * visually wins over Lemmy's own "All active" briefly between renders. */
+.ltDiscoverTab.active {
+  background-color: var(--bs-primary, #4a7) !important;
+  border-color: var(--bs-primary, #4a7) !important;
+  color: var(--bs-light, #fff) !important;
+}
+
+/* Replaces the "Home" anchor in the bar header until the user has set
+ * one in options. Tinted warm so it reads as a "you should do this"
+ * affordance rather than just another nav link. */
+.ltSetHomeLink {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--bs-warning-bg-subtle, rgba(255, 193, 7, 0.18));
+  color: var(--bs-warning-text-emphasis, #aa6b00) !important;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--bs-warning-border-subtle, rgba(255, 193, 7, 0.5));
+}
+.ltSetHomeLink:hover,
+.ltSetHomeLink:focus-visible {
+  filter: brightness(1.1);
+  text-decoration: none;
+  outline: none;
+}
+
+/* Off-home CTA card — sits at the top of the community bar whenever we're
+ * looking at a /c/ page. Sidebar layout stacks vertically; the top-bar
+ * override below flips it to a tight inline row so it doesn't wreck the
+ * single-line scroll strip. */
+.ltCtaCard {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  margin: 0 0 0.4rem 0;
+  background: var(--bs-tertiary-bg, rgba(128, 128, 128, 0.08));
+  border: 1px solid var(--bs-border-color, rgba(128, 128, 128, 0.25));
+  border-radius: 6px;
+}
+.ltCtaTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  word-break: break-word;
+  color: var(--bs-body-color, inherit);
+}
+.ltCtaPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  color: var(--bs-light, #fff) !important;
+  background: var(--bs-primary, #4a7);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+}
+.ltCtaPrimary:hover,
+.ltCtaPrimary:focus-visible {
+  filter: brightness(1.1);
+  text-decoration: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+.ltCtaPrimary:active { transform: translateY(1px); }
+.ltCtaPrimaryIcon { font-size: 0.95em; opacity: 0.9; }
+.ltCtaSecondary {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.1;
+  color: var(--bs-body-color, inherit);
+  background: transparent;
+  border: 1px solid var(--bs-border-color, rgba(128, 128, 128, 0.4));
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.ltCtaSecondary:hover,
+.ltCtaSecondary:focus-visible {
+  background: var(--bs-secondary-bg, rgba(128, 128, 128, 0.15));
+  border-color: var(--bs-secondary-color, rgba(128, 128, 128, 0.6));
+  outline: none;
+}
+
+/* Top-bar variant: keep the card on a single line so it doesn't break
+ * the horizontal strip. The .topDivBar selector wins over the sidebar
+ * defaults via specificity. */
+.topDivBar .ltCtaCard {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.4rem 0 0;
+  vertical-align: middle;
+}
+.topDivBar .ltCtaTitle { font-size: 0.9rem; white-space: nowrap; }
+.topDivBar .ltCtaPrimary { padding: 0.25rem 0.55rem; font-size: 0.85rem; }
+.topDivBar .ltCtaSecondary { padding: 0.2rem 0.5rem; font-size: 0.8rem; }
+
 /* Inline settings affordance shown in both the top-bar and sidebar
  * headers. Uses theme variables so it blends with the active Lemmy
  * color scheme. */
@@ -319,4 +439,283 @@ form#userTag label { width: 60px; }
 [data-lt-hide-sidebar="on"] .col-md-8 {
   flex: 0 0 80% !important;
   max-width: 80%;
+}
+
+/* "Show All Images" injects these inline images directly into each post,
+ * bypassing Lemmy's own per-post expand state machine (which fights us
+ * back on multi-click). Width follows the user's expand-size setting
+ * (--lt-expand-image-size — same value as click-and-drag uses).
+ *
+ * The wrap is needed because Lemmy's compact post-listing is a flex row
+ * (votes | thumbnail | title). Without it, our <img> becomes a fourth
+ * flex item floated off to one side. The wrap takes a full row in any
+ * flex/grid context so the image drops below the post header. */
+.lt-inline-wrap {
+  display: block;
+  width: 100%;
+  flex: 1 0 100%;
+  margin-top: 0.5rem;
+  text-align: left;
+  clear: both;
+  order: 999;
+}
+img.lt-inline-img {
+  display: block;
+  width: var(--lt-expand-image-size);
+  max-width: 100%;
+  height: auto;
+  margin: 0;             /* flush-left within the wrap */
+  border-radius: 4px;
+}
+
+/* Discovered communities (off-instance sightings) */
+.ltDiscoveredHeader {
+  list-style: none;
+  margin-top: 0.5rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--bs-border-color, rgba(128, 128, 128, 0.3));
+  opacity: 0.85;
+  font-size: 0.85rem;
+}
+.ltDiscoveredItem {
+  list-style: none;
+  font-style: italic;
+}
+.ltDiscoveredItem a {
+  color: var(--bs-link-color, inherit);
+}
+.topDivBar .ltDiscoveredHeader { border-top: none; padding-top: 0; }
+
+/* Community groups */
+.ltGroup { margin: 0.25rem 0; }
+.ltGroupSummary {
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  background: rgba(128, 128, 128, 0.1);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  user-select: none;
+}
+.ltGroup[open] > .ltGroupSummary { font-weight: 600; }
+.ltGroupCount { opacity: 0.7; font-size: 0.85em; margin-left: 0.25rem; }
+.ltGroupList {
+  list-style: none;
+  padding-left: 0.6rem;
+  margin: 0.2rem 0 0.4rem 0;
+}
+
+/* Top-bar layout — render groups as floating dropdowns rather than
+ * inline-expanded blocks (which jam the row height and push content). */
+.topDivBar details.ltGroup {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  margin-right: 0.4rem;
+}
+.topDivBar .ltGroupSummary {
+  cursor: pointer;
+  padding: 0.1rem 0.5rem;
+  list-style: none;
+  display: inline-block;
+  border-radius: 3px;
+}
+.topDivBar .ltGroupSummary::-webkit-details-marker { display: none; }
+.topDivBar .ltGroupSummary::marker { content: ""; }
+.topDivBar .ltGroupSummary::after {
+  content: " \25BE";   /* ▾ */
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+.topDivBar details.ltGroup[open] > .ltGroupSummary::after {
+  content: " \25B4"; /* ▴ */
+}
+.topDivBar details.ltGroup[open] > .ltGroupSummary {
+  background: rgba(128, 128, 128, 0.15);
+}
+.topDivBar details.ltGroup[open] > .ltGroupList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100000000;
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, inherit);
+  border: 1px solid var(--bs-border-color, rgba(128, 128, 128, 0.4));
+  border-radius: 4px;
+  padding: 0.5rem;
+  min-width: 220px;
+  max-height: 60vh;
+  overflow-y: auto;
+  white-space: normal;
+  list-style: none;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.topDivBar details.ltGroup[open] > .ltGroupList li,
+.topDivBar details.ltGroup[open] > .ltGroupList a {
+  display: block;
+  padding: 0.15rem 0.3rem;
+  margin-top: 0;
+}
+
+/* Per-item "+ group" affordance — appears subtly, brightens on hover. */
+.ltLiAddGroup {
+  margin-left: 0.4rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0 5px;
+  font-size: 0.85rem;
+  opacity: 0.35;
+  border-radius: 3px;
+  line-height: 1;
+  transition: opacity 0.15s, background-color 0.15s;
+}
+.ltLiAddGroup:hover { opacity: 1; background: rgba(128, 128, 128, 0.2); }
+li:hover > .ltLiAddGroup { opacity: 0.7; }
+.topDivBar .ltLiAddGroup { display: inline-block; }
+
+/* Group picker modal */
+.ltGroupPicker {
+  border-radius: var(--bs-border-radius, 6px);
+  border: 1px solid var(--bs-border-color, #ccc);
+  background: var(--bs-body-bg, #fff);
+  color: var(--bs-body-color, inherit);
+  padding: 1rem;
+  min-width: 320px;
+  max-width: 480px;
+}
+.ltGroupPicker::backdrop { background: rgba(0, 0, 0, 0.5); }
+.ltGroupPickerWrap { display: flex; flex-direction: column; gap: 0.5rem; }
+.ltGroupPickerList {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.ltGroupPickerList li { padding: 0.2rem 0; }
+.ltGroupPickerEmpty { color: rgba(128, 128, 128, 0.85); font-style: italic; }
+.ltGroupPickerNew { display: flex; gap: 4px; }
+.ltGroupPickerNew input { flex: 1; min-width: 0; }
+.ltGroupPickerClose { text-align: right; }
+
+/* Appended Discover posts — compact rows we render ourselves when the
+ * Discover filter leaves Lemmy's page short. !important is liberal here
+ * because Lemmy's own .post-listing rules + Bootstrap reset would
+ * otherwise dominate. Scoped tightly via .lt-disc-post so we never
+ * bleed into native posts. */
+.lt-disc-post * { box-sizing: border-box; }
+/* Layout for our hand-rolled posts. Intentionally NO !important — we
+ * want Lemmy's own .post-listing / .post-title / .person-listing /
+ * .community-link / .thumbnail / .text-body / .badge styles to win
+ * wherever they apply, so the row matches the surrounding native
+ * posts in color, font, and spacing. */
+.lt-disc-post .lt-disc-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.25rem;
+}
+.lt-disc-post .lt-disc-votes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  user-select: none;
+  line-height: 1.1;
+}
+.lt-disc-post .lt-disc-votes button {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 2px 4px;
+  margin: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  box-shadow: none;
+  opacity: 0.85;
+  color: var(--bs-secondary-color, #888);
+}
+.lt-disc-post .lt-disc-votes button:hover { opacity: 1; }
+.lt-disc-post .lt-disc-vote-score {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.1;
+  padding: 2px 0;
+}
+.lt-disc-post .lt-disc-save {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  box-shadow: none;
+}
+.lt-disc-post .lt-disc-save:hover { opacity: 0.8; }
+/* Thumbnail box only — colors/borders come from Lemmy's own .thumbnail. */
+.lt-disc-post .lt-disc-thumb {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.lt-disc-post .lt-disc-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.lt-disc-post .lt-disc-placeholder {
+  background: rgba(128, 128, 128, 0.15);
+  border-radius: 4px;
+}
+.lt-disc-post .lt-disc-placeholder span {
+  font-size: 1.2rem;
+  opacity: 0.55;
+}
+.lt-disc-post .lt-disc-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.lt-disc-post .lt-disc-extlink {
+  font-size: 0.75rem;
+  color: var(--bs-secondary-color, #888);
+  margin-left: 0.3rem;
+  text-decoration: none;
+}
+.lt-disc-post .lt-disc-extlink:hover { text-decoration: underline; }
+.lt-disc-post .lt-disc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color, #888);
+  align-items: center;
+  margin-top: 0.2rem;
+}
+.lt-disc-post .lt-disc-time {
+  opacity: 0.75;
+  font-style: italic;
+}
+
+#ltDiscoverLoading {
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color, #888);
+  font-style: italic;
+  text-align: center;
+  padding: 0.6rem 0;
 }

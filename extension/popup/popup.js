@@ -8,13 +8,18 @@ const TOGGLES = [
   "expandImages",
   "showAllImages",
   "unblurNSFW",
-  "linksInNewTab",
   "blockContent"
 ];
 
+const LINKS_IN_NEW_TAB_VALUES = new Set(["off", "external", "all"]);
+function normalizeLinksInNewTab(v) {
+  if (v === true) return "all";
+  if (v === false || v == null) return "off";
+  return LINKS_IN_NEW_TAB_VALUES.has(v) ? v : "off";
+}
+
 const DEFAULTS = {
   commposSide: "top",
-  reverseSide: "right",
   instance: "",
   commposVertical: 0,
   expandImages: true,
@@ -28,7 +33,7 @@ const DEFAULTS = {
   expandImageSpeed: 0.5,
   showAllImages: false,
   hideShowAllImagesButton: false,
-  linksInNewTab: false
+  linksInNewTab: "off"
 };
 
 function $(id) { return document.getElementById(id); }
@@ -45,15 +50,47 @@ async function load() {
     if (el) el.checked = !!settings[id];
   }
   $("commposSide").value = settings.commposSide || "top";
+  $("linksInNewTab").value = normalizeLinksInNewTab(settings.linksInNewTab);
+  $("instance").value = settings.instance || "";
+  refreshInstanceHint();
 
   const manifest = browser.runtime.getManifest();
   $("version").textContent = `v${manifest.version}`;
 }
 
+function normalizeHost(s) {
+  if (!s) return "";
+  let h = String(s).trim();
+  try { h = new URL(h.includes("://") ? h : `https://${h}`).hostname; }
+  catch (_) {}
+  return h.toLowerCase().replace(/^www\./, "");
+}
+
+let activeTabHost = "";
+
+function refreshInstanceHint() {
+  const hint = $("instance-hint");
+  const section = $("home-section");
+  const trimmed = (settings.instance || "").trim();
+  if (!trimmed) {
+    section.classList.add("warn");
+    hint.textContent = "Not set. Off-instance features won't work until you do.";
+    return;
+  }
+  section.classList.remove("warn");
+  const homeHost = normalizeHost(trimmed);
+  if (activeTabHost && homeHost && activeTabHost === homeHost) {
+    hint.textContent = `On home — ${homeHost}.`;
+  } else if (activeTabHost && homeHost) {
+    hint.textContent = `Off home (this tab is ${activeTabHost}). Home stays ${homeHost}.`;
+  } else {
+    hint.textContent = `Home: ${homeHost}.`;
+  }
+}
+
 function scheduleSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
-    settings.reverseSide = settings.commposSide === "left" ? "right" : "left";
     try {
       await browser.storage.local.set({ [KEY]: settings });
     } catch (e) {
@@ -89,8 +126,10 @@ async function showSiteStatus() {
       el.classList.add("warn");
       return;
     }
+    activeTabHost = normalizeHost(u.host);
     el.textContent = `Active on ${u.host}.`;
     el.classList.add("ok");
+    refreshInstanceHint();
   } catch (_) {
     el.classList.add("hidden");
   }
@@ -110,6 +149,33 @@ document.addEventListener("DOMContentLoaded", () => {
   $("commposSide").addEventListener("change", (e) => {
     settings.commposSide = e.target.value;
     scheduleSave();
+  });
+
+  $("linksInNewTab").addEventListener("change", (e) => {
+    settings.linksInNewTab = normalizeLinksInNewTab(e.target.value);
+    scheduleSave();
+  });
+
+  // Persist on blur and on Enter — don't write a half-typed URL on every
+  // keystroke. Re-render the hint live so the warn state clears as you type.
+  const instanceEl = $("instance");
+  instanceEl.addEventListener("input", () => {
+    settings.instance = instanceEl.value.trim();
+    refreshInstanceHint();
+  });
+  instanceEl.addEventListener("blur", () => {
+    settings.instance = instanceEl.value.trim();
+    scheduleSave();
+    refreshInstanceHint();
+  });
+  instanceEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      settings.instance = instanceEl.value.trim();
+      scheduleSave();
+      refreshInstanceHint();
+      instanceEl.blur();
+    }
   });
 
   async function openSettings() {
