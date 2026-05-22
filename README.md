@@ -23,42 +23,7 @@ A small suite of tools to make Lemmy easier — now a Firefox WebExtension.
 
 ## Installing
 
-### Temporary install (any Firefox)
-
-1. Open `about:debugging#/runtime/this-firefox`
-2. **Load Temporary Add-on…**
-3. Select `extension/manifest.json` (or `lemmytools-0.3.1.1.xpi` if you've packaged it)
-
-The addon stays loaded until Firefox restarts.
-
-### Permanent install (XPI)
-
-A packaged `lemmytools-0.3.1.1.xpi` lives in the repo root. To install it:
-
-- **Firefox Developer Edition, Nightly, or ESR** — open `about:config`, set `xpinstall.signatures.required` to `false`, then drag the `.xpi` onto the Firefox window
-- **Stable Firefox** — the addon must be signed via AMO. Submit the XPI to <https://addons.mozilla.org/developers/> for review
-
-### Repackaging from source
-
-```bash
-# with zip
-cd extension
-zip -r -FS ../lemmytools-0.3.1.1.xpi . -x '*.DS_Store'
-
-# or, if you don't have zip installed (e.g. plain WSL)
-cd extension
-python3 -c "import zipfile,os
-with zipfile.ZipFile('../lemmytools-0.3.1.1.xpi','w',zipfile.ZIP_DEFLATED) as z:
-    for r,_,fs in os.walk('.'):
-        for f in fs:
-            p=os.path.join(r,f)
-            z.write(p, os.path.relpath(p,'.'))"
-
-# Windows PowerShell
-Compress-Archive -Path extension\* -DestinationPath lemmytools-0.3.1.1.xpi -CompressionLevel Optimal
-```
-
-Either form must be run from inside `extension/` so `manifest.json` lands at the archive root — Firefox rejects XPIs where the manifest is nested in a subdirectory.
+See Releases Page
 
 ## Configuring
 
@@ -71,25 +36,6 @@ The most-used toggles are in the **toolbar button popup**:
 For the rest — instance URL, image size, expand-image speed, blocklist filters, etc. — open the full settings page (gear icon, `!settings` command, or popup footer button).
 
 Settings are stored in `browser.storage.local` and applied live across all open Lemmy tabs without requiring a reload.
-
-## Layout
-
-```
-extension/
-├── manifest.json
-├── background/background.js          # default-settings install + openOptionsPage routing
-├── content/
-│   ├── lemmytools.js                 # main content script, MutationObserver-based
-│   └── lemmytools.css                # CSP-clean stylesheet, theme-variable driven
-├── lib/storage.js                    # async storage wrapper + one-time userscript migration
-├── options/{options.html, options.css, options.js}
-├── popup/{popup.html, popup.css, popup.js}
-└── icons/lemmy-logo.webp
-```
-
-## Migrating from the userscript
-
-If you previously used the Greasemonkey/Tampermonkey userscript, your settings, user tags, and cached community list are imported automatically the first time the addon runs on a Lemmy page. The migration runs once and is then idempotent — you can safely uninstall the userscript afterwards.
 
 ## Contributing
 
